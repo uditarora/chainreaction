@@ -4,6 +4,8 @@
  */
 package com.chainreactionai.game;
 
+import java.util.LinkedList;
+
 /**
  * @author Kartik Parnami
  */
@@ -11,6 +13,16 @@ public class GameBoard {
 	private int[][] rectangleWinner;
 	private int[][] numAtomsInRectangle;
 	private int gameGridSize, numPlayers;
+	
+	private class Position {
+		private int coordX;
+		private int coordY;
+		
+		private Position(int x, int y) {
+			this.coordX = x;
+			this.coordY = y;
+		}
+	}
 
 	// Constructor to initialize the grid size, number of players
 	// and setting the default values for rectangle winners and
@@ -69,64 +81,72 @@ public class GameBoard {
 	// This function changes the board according to the
 	// rectangle clicked by user and recursively calls
 	// itself according to the input and the number of atoms
-	// currently in the rectangle
+	// currently in the rectangle using BFS
 	public void changeBoard(int coordX, int coordY, int player) {
-		rectangleWinner[coordX][coordY] = player;
-		numAtomsInRectangle[coordX][coordY] += 1;
-		// If the clicked box is corner-most
-		if ((coordX == 0 && coordY == 0)
-				|| (coordX == 0 && coordY == gameGridSize - 1)
-				|| (coordX == gameGridSize - 1 && coordY == 0)
-				|| (coordX == gameGridSize - 1 && coordY == gameGridSize - 1)) {
-			if (numAtomsInRectangle[coordX][coordY] == 2) {
-				numAtomsInRectangle[coordX][coordY] = 0;
-				rectangleWinner[coordX][coordY] = -1;
-				if (coordX == 0 && coordY == 0) {
-					changeBoard(coordX + 1, coordY, player);
-					changeBoard(coordX, coordY + 1, player);
-				} else if (coordX == 0 && coordY == gameGridSize - 1) {
-					changeBoard(coordX + 1, coordY, player);
-					changeBoard(coordX, coordY - 1, player);
-				} else if (coordX == gameGridSize - 1 && coordY == 0) {
-					changeBoard(coordX - 1, coordY, player);
-					changeBoard(coordX, coordY + 1, player);
-				} else {
-					changeBoard(coordX - 1, coordY, player);
-					changeBoard(coordX, coordY - 1, player);
+		Position initialPosition = new Position(coordX, coordY);
+		LinkedList<Position> positionsQueue = new LinkedList<Position>();
+		positionsQueue.add(initialPosition);
+		Position currentPosition;
+		while (positionsQueue.peek() != null) {
+			currentPosition = positionsQueue.poll();
+			rectangleWinner[currentPosition.coordX][currentPosition.coordY] = player;
+			numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] += 1;
+			
+			// If the clicked box is corner-most
+			if ((currentPosition.coordX == 0 && currentPosition.coordY == 0)
+					|| (currentPosition.coordX == 0 && currentPosition.coordY == gameGridSize - 1)
+					|| (currentPosition.coordX == gameGridSize - 1 && currentPosition.coordY == 0)
+					|| (currentPosition.coordX == gameGridSize - 1 && currentPosition.coordY == gameGridSize - 1)) {
+				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 2) {
+					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
+					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
+					if (currentPosition.coordX == 0 && currentPosition.coordY == 0) {
+						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
+					} else if (currentPosition.coordX == 0 && currentPosition.coordY == gameGridSize - 1) {
+						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
+					} else if (currentPosition.coordX == gameGridSize - 1 && currentPosition.coordY == 0) {
+						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
+					} else {
+						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
+					}
+	
 				}
-
-			}
-		} else if (coordX == 0 || coordY == 0 || coordX == gameGridSize - 1
-				|| coordY == gameGridSize - 1) {
-			if (numAtomsInRectangle[coordX][coordY] == 3) {
-				numAtomsInRectangle[coordX][coordY] = 0;
-				rectangleWinner[coordX][coordY] = -1;
-				if (coordX == 0) {
-					changeBoard(coordX, coordY + 1, player);
-					changeBoard(coordX, coordY - 1, player);
-					changeBoard(coordX + 1, coordY, player);
-				} else if (coordY == 0) {
-					changeBoard(coordX - 1, coordY, player);
-					changeBoard(coordX + 1, coordY, player);
-					changeBoard(coordX, coordY + 1, player);
-				} else if (coordX == gameGridSize - 1) {
-					changeBoard(coordX, coordY + 1, player);
-					changeBoard(coordX, coordY - 1, player);
-					changeBoard(coordX - 1, coordY, player);
-				} else {
-					changeBoard(coordX - 1, coordY, player);
-					changeBoard(coordX + 1, coordY, player);
-					changeBoard(coordX, coordY - 1, player);
+			} else if (currentPosition.coordX == 0 || currentPosition.coordY == 0 || currentPosition.coordX == gameGridSize - 1
+					|| currentPosition.coordY == gameGridSize - 1) {
+				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 3) {
+					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
+					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
+					if (currentPosition.coordX == 0) {
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
+						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
+					} else if (currentPosition.coordY == 0) {
+						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
+					} else if (currentPosition.coordX == gameGridSize - 1) {
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
+						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
+					} else {
+						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
+					}
 				}
-			}
-		} else {
-			if (numAtomsInRectangle[coordX][coordY] == 4) {
-				numAtomsInRectangle[coordX][coordY] = 0;
-				rectangleWinner[coordX][coordY] = -1;
-				changeBoard(coordX - 1, coordY, player);
-				changeBoard(coordX + 1, coordY, player);
-				changeBoard(coordX, coordY - 1, player);
-				changeBoard(coordX, coordY + 1, player);
+			} else {
+				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 4) {
+					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
+					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
+					positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
+					positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
+					positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
+					positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
+				}
 			}
 		}
 	}
