@@ -10,10 +10,10 @@ import com.badlogic.gdx.InputProcessor;
  * 
  */
 public class MyInputProcessor implements InputProcessor {
-	
+
 	private float clickCoordX, clickCoordY;
 	private boolean isTouchDown;
-	
+
 	@Override
 	public boolean keyDown(int keycode) {
 		return false;
@@ -56,19 +56,19 @@ public class MyInputProcessor implements InputProcessor {
 	public boolean scrolled(int amount) {
 		return false;
 	}
-	
-	public boolean isTouchedDown () {
+
+	public boolean isTouchedDown() {
 		return isTouchDown;
 	}
-	
-	public void negateTouchDown () {
+
+	public void unsetTouchDown() {
 		isTouchDown = false;
 	}
-	
+
 	public float getXCoord() {
 		return clickCoordX;
 	}
-	
+
 	public float getYCoord() {
 		return clickCoordY;
 	}

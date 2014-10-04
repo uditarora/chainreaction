@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+//import com.badlogic.gdx.scenes.scene2d.Stage;
+//import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+//import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class ChainReactionAIGame implements ApplicationListener {
 
@@ -21,27 +24,33 @@ public class ChainReactionAIGame implements ApplicationListener {
 	final private int HEIGHT_RECTANGLE = 55;
 	final private int WIDTH_SCREEN = 440;
 	final private int HEIGHT_SCREEN = 480;
+	// private Stage stage;
+	// private Skin skin;
 	private OrthographicCamera camera;
 	private Texture[][] atomImages = new Texture[NUM_STATES_POSSIBLE][NUMBER_OF_PLAYERS];
-	private Array<Rectangle> gameGrid;
+	private Array<Rectangle> rectangularGrid;
 	private GameBoard gameBoard;
-	private int clickCoordX, clickCoordY, playerWithChance;
+	private int clickCoordX, clickCoordY, currentPlayer, numberOfMovesPlayed;
 	private boolean clickOnEdge;
 	MyInputProcessor inputProcessor = new MyInputProcessor();
 
 	@Override
 	public void create() {
+		/*
+		 * Dialog and Shit stage = new Stage(); skin = new
+		 * Skin(Gdx.files.internal("data/uiskin.json")); WinDialog winDialog =
+		 * new WinDialog("Confirm Win", skin); winDialog.show(stage);
+		 */
 		batch = new SpriteBatch();
-
 		// Show the world to be 440*480 no matter the
 		// size of the screen
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
-		gameGrid = new Array<Rectangle>();
+		rectangularGrid = new Array<Rectangle>();
 		gameBoard = new GameBoard(GRID_SIZE, NUMBER_OF_PLAYERS);
 		Gdx.input.setInputProcessor(inputProcessor);
-		inputProcessor.negateTouchDown();
-		playerWithChance = 0;
+		inputProcessor.unsetTouchDown();
+		numberOfMovesPlayed = currentPlayer = 0;
 
 		// Load default values into arrays
 		loadImagesintoArrays();
@@ -75,7 +84,7 @@ public class ChainReactionAIGame implements ApplicationListener {
 				tempBlock.y = (float) (j * HEIGHT_RECTANGLE);
 				tempBlock.height = (float) (HEIGHT_RECTANGLE);
 				tempBlock.width = (float) (WIDTH_RECTANGLE);
-				gameGrid.add(tempBlock);
+				rectangularGrid.add(tempBlock);
 			}
 		}
 	}
@@ -94,27 +103,35 @@ public class ChainReactionAIGame implements ApplicationListener {
 		batch.begin();
 		drawGameBoard();
 		batch.end();
-		
+
 		// process user input
 		if (inputProcessor.isTouchedDown()) {
-			inputProcessor.negateTouchDown();
-			clickOnEdge = false;			
-			clickCoordX = (int)(inputProcessor.getXCoord()/WIDTH_RECTANGLE);
-			if (inputProcessor.getXCoord()%WIDTH_RECTANGLE == 0.0) {
+			inputProcessor.unsetTouchDown();
+			clickOnEdge = false;
+			clickCoordX = (int) (inputProcessor.getXCoord() / WIDTH_RECTANGLE);
+			if (inputProcessor.getXCoord() % WIDTH_RECTANGLE == 0.0) {
 				clickOnEdge = true;
 			}
-			clickCoordY = (int)((480 - inputProcessor.getYCoord())/HEIGHT_RECTANGLE);
-			if ((480 - inputProcessor.getYCoord())%HEIGHT_RECTANGLE == 0.0) {
+			clickCoordY = (int) ((HEIGHT_SCREEN - inputProcessor.getYCoord()) / HEIGHT_RECTANGLE);
+			if ((HEIGHT_SCREEN - inputProcessor.getYCoord()) % HEIGHT_RECTANGLE == 0.0) {
 				clickOnEdge = true;
 			}
-			
+
 			// If the click is within bounds of any one rectangle
 			if (!clickOnEdge) {
-				// Checking the move's validity and changing the board accordingly.
-				// Also passing the chance to the next player.
-				if (gameBoard.isValidMove(clickCoordX, clickCoordY, playerWithChance)) {
-					gameBoard.changeBoard(clickCoordX, clickCoordY, playerWithChance);
-					playerWithChance = (playerWithChance + 1)%NUMBER_OF_PLAYERS;
+				// Checking the move's validity and changing the board
+				// accordingly.
+				// Also passing the move to the next player.
+				if (gameBoard.isValidMove(clickCoordX, clickCoordY,
+						currentPlayer)) {
+					gameBoard.changeBoard(clickCoordX, clickCoordY,
+							currentPlayer);
+					numberOfMovesPlayed += 1;
+					if (gameBoard.isWinningPosition(currentPlayer)
+							&& numberOfMovesPlayed > 1) {
+
+					}
+					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 				}
 			}
 		}
@@ -123,7 +140,7 @@ public class ChainReactionAIGame implements ApplicationListener {
 	// Function to draw the game board using the three
 	// arrays.
 	private void drawGameBoard() {
-		Iterator<Rectangle> iter = gameGrid.iterator();
+		Iterator<Rectangle> iter = rectangularGrid.iterator();
 		int i, j, count = 0;
 		while (iter.hasNext()) {
 			Rectangle tempBlock = iter.next();
@@ -142,6 +159,19 @@ public class ChainReactionAIGame implements ApplicationListener {
 			count++;
 		}
 	}
+
+	/*
+	 * Dialog and Shit public static class WinDialog extends Dialog {
+	 * 
+	 * public WinDialog(String title, Skin skin) { super(title, skin); // TODO
+	 * Auto-generated constructor stub }
+	 * 
+	 * { text("Do you really want to leave?"); button("Yes"); button("No"); }
+	 * 
+	 * @Override protected void result(Object object) { }
+	 * 
+	 * }
+	 */
 
 	@Override
 	public void dispose() {
