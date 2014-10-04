@@ -12,6 +12,9 @@ public class GameBoard {
 	private int[][] numAtomsInRectangle;
 	private int gameGridSize, numPlayers;
 	
+	// Constructoe to initialize the grid size, number of players
+	// and setting the default values for rectangle winners and
+	// number of atoms in each rectangle.
 	GameBoard(int gridSize, int gameNumPlayers) {
 		numPlayers = gameNumPlayers;
 		gameGridSize = gridSize;
@@ -41,10 +44,14 @@ public class GameBoard {
 		}
 	}
 	
+	// This function returns the current winning player
+	// for the given rectangle.
 	public int getRectangleWinner (int row, int col) {
 		return rectangleWinner[row][col];
 	}
 	
+	// This function returns the number of atoms currently
+	// present in a rectangle.
 	public int getNumAtomsInRectangle (int row, int col) {
 		return numAtomsInRectangle[row][col];
 	}
@@ -59,8 +66,9 @@ public class GameBoard {
 	}
 	
 	// This function changes the board according to the
-	// rectangle clicked by user and returns whether further
-	// processing is needed on the board due to the given click
+	// rectangle clicked by user and recursively calls
+	// itself according to the input and the number of atoms
+	// currently in the rectangle
 	public void changeBoard (int coordX, int coordY, int player) {
 		rectangleWinner[coordX][coordY] = player;
 		numAtomsInRectangle[coordX][coordY] += 1;
@@ -68,6 +76,7 @@ public class GameBoard {
 		if ((coordX == 0 && coordY == 0) || (coordX == 0 && coordY == gameGridSize-1) || (coordX == gameGridSize-1 && coordY == 0) || (coordX == gameGridSize-1 && coordY == gameGridSize-1)) {
 			if (numAtomsInRectangle[coordX][coordY] == 2) {
 				numAtomsInRectangle[coordX][coordY] = 0;
+				rectangleWinner[coordX][coordY] = -1;
 				if (coordX == 0 && coordY == 0) {
 					changeBoard(coordX + 1, coordY, player);
 					changeBoard(coordX, coordY + 1, player);
@@ -86,6 +95,7 @@ public class GameBoard {
 		} else if (coordX == 0 || coordY == 0 || coordX == gameGridSize-1 || coordY == gameGridSize-1) {
 			if (numAtomsInRectangle[coordX][coordY] == 3) {
 				numAtomsInRectangle[coordX][coordY] = 0;
+				rectangleWinner[coordX][coordY] = -1;
 				if (coordX == 0) {
 					changeBoard(coordX, coordY + 1, player);
 					changeBoard(coordX, coordY - 1, player);
@@ -107,6 +117,7 @@ public class GameBoard {
 		} else {
 			if (numAtomsInRectangle[coordX][coordY] == 4) {
 				numAtomsInRectangle[coordX][coordY] = 0;
+				rectangleWinner[coordX][coordY] = -1;
 				changeBoard(coordX - 1, coordY, player);
 				changeBoard(coordX + 1, coordY, player);
 				changeBoard(coordX, coordY - 1, player);

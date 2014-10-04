@@ -17,6 +17,10 @@ public class ChainReactionAIGame implements ApplicationListener {
 	final private int GRID_SIZE = 8;
 	final private int NUMBER_OF_PLAYERS = 2;
 	final private int NUM_STATES_POSSIBLE = 4;
+	final private int WIDTH_RECTANGLE = 55;
+	final private int HEIGHT_RECTANGLE = 55;
+	final private int WIDTH_SCREEN = 440;
+	final private int HEIGHT_SCREEN = 480;
 	private OrthographicCamera camera;
 	private Texture[][] atomImages = new Texture[NUM_STATES_POSSIBLE][NUMBER_OF_PLAYERS];
 	private Array<Rectangle> gameGrid;
@@ -32,7 +36,7 @@ public class ChainReactionAIGame implements ApplicationListener {
 		// Show the world to be 440*480 no matter the
 		// size of the screen
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 440, 480);
+		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
 		gameGrid = new Array<Rectangle>();
 		gameBoard = new GameBoard(GRID_SIZE, NUMBER_OF_PLAYERS);
 		Gdx.input.setInputProcessor(inputProcessor);
@@ -67,10 +71,10 @@ public class ChainReactionAIGame implements ApplicationListener {
 		for (int i = 0; i < GRID_SIZE; i += 1) {
 			for (int j = 0; j < GRID_SIZE; j += 1) {
 				Rectangle tempBlock = new Rectangle();
-				tempBlock.x = (float) (i * 55);
-				tempBlock.y = (float) (j * 55);
-				tempBlock.height = (float) (55);
-				tempBlock.width = (float) (55);
+				tempBlock.x = (float) (i * WIDTH_RECTANGLE);
+				tempBlock.y = (float) (j * HEIGHT_RECTANGLE);
+				tempBlock.height = (float) (HEIGHT_RECTANGLE);
+				tempBlock.width = (float) (WIDTH_RECTANGLE);
 				gameGrid.add(tempBlock);
 			}
 		}
@@ -95,20 +99,23 @@ public class ChainReactionAIGame implements ApplicationListener {
 		if (inputProcessor.isTouchedDown()) {
 			inputProcessor.negateTouchDown();
 			clickOnEdge = false;			
-			clickCoordX = (int)(inputProcessor.getXCoord()/55);
-			if (inputProcessor.getXCoord()%55 == 0.0) {
+			clickCoordX = (int)(inputProcessor.getXCoord()/WIDTH_RECTANGLE);
+			if (inputProcessor.getXCoord()%WIDTH_RECTANGLE == 0.0) {
 				clickOnEdge = true;
 			}
-			clickCoordY = (int)((480 - inputProcessor.getYCoord())/55);
-			if ((480 - inputProcessor.getYCoord())%55 == 0.0) {
+			clickCoordY = (int)((480 - inputProcessor.getYCoord())/HEIGHT_RECTANGLE);
+			if ((480 - inputProcessor.getYCoord())%HEIGHT_RECTANGLE == 0.0) {
 				clickOnEdge = true;
 			}
 			
+			// If the click is within bounds of any one rectangle
 			if (!clickOnEdge) {
+				// Checking the move's validity and changing the board accordingly.
+				// Also passing the chance to the next player.
 				if (gameBoard.isValidMove(clickCoordX, clickCoordY, playerWithChance)) {
 					gameBoard.changeBoard(clickCoordX, clickCoordY, playerWithChance);
+					playerWithChance = (playerWithChance + 1)%NUMBER_OF_PLAYERS;
 				}
-				playerWithChance = (playerWithChance + 1)%NUMBER_OF_PLAYERS;
 			}
 		}
 	}
