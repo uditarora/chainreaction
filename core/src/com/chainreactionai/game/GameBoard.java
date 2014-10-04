@@ -13,6 +13,7 @@ public class GameBoard {
 	private int[][] rectangleWinner;
 	private int[][] numAtomsInRectangle;
 	private int gameGridSize, numPlayers;
+	private GameBoard prevGameBoard;
 	
 	private class Position {
 		private int coordX;
@@ -161,6 +162,14 @@ public class GameBoard {
 			}
 		}
 		return true;
+	}
+	
+	public GameBoard getPrevGameBoard() {
+		return prevGameBoard;
+	}
+	
+	public void setPrevGameBoard(GameBoard tempGameBoard) {
+		prevGameBoard = tempGameBoard;
 	}
 
 }
