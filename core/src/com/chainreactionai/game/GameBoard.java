@@ -37,6 +37,13 @@ public class GameBoard {
 		setDefaultNumAtomsInRectangle();
 	}
 
+	public GameBoard (GameBoard board) {
+		this.gameGridSize = board.gameGridSize;
+		this.numPlayers = board.numPlayers;
+		this.numAtomsInRectangle = board.numAtomsInRectangle.clone();
+		this.rectangleWinner = board.rectangleWinner.clone();
+	}
+	
 	// This function sets the default winners of the
 	// rectangles ie. player -1 (no winner)
 	private void setDefaultRectangleWinners() {
@@ -193,6 +200,10 @@ public class GameBoard {
 		}
 		totalScore = (numBallsWeight*runningNumBallsTotal) + (numBoxesWeight*runningNumBoxesTotal);
 		return totalScore;
+	}
+	
+	public int getGameGridSize() {
+		return gameGridSize;
 	}
 
 }
