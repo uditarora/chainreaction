@@ -152,6 +152,8 @@ public class GameBoard {
 		}
 	}
 
+	// This function returns whether the given board is a
+	// winning board for the gien player.
 	public boolean isWinningPosition(int player) {
 		for (int i = 0; i < gameGridSize; i += 1) {
 			for (int j = 0; j < gameGridSize; j += 1) {
@@ -164,12 +166,33 @@ public class GameBoard {
 		return true;
 	}
 	
+	// Getter function for the game board from which this
+	// board is achieved.
 	public GameBoard getPrevGameBoard() {
 		return prevGameBoard;
 	}
 	
+	// Setter function for the board state from which this
+	// board state is achieved.
 	public void setPrevGameBoard(GameBoard tempGameBoard) {
 		prevGameBoard = tempGameBoard;
+	}
+	
+	// This function returns the score for a given player
+	// in the board's current state.
+	public double score(int player) {
+		int runningNumBallsTotal = 0, runningNumBoxesTotal = 0;
+		double numBallsWeight = 0.5, numBoxesWeight = 0.5, totalScore;
+		for (int i = 0; i < gameGridSize; i += 1) {
+			for (int j = 0; j < gameGridSize; j += 1) {
+				if (rectangleWinner[i][j] == player) {
+					runningNumBallsTotal += numAtomsInRectangle[i][j];
+					runningNumBoxesTotal += 1;
+				}
+			}
+		}
+		totalScore = (numBallsWeight*runningNumBallsTotal) + (numBoxesWeight*runningNumBoxesTotal);
+		return totalScore;
 	}
 
 }
