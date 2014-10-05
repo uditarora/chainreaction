@@ -3,11 +3,10 @@
  */
 package com.chainreactionai.game;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.Stack;
-
-import com.badlogic.gdx.utils.Array;
 
 /**
  * @author Kartik Parnami
@@ -17,7 +16,7 @@ import com.badlogic.gdx.utils.Array;
 public class GameSolver {
 	private BoardNode initialBoardNode;
 	private int mainPlayer, numPlayers;
-	final private int MAX_PLY_LEVEL = 4;
+	final private int MAX_PLY_LEVEL = 2;
 	
 	public GameSolver (GameBoard gameBoard, int player, int numberPlayers) {
 		initialBoardNode = new BoardNode(gameBoard, 0, player, null);
@@ -29,20 +28,18 @@ public class GameSolver {
 	
 	//AI solver - Returns the best move
 	public GameBoard getBestGameBoard() {
-		BoardNode tempBoardNode, lastPlyBestBoardNode, solutionBoardNode;
-		lastPlyBestBoardNode = null;
+		BoardNode tempBoardNode, solutionBoardNode;
+		ArrayList<BoardNode> bestBoardNodesArr = new ArrayList<BoardNode>();
 		double lastPlyMaxScore = -99999999;
+		int numberOfBestBoardNodes, chosenBestBoardNodeIndex;
+		Random rand = new Random();
 		LinkedList<BoardNode> possibleBoardNodeQueue = new LinkedList<BoardNode>();
 		possibleBoardNodeQueue.add(initialBoardNode);
 		BoardNode currentBoardNode = possibleBoardNodeQueue.peek();
-		int previousLevel = -1;
 		while (true) {
 			currentBoardNode = possibleBoardNodeQueue.poll();
 			int currentLevel = currentBoardNode.getLevel();
-			if (currentLevel != previousLevel) {
-				System.out.println("Current Level is " + currentLevel);
-				previousLevel = currentLevel;
-			}
+			System.out.println("Current Level is " + currentLevel);
 			if(currentLevel == MAX_PLY_LEVEL) {
 				break;
 			}
@@ -60,10 +57,9 @@ public class GameSolver {
 				int currentPlayer = currentBoardNode.player;
 				for (int i = 0; i < numPlayers-1; i += 1) {
 					currentPlayer = (currentPlayer+1) % numPlayers;
-//					System.out.println("Current Player is: " + currentPlayer);
+					System.out.println("Current Player is: " + currentPlayer);
 					double temp = tempBoardNode.getPropogatedScore();
 					tempBoardNode = getBestPossibleMove(tempBoardNode, currentPlayer);
-//					System.out.println("Player's best posssible move is: ");
 //					tempBoardNode.printBoard();
 					tempBoardNode.setScore();
 					tempBoardNode.setOpponentPropogatingScore(temp);
@@ -71,12 +67,17 @@ public class GameSolver {
 				int nextPlayer = currentPlayer;
 				possibleBoardNodeQueue.add(new BoardNode(tempBoardNode.board, currentLevel+1, nextPlayer, currentBoardNode));
 				if ((currentLevel == MAX_PLY_LEVEL - 1) && (tempBoardNode.getPropogatedScore() > lastPlyMaxScore)) {
-					lastPlyBestBoardNode = tempBoardNode;
+					bestBoardNodesArr.clear();
+					bestBoardNodesArr.add(tempBoardNode);
 					lastPlyMaxScore = tempBoardNode.getPropogatedScore();
+				} else if ((currentLevel == MAX_PLY_LEVEL - 1) && (tempBoardNode.getPropogatedScore() == lastPlyMaxScore)) {
+					bestBoardNodesArr.add(tempBoardNode);
 				}
 			}
 		}
-		solutionBoardNode = getPredecessorNode(lastPlyBestBoardNode);
+		numberOfBestBoardNodes = bestBoardNodesArr.size();
+		chosenBestBoardNodeIndex = rand.nextInt(numberOfBestBoardNodes);
+		solutionBoardNode = getPredecessorNode(bestBoardNodesArr.get(chosenBestBoardNodeIndex));
 		return solutionBoardNode.board;
 	}
 	
