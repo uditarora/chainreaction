@@ -35,10 +35,14 @@ public class GameSolver {
 		LinkedList<BoardNode> possibleBoardNodeQueue = new LinkedList<BoardNode>();
 		possibleBoardNodeQueue.add(initialBoardNode);
 		BoardNode currentBoardNode = possibleBoardNodeQueue.peek();
+		int previousLevel = -1;
 		while (true) {
 			currentBoardNode = possibleBoardNodeQueue.poll();
 			int currentLevel = currentBoardNode.getLevel();
-			System.out.println("Current Level is " + currentLevel);
+			if (currentLevel != previousLevel) {
+				System.out.println("Current Level is " + currentLevel);
+				previousLevel = currentLevel;
+			}
 			if(currentLevel == MAX_PLY_LEVEL) {
 				break;
 			}
@@ -56,9 +60,10 @@ public class GameSolver {
 				int currentPlayer = currentBoardNode.player;
 				for (int i = 0; i < numPlayers-1; i += 1) {
 					currentPlayer = (currentPlayer+1) % numPlayers;
-					System.out.println("Current Player is: " + currentPlayer);
+//					System.out.println("Current Player is: " + currentPlayer);
 					double temp = tempBoardNode.getPropogatedScore();
 					tempBoardNode = getBestPossibleMove(tempBoardNode, currentPlayer);
+//					System.out.println("Player's best posssible move is: ");
 //					tempBoardNode.printBoard();
 					tempBoardNode.setScore();
 					tempBoardNode.setOpponentPropogatingScore(temp);
@@ -67,6 +72,7 @@ public class GameSolver {
 				possibleBoardNodeQueue.add(new BoardNode(tempBoardNode.board, currentLevel+1, nextPlayer, currentBoardNode));
 				if ((currentLevel == MAX_PLY_LEVEL - 1) && (tempBoardNode.getPropogatedScore() > lastPlyMaxScore)) {
 					lastPlyBestBoardNode = tempBoardNode;
+					lastPlyMaxScore = tempBoardNode.getPropogatedScore();
 				}
 			}
 		}
