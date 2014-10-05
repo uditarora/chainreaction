@@ -107,6 +107,16 @@ public class ChainReactionAIGame implements ApplicationListener {
 		drawGameBoard();
 		batch.end();
 		
+		//Check if current player is CPU and play its move
+		if (isCPU[currentPlayer]) {
+			System.out.println("Reached CPU");
+			GameSolver solver = new GameSolver(gameBoard, currentPlayer, NUMBER_OF_PLAYERS);
+			System.out.println("GameSolver initialized");
+			GameBoard solvedBoard = solver.getBestGameBoard();
+			gameBoard = solvedBoard;
+			currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
+		}
+		
 		// process user input
 		if (inputProcessor.isTouchedDown()) {
 			inputProcessor.unsetTouchDown();
@@ -135,15 +145,6 @@ public class ChainReactionAIGame implements ApplicationListener {
 					}
 					gameBoard.printBoard();
 					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
-					//Check if current player is CPU and play its move
-					if (isCPU[currentPlayer]) {
-						System.out.println("Reached CPU");
-						GameSolver solver = new GameSolver(gameBoard, currentPlayer, NUMBER_OF_PLAYERS);
-						System.out.println("GameSolver initialized");
-						GameBoard solvedBoard = solver.getBestGameBoard();
-						gameBoard = solvedBoard;
-						currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
-					}
 				}
 			}
 		}

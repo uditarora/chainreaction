@@ -39,8 +39,17 @@ public class GameBoard {
 	public GameBoard (GameBoard board) {
 		this.gameGridSize = board.gameGridSize;
 		this.numPlayers = board.numPlayers;
-		this.numAtomsInRectangle = board.numAtomsInRectangle.clone();
-		this.rectangleWinner = board.rectangleWinner.clone();
+		this.numAtomsInRectangle = new int[this.gameGridSize][this.gameGridSize];
+//		this.numAtomsInRectangle = board.numAtomsInRectangle.clone();
+		this.rectangleWinner = new int[this.gameGridSize][this.gameGridSize];
+//		this.rectangleWinner = board.rectangleWinner.clone();
+		
+		for (int i = 0; i < this.gameGridSize; ++i) {
+			for (int j = 0; j < this.gameGridSize; ++j) {
+				this.numAtomsInRectangle[i][j] = board.numAtomsInRectangle[i][j];
+				this.rectangleWinner[i][j] = board.rectangleWinner[i][j];
+			}
+		}
 	}
 	
 	// This function sets the default winners of the
