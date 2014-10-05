@@ -69,4 +69,8 @@ public class BoardNode implements Comparable<BoardNode> {
 	public double getPropogatedScore() {
 		return totalScore;
 	}
+	
+	public void printBoard () {
+		board.printBoard();
+	}
 }
