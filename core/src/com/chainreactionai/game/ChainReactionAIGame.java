@@ -35,6 +35,7 @@ public class ChainReactionAIGame implements ApplicationListener {
 	MyInputProcessor inputProcessor = new MyInputProcessor();
 
 	private boolean isCPU[] = new boolean[NUMBER_OF_PLAYERS];
+	private boolean gameOver;
 	
 	@Override
 	public void create() {
@@ -58,6 +59,7 @@ public class ChainReactionAIGame implements ApplicationListener {
 		loadImagesintoArrays();
 		setDimsForRectangles();
 		isCPU[NUMBER_OF_PLAYERS - 1] = true;
+		gameOver = false;
 	}
 
 	// This function loads the images into the arrays
@@ -108,17 +110,22 @@ public class ChainReactionAIGame implements ApplicationListener {
 		batch.end();
 		
 		//Check if current player is CPU and play its move
-		if (isCPU[currentPlayer]) {
+		if (isCPU[currentPlayer] && !gameOver) {
 			System.out.println("Reached CPU");
 			GameSolver solver = new GameSolver(gameBoard, currentPlayer, NUMBER_OF_PLAYERS);
 			System.out.println("GameSolver initialized");
 			GameBoard solvedBoard = solver.getBestGameBoard();
 			gameBoard = solvedBoard;
+			if (gameBoard.isWinningPosition(currentPlayer)
+					&& numberOfMovesPlayed > 1) {
+				gameOver = true;
+				System.out.println("Player " + currentPlayer + " has won the game!");
+			}
 			currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 		}
 		
 		// process user input
-		if (inputProcessor.isTouchedDown()) {
+		if (inputProcessor.isTouchedDown() && !gameOver) {
 			inputProcessor.unsetTouchDown();
 			clickOnEdge = false;
 			clickCoordX = (int) (inputProcessor.getXCoord() / WIDTH_RECTANGLE);
@@ -142,8 +149,10 @@ public class ChainReactionAIGame implements ApplicationListener {
 					numberOfMovesPlayed += 1;
 					if (gameBoard.isWinningPosition(currentPlayer)
 							&& numberOfMovesPlayed > 1) {
+						gameOver = true;
+						System.out.println("Player " + currentPlayer + " has won the game!");
 					}
-					gameBoard.printBoard();
+//					gameBoard.printBoard();
 					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 				}
 			}
