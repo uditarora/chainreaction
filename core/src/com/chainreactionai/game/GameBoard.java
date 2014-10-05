@@ -13,7 +13,6 @@ public class GameBoard {
 	private int[][] rectangleWinner;
 	private int[][] numAtomsInRectangle;
 	private int gameGridSize, numPlayers;
-	private GameBoard prevGameBoard;
 	
 	private class Position {
 		private int coordX;
@@ -173,18 +172,6 @@ public class GameBoard {
 		return true;
 	}
 	
-	// Getter function for the game board from which this
-	// board is achieved.
-	public GameBoard getPrevGameBoard() {
-		return prevGameBoard;
-	}
-	
-	// Setter function for the board state from which this
-	// board state is achieved.
-	public void setPrevGameBoard(GameBoard tempGameBoard) {
-		prevGameBoard = tempGameBoard;
-	}
-	
 	// This function returns the score for a given player
 	// in the board's current state.
 	public double score(int player) {
@@ -205,5 +192,5 @@ public class GameBoard {
 	public int getGameGridSize() {
 		return gameGridSize;
 	}
-
+	
 }
