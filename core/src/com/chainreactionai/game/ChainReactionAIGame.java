@@ -34,6 +34,8 @@ public class ChainReactionAIGame implements ApplicationListener {
 	private boolean clickOnEdge;
 	MyInputProcessor inputProcessor = new MyInputProcessor();
 
+	private boolean isCPU[] = new boolean[NUMBER_OF_PLAYERS];
+	
 	@Override
 	public void create() {
 		/*
@@ -55,6 +57,7 @@ public class ChainReactionAIGame implements ApplicationListener {
 		// Load default values into arrays
 		loadImagesintoArrays();
 		setDimsForRectangles();
+		isCPU[NUMBER_OF_PLAYERS - 1] = true;
 	}
 
 	// This function loads the images into the arrays
@@ -104,6 +107,15 @@ public class ChainReactionAIGame implements ApplicationListener {
 		drawGameBoard();
 		batch.end();
 
+		//Check if current player is CPU and play its move
+		if (isCPU[currentPlayer]) {
+			GameSolver solver = new GameSolver(gameBoard, currentPlayer, NUMBER_OF_PLAYERS);
+			GameBoard solvedBoard = new GameBoard(gameBoard);
+			solvedBoard = solver.getBestGameBoard();
+			gameBoard = solvedBoard;
+			currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
+		}
+		
 		// process user input
 		if (inputProcessor.isTouchedDown()) {
 			inputProcessor.unsetTouchDown();
@@ -129,7 +141,6 @@ public class ChainReactionAIGame implements ApplicationListener {
 					numberOfMovesPlayed += 1;
 					if (gameBoard.isWinningPosition(currentPlayer)
 							&& numberOfMovesPlayed > 1) {
-
 					}
 					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 				}

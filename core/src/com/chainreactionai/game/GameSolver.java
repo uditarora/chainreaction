@@ -30,9 +30,10 @@ public class GameSolver {
 	//AI solver - Returns the best move
 	public GameBoard getBestGameBoard() {
 		BoardNode tempBoardNode, lastPlyBestBoardNode, solutionBoardNode;
+		lastPlyBestBoardNode = null;
 		double lastPlyMaxScore = -99999999;
 		LinkedList<BoardNode> possibleBoardNodeQueue = new LinkedList<BoardNode>();
-		GameBoard tempGameBoard;
+//		GameBoard tempGameBoard;
 		possibleBoardNodeQueue.add(initialBoardNode);
 		BoardNode currentBoardNode = possibleBoardNodeQueue.peek();
 		while (true) {
@@ -60,8 +61,8 @@ public class GameSolver {
 					tempBoardNode.setOpponentPropogatingScore(temp);
 				}
 				int nextPlayer = currentPlayer;
-				possibleBoardNodeQueue.add(new BoardNode(tempGameBoard, currentLevel+1, nextPlayer, currentBoardNode));
-				if((currentLevel == MAX_PLY_LEVEL - 1) && (tempBoardNode.getPropogatedScore()<lastPlyMaxScore)) {
+				possibleBoardNodeQueue.add(new BoardNode(tempBoardNode.board, currentLevel+1, nextPlayer, currentBoardNode));
+				if ((currentLevel == MAX_PLY_LEVEL - 1) && (tempBoardNode.getPropogatedScore() > lastPlyMaxScore)) {
 					lastPlyBestBoardNode = tempBoardNode;
 				}
 			}
@@ -89,17 +90,17 @@ public class GameSolver {
 	
 	// Returns the BoardNode which has the best possible move
 	// played by the player passed as parameter.
-	private GameBoard getBestPossibleMove(GameBoard oldGameBoard, int player) {
-		GameBoard solutionGameBoard = oldGameBoard;
+	private BoardNode getBestPossibleMove(BoardNode oldBoardNode, int player) {
+		GameBoard solutionGameBoard = oldBoardNode.board;
 		double maxScore = 0, currentScore = 0;
-		for (GameBoard board: getAllPossibleMoves(oldGameBoard, player)) {
+		for (GameBoard board: getAllPossibleMoves(oldBoardNode.board, player)) {
 			currentScore = board.score(player);
 			if (currentScore > maxScore) {
 				maxScore = currentScore;
 				solutionGameBoard = board;
 			}
 		}
-		return solutionGameBoard;
+		return new BoardNode(solutionGameBoard, oldBoardNode.level + 1, player, oldBoardNode);
 	}
 	
 	// Returns the BoardNode which was the starting point for this
