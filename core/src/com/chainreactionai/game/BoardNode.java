@@ -11,10 +11,10 @@ package com.chainreactionai.game;
 // Class to represent a GameBoard and all its related information.
 public class BoardNode implements Comparable<BoardNode> {
 
-	private GameBoard board;
+	public GameBoard board;
 	private double score, totalScore;
-	private int level, player;
-	private BoardNode previous;
+	public int level, player;
+	public BoardNode previous;
 
 	BoardNode(GameBoard gameBoard, int level, int player,
 			BoardNode previousBoard) {
