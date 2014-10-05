@@ -52,14 +52,14 @@ public class GameSolver {
 				}
 			} else {
 				tempBoardNode = currentBoardNode;
-				currentBoardNode.printBoard();
+//				currentBoardNode.printBoard();
 				int currentPlayer = currentBoardNode.player;
 				for (int i = 0; i < numPlayers-1; i += 1) {
 					currentPlayer = (currentPlayer+1) % numPlayers;
 					System.out.println("Current Player is: " + currentPlayer);
 					double temp = tempBoardNode.getPropogatedScore();
 					tempBoardNode = getBestPossibleMove(tempBoardNode, currentPlayer);
-					tempBoardNode.printBoard();
+//					tempBoardNode.printBoard();
 					tempBoardNode.setScore();
 					tempBoardNode.setOpponentPropogatingScore(temp);
 				}
