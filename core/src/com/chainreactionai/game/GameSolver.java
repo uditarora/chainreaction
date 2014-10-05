@@ -15,114 +15,122 @@ import com.badlogic.gdx.utils.Array;
  */
 
 public class GameSolver {
-//	private GameBoard currentGameBoard, initialGameBoard;
 	private BoardNode initialBoardNode;
-//	private int currentPlayer, currentLevel, mainPlayer, numPlayers;
 	private int mainPlayer, numPlayers;
 	final private int MAX_PLY_LEVEL = 4;
-//	private Array<GameBoard> allPossibleMoves;
-//	private HashMap<Integer, GameBoard> hm;
 	
+	// Private class to represent a GameBoard and all its related information.
 	private class BoardNode implements Comparable<BoardNode> {
+		
 		private GameBoard board;
-		private double currentScore, totalScore;
+		private double score, totalScore;
 		private int level, player;
 		private BoardNode previous;
+		
 		private BoardNode(GameBoard gameBoard, int level, int player, BoardNode previousBoard) {
 			board = gameBoard;
 			this.level = level;
 			this.player = player;
-			currentScore = gameBoard.score(player);
 			previous = previousBoard;
-			//Not sure if this is correct. We may need to negate the score at one stage
-			if (previous == null)
-				totalScore = currentScore;
-			else
-				totalScore += currentScore;
 		}
+		
 		public int compareTo (BoardNode that)
         {
-            if (this.currentScore > that.currentScore)
+            if (this.score > that.score)
                 return 1;
-            else if (this.currentScore < that.currentScore)
+            else if (this.score < that.score)
                 return -1;
             else
             	return 0;
         }
+		
+		// Sets the score of the BoardNode for a given player
+		// by using the GameBoard's internal functions
+		public void setScore() {
+			score = board.score(player);
+		}
+		
+		// This returns the level of depth at which this BoardNode
+		// is in the search tree.
+		public int getLevel() {
+			return level;
+		}
+		
+		// This returns the score of the node irrespective of the 
+		// score propogating from above.
+		public double getNodeScore() {
+			return score;
+		}
+		
+		// This is for the moves made by the player who is playing
+		// the game ie. adding the score of the node and the score
+		// propogating from above.
+		public void setSelfPropogatingScore(double prevScore) {
+			totalScore = prevScore + score;
+		}
+		
+		// This is for the moves made by the opponents who are playing
+		// the game ie. subtracting the score of the node and the score
+		// propogating from above.
+		public void setOpponentPropogatingScore(double prevScore) {
+			totalScore = prevScore - score;
+		}
+		
+		// Returns the propogated score.
+		public double getPropogatedScore() {
+			return totalScore;
+		}
 	}
 	
 	public GameSolver (GameBoard gameBoard, int player, int numberPlayers) {
-//		initialGameBoard = gameBoard;
 		initialBoardNode = new BoardNode(gameBoard, 0, player, null);
-//		mainPlayer = currentPlayer = player;
+		initialBoardNode.setScore();
+		initialBoardNode.setSelfPropogatingScore(0);
 		mainPlayer = player;
 		numPlayers = numberPlayers;
 	}
 	
-//	public GameBoard getBestGameBoard() {
-//		LinkedList<GameBoard> possibleGameBoardQueue = new LinkedList<GameBoard>();
-//		LinkedList<Integer> possibleGameBoardDepthQueue = new LinkedList<Integer>();
-//		GameBoard tempGameBoard;
-//		possibleGameBoardQueue.add(initialGameBoard);
-//		possibleGameBoardDepthQueue.add(0);
-//		currentGameBoard = possibleGameBoardQueue.peek();
-//		currentLevel = possibleGameBoardDepthQueue.peek();
-//		while (true) {
-//			currentGameBoard = possibleGameBoardQueue.poll();
-//			currentLevel = possibleGameBoardDepthQueue.poll();
-//			if(currentLevel == PLY_LEVEL) {
-//				break;
-//			}
-//			if (currentLevel%2 == 0) {
-//				allPossibleMoves = getAllPossibleMoves(currentGameBoard, mainPlayer);
-//				for (GameBoard b: allPossibleMoves) {
-//					b.setPrevGameBoard(currentGameBoard);
-//					possibleGameBoardQueue.add(b);
-//					possibleGameBoardDepthQueue.add(currentLevel+1);
-//				}
-//			} else {
-//				currentPlayer = mainPlayer;
-//				tempGameBoard = currentGameBoard;
-//				for (int i = 0; i < numPlayers-1; i += 1) {
-//					currentPlayer = (currentPlayer+1) % numPlayers;
-//					tempGameBoard = playBestPossibleMove(tempGameBoard, currentPlayer);
-//				}
-//				possibleGameBoardQueue.add(tempGameBoard);
-//				possibleGameBoardDepthQueue.add(currentLevel+1);
-//				tempGameBoard.setPrevGameBoard(currentGameBoard);
-//			}
-//		}
-//	}
-	
 	//AI solver - Returns the best move
 	public GameBoard getBestGameBoard() {
+		BoardNode tempBoardNode, lastPlyBestBoardNode, solutionBoardNode;
+		double lastPlyMaxScore = -99999999;
 		LinkedList<BoardNode> possibleBoardNodeQueue = new LinkedList<BoardNode>();
 		GameBoard tempGameBoard;
 		possibleBoardNodeQueue.add(initialBoardNode);
 		BoardNode currentBoardNode = possibleBoardNodeQueue.peek();
 		while (true) {
 			currentBoardNode = possibleBoardNodeQueue.poll();
-			int currentLevel = currentBoardNode.level;
+			int currentLevel = currentBoardNode.getLevel();
 			if(currentLevel == MAX_PLY_LEVEL) {
 				break;
 			}
 			if (currentLevel%2 == 0) {
-//				Array<GameBoard> allPossibleMoves = getAllPossibleMoves(currentBoardNode.board, mainPlayer);
 				for (GameBoard b: getAllPossibleMoves(currentBoardNode.board, mainPlayer)) {
-					int nextPlayer = (currentBoardNode.player + 1) % numPlayers;
-					possibleBoardNodeQueue.add(new BoardNode(b, currentLevel+1, nextPlayer, currentBoardNode));
+					double temp = currentBoardNode.getPropogatedScore();
+					tempBoardNode = new BoardNode(b, currentLevel+1, mainPlayer, currentBoardNode);
+					tempBoardNode.setScore();
+					tempBoardNode.setSelfPropogatingScore(temp);
+					possibleBoardNodeQueue.add(tempBoardNode);
 				}
 			} else {
-				tempGameBoard = currentBoardNode.board;
+				tempBoardNode = currentBoardNode;
 				int currentPlayer = currentBoardNode.player;
 				for (int i = 0; i < numPlayers-1; i += 1) {
 					currentPlayer = (currentPlayer+1) % numPlayers;
-					tempGameBoard = getBestPossibleMove(tempGameBoard, currentPlayer);
+					double temp = tempBoardNode.getPropogatedScore();
+					tempBoardNode = getBestPossibleMove(tempBoardNode, currentPlayer);
+					tempBoardNode.setScore();
+					tempBoardNode.setOpponentPropogatingScore(temp);
 				}
 				int nextPlayer = currentPlayer;
 				possibleBoardNodeQueue.add(new BoardNode(tempGameBoard, currentLevel+1, nextPlayer, currentBoardNode));
+				if((currentLevel == MAX_PLY_LEVEL - 1) && (tempBoardNode.getPropogatedScore()<lastPlyMaxScore)) {
+					lastPlyBestBoardNode = tempBoardNode;
+				}
 			}
 		}
+		solutionBoardNode = getPredecessorNode(lastPlyBestBoardNode);
+		return solutionBoardNode.board;
 	}
 	
 	//Returns a list of all possible board positions from a given board for the given player
@@ -141,8 +149,9 @@ public class GameSolver {
 		return possibleMoves;
 	}
 	
+	// Returns the BoardNode which has the best possible move
+	// played by the player passed as parameter.
 	private GameBoard getBestPossibleMove(GameBoard oldGameBoard, int player) {
-		// Udit complete this.
 		GameBoard solutionGameBoard = oldGameBoard;
 		double maxScore = 0, currentScore = 0;
 		for (GameBoard board: getAllPossibleMoves(oldGameBoard, player)) {
@@ -153,5 +162,17 @@ public class GameSolver {
 			}
 		}
 		return solutionGameBoard;
+	}
+	
+	// Returns the BoardNode which was the starting point for this
+	// branch of search.
+	private BoardNode getPredecessorNode (BoardNode board) {
+		BoardNode tempBoardNode;
+		tempBoardNode = board.previous;
+		while(tempBoardNode != initialBoardNode) {
+			board = tempBoardNode;
+			tempBoardNode = tempBoardNode.previous;
+		}
+		return board;
 	}
 }
