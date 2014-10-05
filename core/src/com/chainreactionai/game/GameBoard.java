@@ -193,4 +193,23 @@ public class GameBoard {
 		return gameGridSize;
 	}
 	
+	public void printBoard() {
+		System.out.println("Rectangle Winners:");
+		for (int i = 0; i < gameGridSize; i += 1) {
+			for (int j = 0; j < gameGridSize; j += 1) {
+				System.out.print(rectangleWinner[i][j]);
+				System.out.print(" ");
+			}
+			System.out.println();
+		}
+		System.out.println("Num Atoms:");
+		for (int i = 0; i < gameGridSize; i += 1) {
+			for (int j = 0; j < gameGridSize; j += 1) {
+				System.out.print(numAtomsInRectangle[i][j]);
+				System.out.print(" ");
+			}
+			System.out.println();
+		}
+	}
+	
 }
