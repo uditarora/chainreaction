@@ -70,6 +70,7 @@ public class BoardNode implements Comparable<BoardNode> {
 		return totalScore;
 	}
 	
+	// Prints the GameBoard's state for Debugging purposes.
 	public void printBoard () {
 		board.printBoard();
 	}
