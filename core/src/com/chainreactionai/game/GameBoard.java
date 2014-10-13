@@ -14,6 +14,7 @@ public class GameBoard {
 	private int[][] numAtomsInRectangle;
 	private int gameGridSize, numPlayers;
 	
+	// Class for position which stores the coordinates for the click.
 	private class Position {
 		private int coordX;
 		private int coordY;
@@ -40,9 +41,7 @@ public class GameBoard {
 		this.gameGridSize = board.gameGridSize;
 		this.numPlayers = board.numPlayers;
 		this.numAtomsInRectangle = new int[this.gameGridSize][this.gameGridSize];
-//		this.numAtomsInRectangle = board.numAtomsInRectangle.clone();
 		this.rectangleWinner = new int[this.gameGridSize][this.gameGridSize];
-//		this.rectangleWinner = board.rectangleWinner.clone();
 		
 		for (int i = 0; i < this.gameGridSize; ++i) {
 			for (int j = 0; j < this.gameGridSize; ++j) {
@@ -198,10 +197,12 @@ public class GameBoard {
 		return totalScore;
 	}
 	
+	// Getter function for returning the Game Grid Dimensions
 	public int getGameGridSize() {
 		return gameGridSize;
 	}
 	
+	// Prints the GameBoard's state for Debugging purposes.
 	public void printBoard() {
 		System.out.println("Rectangle Winners:");
 		for (int i = 0; i < gameGridSize; i += 1) {

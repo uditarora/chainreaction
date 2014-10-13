@@ -16,8 +16,10 @@ import java.util.Stack;
 public class GameSolver {
 	private BoardNode initialBoardNode;
 	private int mainPlayer, numPlayers;
-	final private int MAX_PLY_LEVEL = 2;
+	final private int MAX_PLY_LEVEL = 4;
 	
+	// Constructor to initialize the GameSolver with a BoardNode
+	// which has the current state as the state passed.
 	public GameSolver (GameBoard gameBoard, int player, int numberPlayers) {
 		initialBoardNode = new BoardNode(gameBoard, 0, player, null);
 		initialBoardNode.setScore();
@@ -26,7 +28,8 @@ public class GameSolver {
 		numPlayers = numberPlayers;
 	}
 	
-	//AI solver - Returns the best move
+	// AI solver - Returns the best move for the given player using minimax
+	// algorithm.
 	public GameBoard getBestGameBoard() {
 		BoardNode tempBoardNode, solutionBoardNode;
 		ArrayList<BoardNode> bestBoardNodesArr = new ArrayList<BoardNode>();
@@ -40,10 +43,13 @@ public class GameSolver {
 			currentBoardNode = possibleBoardNodeQueue.poll();
 			int currentLevel = currentBoardNode.getLevel();
 			System.out.println("Current Level is " + currentLevel);
+			// Checking if MAX_PLY_LEVEL has been reached
 			if(currentLevel == MAX_PLY_LEVEL) {
 				break;
 			}
 			if (currentLevel%2 == 0) {
+				// This is where the user is playing his move 
+				// ie. the max part of minimax
 				for (GameBoard b: getAllPossibleMoves(currentBoardNode.board, mainPlayer)) {
 					double temp = currentBoardNode.getPropogatedScore();
 					tempBoardNode = new BoardNode(b, currentLevel+1, mainPlayer, currentBoardNode);
@@ -52,15 +58,17 @@ public class GameSolver {
 					possibleBoardNodeQueue.add(tempBoardNode);
 				}
 			} else {
+				// This is where the opponents will be made to 
+				// play their best moves.
 				tempBoardNode = currentBoardNode;
-//				currentBoardNode.printBoard();
 				int currentPlayer = currentBoardNode.player;
 				for (int i = 0; i < numPlayers-1; i += 1) {
+					// Giving the opportunity to all the players to give
+					// their best move.
 					currentPlayer = (currentPlayer+1) % numPlayers;
 					System.out.println("Current Player is: " + currentPlayer);
 					double temp = tempBoardNode.getPropogatedScore();
 					tempBoardNode = getBestPossibleMove(tempBoardNode, currentPlayer);
-//					tempBoardNode.printBoard();
 					tempBoardNode.setScore();
 					tempBoardNode.setOpponentPropogatingScore(temp);
 				}
@@ -75,6 +83,7 @@ public class GameSolver {
 				}
 			}
 		}
+		//
 		numberOfBestBoardNodes = bestBoardNodesArr.size();
 		chosenBestBoardNodeIndex = rand.nextInt(numberOfBestBoardNodes);
 		solutionBoardNode = getPredecessorNode(bestBoardNodesArr.get(chosenBestBoardNodeIndex));

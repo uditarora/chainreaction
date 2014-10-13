@@ -54,7 +54,7 @@ public class ChainReactionAIGame implements ApplicationListener {
 		Gdx.input.setInputProcessor(inputProcessor);
 		inputProcessor.unsetTouchDown();
 		numberOfMovesPlayed = currentPlayer = 0;
-
+		
 		// Load default values into arrays
 		loadImagesintoArrays();
 		setDimsForRectangles();
@@ -98,19 +98,14 @@ public class ChainReactionAIGame implements ApplicationListener {
 	public void render() {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		// tell the camera to update its matrices.
-		camera.update();
-
-		// tell the SpriteBatch to render in the
-		// coordinate system specified by the camera.
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		drawGameBoard();
-		batch.end();
 		
 		//Check if current player is CPU and play its move
 		if (isCPU[currentPlayer] && !gameOver) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			System.out.println("Reached CPU");
 			GameSolver solver = new GameSolver(gameBoard, currentPlayer, NUMBER_OF_PLAYERS);
 			System.out.println("GameSolver initialized");
@@ -127,6 +122,8 @@ public class ChainReactionAIGame implements ApplicationListener {
 		// process user input
 		if (inputProcessor.isTouchedDown() && !gameOver) {
 			inputProcessor.unsetTouchDown();
+			// Checking whether the click is on an edge or a box.
+			// If on edge, then reject the click.
 			clickOnEdge = false;
 			clickCoordX = (int) (inputProcessor.getXCoord() / WIDTH_RECTANGLE);
 			if (inputProcessor.getXCoord() % WIDTH_RECTANGLE == 0.0) {
@@ -152,11 +149,22 @@ public class ChainReactionAIGame implements ApplicationListener {
 						gameOver = true;
 						System.out.println("Player " + currentPlayer + " has won the game!");
 					}
-//					gameBoard.printBoard();
 					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 				}
 			}
 		}
+		
+		// Rendering here to have board updated 
+		// after every player's move.
+		// Tell the camera to update its matrices.
+		camera.update();
+
+		// Tell the SpriteBatch to render in the
+		// coordinate system specified by the camera.
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
+		drawGameBoard();
+		batch.end();
 	}
 
 	// Function to draw the game board using the three
