@@ -23,7 +23,7 @@ public class GameSolver {
 	public GameSolver (GameBoard gameBoard, int player, int numberPlayers) {
 		initialBoardNode = new BoardNode(gameBoard, 0, player, null);
 		initialBoardNode.setScore();
-		initialBoardNode.setSelfPropogatingScore(0);
+		initialBoardNode.setSelfPropagatingScore(0);
 		mainPlayer = player;
 		numPlayers = numberPlayers;
 	}
@@ -49,12 +49,12 @@ public class GameSolver {
 			}
 			if (currentLevel%2 == 0) {
 				// This is where the user is playing his move 
-				// ie. the max part of minimax
+				// ie. the max part of minimax algorithm
 				for (GameBoard b: getAllPossibleMoves(currentBoardNode.board, mainPlayer)) {
-					double temp = currentBoardNode.getPropogatedScore();
+					double temp = currentBoardNode.getPropagatedScore();
 					tempBoardNode = new BoardNode(b, currentLevel+1, mainPlayer, currentBoardNode);
 					tempBoardNode.setScore();
-					tempBoardNode.setSelfPropogatingScore(temp);
+					tempBoardNode.setSelfPropagatingScore(temp);
 					possibleBoardNodeQueue.add(tempBoardNode);
 				}
 			} else {
@@ -67,18 +67,18 @@ public class GameSolver {
 					// their best move.
 					currentPlayer = (currentPlayer+1) % numPlayers;
 					System.out.println("Current Player is: " + currentPlayer);
-					double temp = tempBoardNode.getPropogatedScore();
+					double temp = tempBoardNode.getPropagatedScore();
 					tempBoardNode = getBestPossibleMove(tempBoardNode, currentPlayer);
 					tempBoardNode.setScore();
-					tempBoardNode.setOpponentPropogatingScore(temp);
+					tempBoardNode.setOpponentPropagatingScore(temp);
 				}
 				int nextPlayer = currentPlayer;
 				possibleBoardNodeQueue.add(new BoardNode(tempBoardNode.board, currentLevel+1, nextPlayer, currentBoardNode));
-				if ((currentLevel == MAX_PLY_LEVEL - 1) && (tempBoardNode.getPropogatedScore() > lastPlyMaxScore)) {
+				if ((currentLevel == MAX_PLY_LEVEL - 1) && (tempBoardNode.getPropagatedScore() > lastPlyMaxScore)) {
 					bestBoardNodesArr.clear();
 					bestBoardNodesArr.add(tempBoardNode);
-					lastPlyMaxScore = tempBoardNode.getPropogatedScore();
-				} else if ((currentLevel == MAX_PLY_LEVEL - 1) && (tempBoardNode.getPropogatedScore() == lastPlyMaxScore)) {
+					lastPlyMaxScore = tempBoardNode.getPropagatedScore();
+				} else if ((currentLevel == MAX_PLY_LEVEL - 1) && (tempBoardNode.getPropagatedScore() == lastPlyMaxScore)) {
 					bestBoardNodesArr.add(tempBoardNode);
 				}
 			}
