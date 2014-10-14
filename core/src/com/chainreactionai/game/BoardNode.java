@@ -53,20 +53,20 @@ public class BoardNode implements Comparable<BoardNode> {
 
 	// This is for the moves made by the player who is playing
 	// the game ie. adding the score of the node and the score
-	// propogating from above.
-	public void setSelfPropogatingScore(double prevScore) {
+	// propagating from above.
+	public void setSelfPropagatingScore(double prevScore) {
 		totalScore = prevScore + score;
 	}
 
 	// This is for the moves made by the opponents who are playing
 	// the game ie. subtracting the score of the node and the score
-	// propogating from above.
-	public void setOpponentPropogatingScore(double prevScore) {
+	// propagating from above.
+	public void setOpponentPropagatingScore(double prevScore) {
 		totalScore = prevScore - score;
 	}
 
-	// Returns the propogated score.
-	public double getPropogatedScore() {
+	// Returns the propagated score.
+	public double getPropagatedScore() {
 		return totalScore;
 	}
 	
