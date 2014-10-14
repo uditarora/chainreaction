@@ -37,13 +37,11 @@ public class MainGameScreen implements Screen {
 	private int clickCoordX, clickCoordY, currentPlayer, numberOfMovesPlayed;
 	private boolean clickOnEdge;
 	MyInputProcessor inputProcessor = new MyInputProcessor();
-	private ChainReactionAIGame game;
 	private boolean isCPU[] = new boolean[NUMBER_OF_PLAYERS];
 	private boolean gameOver;
 	
-	public MainGameScreen(ChainReactionAIGame game)
+	public MainGameScreen()
 	{
-		this.game = game;
 		create();
 	}
 	
