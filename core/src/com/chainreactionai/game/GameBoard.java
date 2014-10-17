@@ -102,7 +102,8 @@ public class GameBoard {
 		LinkedList<Position> positionsQueue = new LinkedList<Position>();
 		positionsQueue.add(initialPosition);
 		Position currentPosition;
-		while (positionsQueue.peek() != null) {
+		boolean gameOver = false;
+		while (positionsQueue.peek() != null && !gameOver) {
 			currentPosition = positionsQueue.poll();
 			rectangleWinner[currentPosition.coordX][currentPosition.coordY] = player;
 			numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] += 1;
@@ -163,6 +164,7 @@ public class GameBoard {
 					positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
 				}
 			}
+			gameOver = isWinningPosition(player);
 		}
 	}
 
