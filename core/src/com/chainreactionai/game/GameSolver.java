@@ -17,6 +17,7 @@ public class GameSolver {
 	private BoardNode initialBoardNode;
 	private int mainPlayer, numPlayers;
 	final private int MAX_PLY_LEVEL = 4;
+	final private boolean DEBUG = true;
 	
 	// Constructor to initialize the GameSolver with a BoardNode
 	// which has the current state as the state passed.
@@ -42,7 +43,8 @@ public class GameSolver {
 		while (true) {
 			currentBoardNode = possibleBoardNodeQueue.poll();
 			int currentLevel = currentBoardNode.getLevel();
-			System.out.println("Current Level is " + currentLevel);
+			if (DEBUG)
+				System.out.println("Current Level is " + currentLevel);
 			// Checking if MAX_PLY_LEVEL has been reached
 			if(currentLevel == MAX_PLY_LEVEL) {
 				break;
@@ -66,7 +68,8 @@ public class GameSolver {
 					// Giving the opportunity to all the players to give
 					// their best move.
 					currentPlayer = (currentPlayer+1) % numPlayers;
-					System.out.println("Current Player is: " + currentPlayer);
+					if (DEBUG)
+						System.out.println("Current Player is: " + currentPlayer);
 					double temp = tempBoardNode.getPropagatedScore();
 					tempBoardNode = getBestPossibleMove(tempBoardNode, currentPlayer);
 					tempBoardNode.setScore();
