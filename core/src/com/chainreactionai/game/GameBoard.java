@@ -167,7 +167,7 @@ public class GameBoard {
 	}
 
 	// This function returns whether the given board is a
-	// winning board for the gien player.
+	// winning board for the given player.
 	public boolean isWinningPosition(int player) {
 		for (int i = 0; i < gameGridSize; i += 1) {
 			for (int j = 0; j < gameGridSize; j += 1) {
