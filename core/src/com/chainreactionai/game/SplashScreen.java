@@ -52,7 +52,7 @@ public class SplashScreen implements Screen {
 		batch.end();
 
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-			myGame.setScreen(new MainGameScreen());
+			myGame.setScreen(new MainMenuScreen(myGame));
 		}
 	}
 
