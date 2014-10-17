@@ -4,18 +4,18 @@
 package com.chainreactionai.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
  * @author Parnami
@@ -25,7 +25,6 @@ public class MainMenuScreen implements Screen {
 	SpriteBatch batch;
 	private OrthographicCamera camera;
 	private ChainReactionAIGame myGame;
-	private Texture splashScreenBackground;
 	final private int WIDTH_SCREEN = 440;
 	final private int HEIGHT_SCREEN = 480;
 	private Stage stage = new Stage();
@@ -55,6 +54,23 @@ public class MainMenuScreen implements Screen {
 
         table.setFillParent(true);
         stage.addActor(table);
+        buttonPlay.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //Same way we moved here from the Splash Screen
+                //We set it to new Splash because we got no other screens
+                //otherwise you put the screen there where you want to go
+                myGame.setScreen(new MainGameScreen());
+            }
+        });
+        buttonExit.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+                // or System.exit(0);
+            }
+        });
+        Gdx.input.setInputProcessor(stage);
     }
     
     @Override
@@ -63,9 +79,6 @@ public class MainMenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-			myGame.setScreen(new MainGameScreen());
-		}
     }
 
     @Override
