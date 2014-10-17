@@ -39,6 +39,7 @@ public class MainGameScreen implements Screen {
 	MyInputProcessor inputProcessor = new MyInputProcessor();
 	private boolean isCPU[] = new boolean[NUMBER_OF_PLAYERS];
 	private boolean gameOver;
+	final private boolean DEBUG = true;
 	
 	public MainGameScreen()
 	{
@@ -66,6 +67,7 @@ public class MainGameScreen implements Screen {
 		loadImagesintoArrays();
 		setDimsForRectangles();
 		isCPU[NUMBER_OF_PLAYERS - 1] = true;
+//		isCPU[0] = true;
 		gameOver = false;
 	}
 
@@ -109,13 +111,15 @@ public class MainGameScreen implements Screen {
 		//Check if current player is CPU and play its move
 		if (isCPU[currentPlayer] && !gameOver) {
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(200);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			System.out.println("Reached CPU");
+			if (DEBUG)
+				System.out.println("Reached CPU");
 			GameSolver solver = new GameSolver(gameBoard, currentPlayer, NUMBER_OF_PLAYERS);
-			System.out.println("GameSolver initialized");
+			if (DEBUG)
+				System.out.println("GameSolver initialized");
 			GameBoard solvedBoard = solver.getBestGameBoard();
 			gameBoard = solvedBoard;
 			if (gameBoard.isWinningPosition(currentPlayer)
