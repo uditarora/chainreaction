@@ -102,7 +102,8 @@ public class GameBoard {
 		LinkedList<Position> positionsQueue = new LinkedList<Position>();
 		positionsQueue.add(initialPosition);
 		Position currentPosition;
-		while (positionsQueue.peek() != null && !isWinningPosition(player)) {
+		boolean gameOver = false;
+		while (positionsQueue.peek() != null && !gameOver) {
 			currentPosition = positionsQueue.poll();
 			rectangleWinner[currentPosition.coordX][currentPosition.coordY] = player;
 			numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] += 1;
@@ -163,11 +164,12 @@ public class GameBoard {
 					positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
 				}
 			}
+			gameOver = isWinningPosition(player);
 		}
 	}
 
 	// This function returns whether the given board is a
-	// winning board for the gien player.
+	// winning board for the given player.
 	public boolean isWinningPosition(int player) {
 		for (int i = 0; i < gameGridSize; i += 1) {
 			for (int j = 0; j < gameGridSize; j += 1) {
