@@ -36,7 +36,7 @@ public class NumOpponentScreen implements Screen {
     private ArrayList<Boolean> tempCPU = new ArrayList<Boolean>();
     private Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"), new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
     private TextButton[] buttons;
-    private Label title = new Label("Game Title",skin);
+    private Label title = new Label("Chain Reaction AI",skin);
 
     public NumOpponentScreen(ChainReactionAIGame game, int maxNumOpponents, boolean[] CPU) {
 		myGame = game;

@@ -31,7 +31,7 @@ public class MainMenuScreen implements Screen {
     private Table table = new Table();
     private Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"), new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
     private TextButton buttonSinglePlayer = new TextButton("Single Player", skin), buttonExit = new TextButton("Exit", skin);
-    private Label title = new Label("Game Title",skin);
+    private Label title = new Label("Chain Reaction AI",skin);
 
     public MainMenuScreen(ChainReactionAIGame game) {
 		myGame = game;
@@ -56,8 +56,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 //Same way we moved here from the Splash Screen
-                //We set it to new Splash because we got no other screens
-                //otherwise you put the screen there where you want to go
+                //We set it to the NumOpponenetScreen
             	boolean[] CPU = new boolean[1];
             	CPU[0] = false;
                 myGame.setScreen(new NumOpponentScreen(myGame, 5, CPU));

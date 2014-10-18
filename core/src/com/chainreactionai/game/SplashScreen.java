@@ -51,6 +51,7 @@ public class SplashScreen implements Screen {
 		batch.draw(splashScreenBackground, 0, 0);
 		batch.end();
 
+		// When user clicks on the screen, go to the main menu screen
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 			myGame.setScreen(new MainMenuScreen(myGame));
 		}
