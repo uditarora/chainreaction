@@ -18,7 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
- * @author Parnami
+ * @author Kartik Parnami
  * 
  */
 public class MainMenuScreen implements Screen {
@@ -28,81 +28,97 @@ public class MainMenuScreen implements Screen {
 	final private int WIDTH_SCREEN = 440;
 	final private int HEIGHT_SCREEN = 480;
 	private Stage stage = new Stage();
-    private Table table = new Table();
-    private Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"), new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
-    private TextButton buttonSinglePlayer = new TextButton("Single Player", skin), buttonExit = new TextButton("Exit", skin);
-    private Label title = new Label("Chain Reaction AI",skin);
+	private Table table = new Table();
+	private Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"),
+			new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
+	private TextButton buttonSinglePlayer = new TextButton("Single Player",
+			skin), buttonMultiPlayer = new TextButton("Multi Player", skin),
+			buttonExit = new TextButton("Exit", skin);
+	private Label title = new Label("Chain Reaction", skin);
 
-    public MainMenuScreen(ChainReactionAIGame game) {
+	public MainMenuScreen(ChainReactionAIGame game) {
 		myGame = game;
 		create();
 	}
-    
-    private void create() {
-    	batch = new SpriteBatch();
+
+	private void create() {
+		batch = new SpriteBatch();
 		// Show the world to be 440*480 no matter the
 		// size of the screen
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
-    	//The elements are displayed in the order you add them.
-        //The first appear on top, the last at the bottom.
-        table.add(title).padBottom(40).row();
-        table.add(buttonSinglePlayer).size(150,60).padBottom(20).row();
-        table.add(buttonExit).size(150,60).padBottom(20).row();
+		// The elements are displayed in the order you add them.
+		// The first appear on top, the last at the bottom.
+		table.add(title).padBottom(40).row();
+		table.add(buttonSinglePlayer).size(150, 60).padBottom(20).row();
+		table.add(buttonMultiPlayer).size(150, 60).padBottom(20).row();
+		table.add(buttonExit).size(150, 60).padBottom(20).row();
 
-        table.setFillParent(true);
-        stage.addActor(table);
-        buttonSinglePlayer.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                //Same way we moved here from the Splash Screen
-                //We set it to the NumOpponenetScreen
-            	boolean[] CPU = new boolean[1];
-            	CPU[0] = false;
-                myGame.setScreen(new NumOpponentScreen(myGame, 5, CPU));
-            }
-        });
-        buttonExit.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
-            }
-        });
-        Gdx.input.setInputProcessor(stage);
-    }
-    
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act();
-        stage.draw();
-    }
+		table.setFillParent(true);
+		stage.addActor(table);
+		buttonSinglePlayer.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				// Same way we moved here from the Splash Screen
+				// We set it to new Splash because we got no other screens
+				// otherwise you put the screen there where you want to go
+				boolean[] CPU = new boolean[1];
+				CPU[0] = false;
+				myGame.setScreen(new NumOpponentScreen(myGame, 5, CPU));
+			}
+		});
+		buttonMultiPlayer.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				// Same way we moved here from the Splash Screen
+				// We set it to new Splash because we got no other screens
+				// otherwise you put the screen there where you want to go
+				boolean[] CPU = new boolean[1];
+				CPU[0] = false;
+				myGame.setScreen(new NumHumanPlayersScreen(myGame, 6));
+			}
+		});
+		buttonExit.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				Gdx.app.exit();
+			}
+		});
+		Gdx.input.setInputProcessor(stage);
+	}
 
-    @Override
-    public void resize(int width, int height) {
-    }
+	@Override
+	public void render(float delta) {
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		stage.act();
+		stage.draw();
+	}
 
-    @Override
-    public void show() {
-    }
+	@Override
+	public void resize(int width, int height) {
+	}
 
-    @Override
-    public void hide() {
-        dispose();
-    }
+	@Override
+	public void show() {
+	}
 
-    @Override
-    public void pause() {
-    }
+	@Override
+	public void hide() {
+		dispose();
+	}
 
-    @Override
-    public void resume() {
-    }
+	@Override
+	public void pause() {
+	}
 
-    @Override
-    public void dispose() {
-        stage.dispose();
-        skin.dispose();
-    }
+	@Override
+	public void resume() {
+	}
+
+	@Override
+	public void dispose() {
+		stage.dispose();
+		skin.dispose();
+	}
 }
