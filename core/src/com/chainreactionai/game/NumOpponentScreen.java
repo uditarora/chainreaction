@@ -32,7 +32,6 @@ public class NumOpponentScreen implements Screen {
 	private Stage stage = new Stage();
     private Table table = new Table();
     private int maxNumberOfOpponents;
-    private int numOfHumans;
     private ArrayList<Boolean> isCPU = new ArrayList<Boolean>();
     private ArrayList<Boolean> tempCPU = new ArrayList<Boolean>();
     private Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"), new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
@@ -42,7 +41,6 @@ public class NumOpponentScreen implements Screen {
     public NumOpponentScreen(ChainReactionAIGame game, int maxNumOpponents, boolean[] CPU) {
 		myGame = game;
 		maxNumberOfOpponents = maxNumOpponents;
-		numOfHumans = CPU.length;
 		for (int i = 0; i < CPU.length; i += 1) {
 			isCPU.add(CPU[i]);
 		}
@@ -50,7 +48,6 @@ public class NumOpponentScreen implements Screen {
 	}
     
     private void create() {
-    	NumOpponentScreen that = this;
     	batch = new SpriteBatch();
 		// Show the world to be 440*480 no matter the
 		// size of the screen
@@ -66,31 +63,102 @@ public class NumOpponentScreen implements Screen {
         }
         table.setFillParent(true);
         stage.addActor(table);
-        for (int i = 0; i < maxNumberOfOpponents; i += 1) {
-        	buttons[i].addListener(new ClickListener(){
+        if(maxNumberOfOpponents>=1) {
+	        buttons[0].addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	                //Same way we moved here from the Splash Screen
 	                //We set it to new Splash because we got no other screens
 	                //otherwise you put the screen there where you want to go
-	            	// TODO: Add new players to isCPU list.
-	            	that.changeToGameScreen(i+1);
+	            	int j;
+	            	tempCPU.clear();
+	            	for (j = 0; j < isCPU.size(); j += 1) {
+	            		tempCPU.add(isCPU.get(j));
+	            	}
+	            	for (j = 1; j <= 1; j += 1) {
+	            		tempCPU.add(true);
+	            	}
+	            	myGame.setScreen(new MainGameScreen(tempCPU));
 	            }
-	        });
+		    });
+        }
+        if(maxNumberOfOpponents>=2) {
+	        buttons[1].addListener(new ClickListener(){
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	                //Same way we moved here from the Splash Screen
+	                //We set it to new Splash because we got no other screens
+	                //otherwise you put the screen there where you want to go
+	            	int j;
+	            	tempCPU.clear();
+	            	for (j = 0; j < isCPU.size(); j += 1) {
+	            		tempCPU.add(isCPU.get(j));
+	            	}
+	            	for (j = 1; j <= 2; j += 1) {
+	            		tempCPU.add(true);
+	            	}
+	            	myGame.setScreen(new MainGameScreen(tempCPU));
+	            }
+		    });
+        }
+        if(maxNumberOfOpponents>=3) {
+	        buttons[2].addListener(new ClickListener(){
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	                //Same way we moved here from the Splash Screen
+	                //We set it to new Splash because we got no other screens
+	                //otherwise you put the screen there where you want to go
+	            	int j;
+	            	tempCPU.clear();
+	            	for (j = 0; j < isCPU.size(); j += 1) {
+	            		tempCPU.add(isCPU.get(j));
+	            	}
+	            	for (j = 1; j <= 3; j += 1) {
+	            		tempCPU.add(true);
+	            	}
+	            	myGame.setScreen(new MainGameScreen(tempCPU));
+	            }
+		    });
+        }
+        if(maxNumberOfOpponents>=4) {
+	        buttons[3].addListener(new ClickListener(){
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	                //Same way we moved here from the Splash Screen
+	                //We set it to new Splash because we got no other screens
+	                //otherwise you put the screen there where you want to go
+	            	int j;
+	            	tempCPU.clear();
+	            	for (j = 0; j < isCPU.size(); j += 1) {
+	            		tempCPU.add(isCPU.get(j));
+	            	}
+	            	for (j = 1; j <= 4; j += 1) {
+	            		tempCPU.add(true);
+	            	}
+	            	myGame.setScreen(new MainGameScreen(tempCPU));
+	            }
+		    });
+        }
+        if(maxNumberOfOpponents>=5) {
+	        buttons[4].addListener(new ClickListener(){
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	                //Same way we moved here from the Splash Screen
+	                //We set it to new Splash because we got no other screens
+	                //otherwise you put the screen there where you want to go
+	            	int j;
+	            	tempCPU.clear();
+	            	for (j = 0; j < isCPU.size(); j += 1) {
+	            		tempCPU.add(isCPU.get(j));
+	            	}
+	            	for (j = 1; j <= 5; j += 1) {
+	            		tempCPU.add(true);
+	            	}
+	            	myGame.setScreen(new MainGameScreen(tempCPU));
+	            }
+		    });
         }
         Gdx.input.setInputProcessor(stage);
-    }
-    
-    public void changeToGameScreen(int numCPUOpponents) {
-    	int j;
-    	tempCPU.clear();
-    	for (j = 0; j < isCPU.size(); j += 1) {
-    		tempCPU.add(isCPU.get(j));
-    	}
-    	for (j = 1; j <= numCPUOpponents; j += 1) {
-    		tempCPU.add(true);
-    	}
-    	myGame.setScreen(new MainGameScreen(tempCPU));
     }
     
     @Override
