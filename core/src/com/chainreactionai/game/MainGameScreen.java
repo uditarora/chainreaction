@@ -3,6 +3,7 @@
  */
 package com.chainreactionai.game;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
@@ -22,7 +23,6 @@ import com.badlogic.gdx.utils.Array;
 public class MainGameScreen implements Screen {
 	SpriteBatch batch;
 	final private int GRID_SIZE = 8;
-	final private int NUMBER_OF_PLAYERS = 2;
 	final private int NUM_STATES_POSSIBLE = 4;
 	final private int WIDTH_RECTANGLE = 55;
 	final private int HEIGHT_RECTANGLE = 55;
@@ -31,18 +31,26 @@ public class MainGameScreen implements Screen {
 	// private Stage stage;
 	// private Skin skin;
 	private OrthographicCamera camera;
-	private Texture[][] atomImages = new Texture[NUM_STATES_POSSIBLE][NUMBER_OF_PLAYERS];
+	private int NUMBER_OF_PLAYERS;
+	private Texture[][] atomImages = new Texture[NUM_STATES_POSSIBLE][8];
 	private Array<Rectangle> rectangularGrid;
 	private GameBoard gameBoard;
 	private int clickCoordX, clickCoordY, currentPlayer, numberOfMovesPlayed;
 	private boolean clickOnEdge;
 	MyInputProcessor inputProcessor = new MyInputProcessor();
-	private boolean isCPU[] = new boolean[NUMBER_OF_PLAYERS];
+	private boolean[] isCPU;
 	private boolean gameOver;
 	final private boolean DEBUG = true;
 	
-	public MainGameScreen()
+	public MainGameScreen(ArrayList<Boolean> CPU)
 	{
+		NUMBER_OF_PLAYERS = CPU.size();
+		isCPU = new boolean[NUMBER_OF_PLAYERS];
+		System.out.println(CPU.size());
+		for (int i = 0; i < CPU.size(); i += 1) {
+			System.out.println("isCPU["+i+"] = "+CPU.get(i));
+			isCPU[i] = CPU.get(i);
+		}
 		create();
 	}
 	
@@ -67,7 +75,6 @@ public class MainGameScreen implements Screen {
 		loadImagesintoArrays();
 		setDimsForRectangles();
 		isCPU[NUMBER_OF_PLAYERS - 1] = true;
-//		isCPU[0] = true;
 		gameOver = false;
 	}
 
@@ -77,15 +84,31 @@ public class MainGameScreen implements Screen {
 		// Background image loaded into first column
 		atomImages[0][0] = new Texture("background.jpg");
 		atomImages[0][1] = new Texture("background.jpg");
+		atomImages[0][2] = new Texture("background.jpg");
+		atomImages[0][3] = new Texture("background.jpg");
+		atomImages[0][4] = new Texture("background.jpg");
+		atomImages[0][5] = new Texture("background.jpg");
 		// One Atom Images Batch
 		atomImages[1][0] = new Texture("oneAtomPlayerOne.jpg");
 		atomImages[1][1] = new Texture("oneAtomPlayerTwo.jpg");
+		atomImages[1][2] = new Texture("oneAtomPlayerThree.jpg");
+		atomImages[1][3] = new Texture("oneAtomPlayerFour.jpg");
+		atomImages[1][4] = new Texture("oneAtomPlayerFive.jpg");
+		atomImages[1][5] = new Texture("oneAtomPlayerSix.jpg");
 		// Two Atom Images Batch
 		atomImages[2][0] = new Texture("twoAtomPlayerOne.jpg");
 		atomImages[2][1] = new Texture("twoAtomPlayerTwo.jpg");
+		atomImages[2][2] = new Texture("twoAtomPlayerThree.jpg");
+		atomImages[2][3] = new Texture("twoAtomPlayerFour.jpg");
+		atomImages[2][4] = new Texture("twoAtomPlayerFive.jpg");
+		atomImages[2][5] = new Texture("twoAtomPlayerSix.jpg");
 		// Three Atom Images Batch
 		atomImages[3][0] = new Texture("threeAtomPlayerOne.jpg");
 		atomImages[3][1] = new Texture("threeAtomPlayerTwo.jpg");
+		atomImages[3][2] = new Texture("threeAtomPlayerThree.jpg");
+		atomImages[3][3] = new Texture("threeAtomPlayerFour.jpg");
+		atomImages[3][4] = new Texture("threeAtomPlayerFive.jpg");
+		atomImages[3][5] = new Texture("threeAtomPlayerSix.jpg");
 	}
 
 	// This function loads the dimensions for all the

@@ -2,9 +2,6 @@ package com.chainreactionai.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-//import com.badlogic.gdx.scenes.scene2d.Stage;
-//import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-//import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class ChainReactionAIGame extends Game {
 	public static int WIDTH;
