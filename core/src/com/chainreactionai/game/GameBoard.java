@@ -13,12 +13,12 @@ public class GameBoard {
 	private int[][] rectangleWinner;
 	private int[][] numAtomsInRectangle;
 	private int gameGridSize, numPlayers;
-	
+
 	// Class for position which stores the coordinates for the click.
 	private class Position {
 		private int coordX;
 		private int coordY;
-		
+
 		private Position(int x, int y) {
 			this.coordX = x;
 			this.coordY = y;
@@ -37,12 +37,12 @@ public class GameBoard {
 		setDefaultNumAtomsInRectangle();
 	}
 
-	public GameBoard (GameBoard board) {
+	public GameBoard(GameBoard board) {
 		this.gameGridSize = board.gameGridSize;
 		this.numPlayers = board.numPlayers;
 		this.numAtomsInRectangle = new int[this.gameGridSize][this.gameGridSize];
 		this.rectangleWinner = new int[this.gameGridSize][this.gameGridSize];
-		
+
 		for (int i = 0; i < this.gameGridSize; ++i) {
 			for (int j = 0; j < this.gameGridSize; ++j) {
 				this.numAtomsInRectangle[i][j] = board.numAtomsInRectangle[i][j];
@@ -50,7 +50,7 @@ public class GameBoard {
 			}
 		}
 	}
-	
+
 	// This function sets the default winners of the
 	// rectangles ie. player -1 (no winner)
 	private void setDefaultRectangleWinners() {
@@ -107,7 +107,7 @@ public class GameBoard {
 			currentPosition = positionsQueue.poll();
 			rectangleWinner[currentPosition.coordX][currentPosition.coordY] = player;
 			numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] += 1;
-			
+
 			// If the clicked box is corner-most
 			if ((currentPosition.coordX == 0 && currentPosition.coordY == 0)
 					|| (currentPosition.coordX == 0 && currentPosition.coordY == gameGridSize - 1)
@@ -116,52 +116,91 @@ public class GameBoard {
 				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 2) {
 					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
 					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
-					if (currentPosition.coordX == 0 && currentPosition.coordY == 0) {
-						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
-					} else if (currentPosition.coordX == 0 && currentPosition.coordY == gameGridSize - 1) {
-						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
-					} else if (currentPosition.coordX == gameGridSize - 1 && currentPosition.coordY == 0) {
-						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
+					if (currentPosition.coordX == 0
+							&& currentPosition.coordY == 0) {
+						positionsQueue.add(new Position(
+								currentPosition.coordX + 1,
+								currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX,
+								currentPosition.coordY + 1));
+					} else if (currentPosition.coordX == 0
+							&& currentPosition.coordY == gameGridSize - 1) {
+						positionsQueue.add(new Position(
+								currentPosition.coordX + 1,
+								currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX,
+								currentPosition.coordY - 1));
+					} else if (currentPosition.coordX == gameGridSize - 1
+							&& currentPosition.coordY == 0) {
+						positionsQueue.add(new Position(
+								currentPosition.coordX - 1,
+								currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX,
+								currentPosition.coordY + 1));
 					} else {
-						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
+						positionsQueue.add(new Position(
+								currentPosition.coordX - 1,
+								currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX,
+								currentPosition.coordY - 1));
 					}
-	
+
 				}
-			} else if (currentPosition.coordX == 0 || currentPosition.coordY == 0 || currentPosition.coordX == gameGridSize - 1
+			} else if (currentPosition.coordX == 0
+					|| currentPosition.coordY == 0
+					|| currentPosition.coordX == gameGridSize - 1
 					|| currentPosition.coordY == gameGridSize - 1) {
 				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 3) {
 					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
 					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
 					if (currentPosition.coordX == 0) {
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
-						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX,
+								currentPosition.coordY + 1));
+						positionsQueue.add(new Position(currentPosition.coordX,
+								currentPosition.coordY - 1));
+						positionsQueue.add(new Position(
+								currentPosition.coordX + 1,
+								currentPosition.coordY));
 					} else if (currentPosition.coordY == 0) {
-						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
+						positionsQueue.add(new Position(
+								currentPosition.coordX - 1,
+								currentPosition.coordY));
+						positionsQueue.add(new Position(
+								currentPosition.coordX + 1,
+								currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX,
+								currentPosition.coordY + 1));
 					} else if (currentPosition.coordX == gameGridSize - 1) {
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
-						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX,
+								currentPosition.coordY + 1));
+						positionsQueue.add(new Position(currentPosition.coordX,
+								currentPosition.coordY - 1));
+						positionsQueue.add(new Position(
+								currentPosition.coordX - 1,
+								currentPosition.coordY));
 					} else {
-						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
+						positionsQueue.add(new Position(
+								currentPosition.coordX - 1,
+								currentPosition.coordY));
+						positionsQueue.add(new Position(
+								currentPosition.coordX + 1,
+								currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX,
+								currentPosition.coordY - 1));
 					}
 				}
 			} else {
 				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 4) {
 					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
 					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
-					positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
-					positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
-					positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
-					positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
+					positionsQueue.add(new Position(currentPosition.coordX - 1,
+							currentPosition.coordY));
+					positionsQueue.add(new Position(currentPosition.coordX + 1,
+							currentPosition.coordY));
+					positionsQueue.add(new Position(currentPosition.coordX,
+							currentPosition.coordY - 1));
+					positionsQueue.add(new Position(currentPosition.coordX,
+							currentPosition.coordY + 1));
 				}
 			}
 			gameOver = isWinningPosition(player);
@@ -181,7 +220,7 @@ public class GameBoard {
 		}
 		return true;
 	}
-	
+
 	// This function returns the score for a given player
 	// in the board's current state.
 	public double score(int player) {
@@ -195,15 +234,16 @@ public class GameBoard {
 				}
 			}
 		}
-		totalScore = (numBallsWeight*runningNumBallsTotal) + (numBoxesWeight*runningNumBoxesTotal);
+		totalScore = (numBallsWeight * runningNumBallsTotal)
+				+ (numBoxesWeight * runningNumBoxesTotal);
 		return totalScore;
 	}
-	
+
 	// Getter function for returning the Game Grid Dimensions
 	public int getGameGridSize() {
 		return gameGridSize;
 	}
-	
+
 	// Prints the GameBoard's state for Debugging purposes.
 	public void printBoard() {
 		System.out.println("Rectangle Winners:");
@@ -223,5 +263,5 @@ public class GameBoard {
 			System.out.println();
 		}
 	}
-	
+
 }
