@@ -11,6 +11,7 @@ public class ChainReactionAIGame extends Game {
 	public void create() {
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
+		//Start with the splash screen
 		setScreen(new SplashScreen(this));
 	}
 
