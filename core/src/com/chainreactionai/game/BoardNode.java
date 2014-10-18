@@ -69,9 +69,9 @@ public class BoardNode implements Comparable<BoardNode> {
 	public double getPropagatedScore() {
 		return totalScore;
 	}
-	
+
 	// Prints the GameBoard's state for Debugging purposes.
-	public void printBoard () {
+	public void printBoard() {
 		board.printBoard();
 	}
 }

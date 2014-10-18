@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.Array;
 
 /**
  * @author Kartik Parnami
- *
+ * 
  */
 
 public class MainGameScreen implements Screen {
@@ -28,8 +28,6 @@ public class MainGameScreen implements Screen {
 	final private int HEIGHT_RECTANGLE = 55;
 	final private int WIDTH_SCREEN = 440;
 	final private int HEIGHT_SCREEN = 480;
-	// private Stage stage;
-	// private Skin skin;
 	private OrthographicCamera camera;
 	private int NUMBER_OF_PLAYERS;
 	private Texture[][] atomImages = new Texture[NUM_STATES_POSSIBLE][8];
@@ -41,25 +39,19 @@ public class MainGameScreen implements Screen {
 	private boolean[] isCPU;
 	private boolean gameOver;
 	final private boolean DEBUG = true;
-	
-	public MainGameScreen(ArrayList<Boolean> CPU)
-	{
+
+	public MainGameScreen(ArrayList<Boolean> CPU) {
 		NUMBER_OF_PLAYERS = CPU.size();
 		isCPU = new boolean[NUMBER_OF_PLAYERS];
 		System.out.println(CPU.size());
 		for (int i = 0; i < CPU.size(); i += 1) {
-			System.out.println("isCPU["+i+"] = "+CPU.get(i));
+			System.out.println("isCPU[" + i + "] = " + CPU.get(i));
 			isCPU[i] = CPU.get(i);
 		}
 		create();
 	}
-	
+
 	private void create() {
-		/*
-		 * Dialog and Shit stage = new Stage(); skin = new
-		 * Skin(Gdx.files.internal("data/uiskin.json")); WinDialog winDialog =
-		 * new WinDialog("Confirm Win", skin); winDialog.show(stage);
-		 */
 		batch = new SpriteBatch();
 		// Show the world to be 440*480 no matter the
 		// size of the screen
@@ -70,11 +62,10 @@ public class MainGameScreen implements Screen {
 		Gdx.input.setInputProcessor(inputProcessor);
 		inputProcessor.unsetTouchDown();
 		numberOfMovesPlayed = currentPlayer = 0;
-		
+
 		// Load default values into arrays
 		loadImagesintoArrays();
 		setDimsForRectangles();
-		isCPU[NUMBER_OF_PLAYERS - 1] = true;
 		gameOver = false;
 	}
 
@@ -130,8 +121,8 @@ public class MainGameScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		//Check if current player is CPU and play its move
+
+		// Check if current player is CPU and play its move
 		if (isCPU[currentPlayer] && !gameOver) {
 			try {
 				Thread.sleep(200);
@@ -140,7 +131,8 @@ public class MainGameScreen implements Screen {
 			}
 			if (DEBUG)
 				System.out.println("Reached CPU");
-			GameSolver solver = new GameSolver(gameBoard, currentPlayer, NUMBER_OF_PLAYERS);
+			GameSolver solver = new GameSolver(gameBoard, currentPlayer,
+					NUMBER_OF_PLAYERS);
 			if (DEBUG)
 				System.out.println("GameSolver initialized");
 			GameBoard solvedBoard = solver.getBestGameBoard();
@@ -148,11 +140,12 @@ public class MainGameScreen implements Screen {
 			if (gameBoard.isWinningPosition(currentPlayer)
 					&& numberOfMovesPlayed > 1) {
 				gameOver = true;
-				System.out.println("Player " + currentPlayer + " has won the game!");
+				System.out.println("Player " + currentPlayer
+						+ " has won the game!");
 			}
 			currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 		}
-		
+
 		// process user input
 		if (inputProcessor.isTouchedDown() && !gameOver) {
 			inputProcessor.unsetTouchDown();
@@ -181,14 +174,15 @@ public class MainGameScreen implements Screen {
 					if (gameBoard.isWinningPosition(currentPlayer)
 							&& numberOfMovesPlayed > 1) {
 						gameOver = true;
-						System.out.println("Player " + currentPlayer + " has won the game!");
+						System.out.println("Player " + currentPlayer
+								+ " has won the game!");
 					}
 					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 				}
 			}
 		}
-		
-		// Rendering here to have board updated 
+
+		// Rendering here to have board updated
 		// after every player's move.
 		// Tell the camera to update its matrices.
 		camera.update();
