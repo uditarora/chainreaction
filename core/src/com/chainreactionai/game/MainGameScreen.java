@@ -36,13 +36,14 @@ public class MainGameScreen implements Screen {
 	private int clickCoordX, clickCoordY, currentPlayer, numberOfMovesPlayed;
 	private boolean clickOnEdge;
 	MyInputProcessor inputProcessor = new MyInputProcessor();
-	private boolean[] isCPU;
+	private boolean[] isCPU, lostPlayer;
 	private boolean gameOver;
 	final private boolean DEBUG = true;
 
 	public MainGameScreen(ArrayList<Boolean> CPU) {
 		NUMBER_OF_PLAYERS = CPU.size();
 		isCPU = new boolean[NUMBER_OF_PLAYERS];
+		lostPlayer = new boolean[NUMBER_OF_PLAYERS];
 		System.out.println(CPU.size());
 		for (int i = 0; i < CPU.size(); i += 1) {
 			System.out.println("isCPU[" + i + "] = " + CPU.get(i));
@@ -66,6 +67,7 @@ public class MainGameScreen implements Screen {
 		// Load default values into arrays
 		loadImagesintoArrays();
 		setDimsForRectangles();
+		setNoPlayerHasLost();
 		gameOver = false;
 	}
 
@@ -116,70 +118,81 @@ public class MainGameScreen implements Screen {
 			}
 		}
 	}
+	
+	private void setNoPlayerHasLost() {
+		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
+			lostPlayer[i] = false;
+		}
+	}
 
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		// Check if current player is CPU and play its move
-		if (isCPU[currentPlayer] && !gameOver) {
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		
+		if (lostPlayer[currentPlayer] == false) { 
+			// Check if current player is CPU and play its move
+			if (isCPU[currentPlayer] && !gameOver) {
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if (DEBUG)
+					System.out.println("Reached CPU");
+				GameSolver solver = new GameSolver(gameBoard, currentPlayer,
+						NUMBER_OF_PLAYERS);
+				if (DEBUG)
+					System.out.println("GameSolver initialized");
+				GameBoard solvedBoard = solver.getBestGameBoard();
+				numberOfMovesPlayed += 1;
+				gameBoard = solvedBoard;
+				if (gameBoard.isWinningPosition(currentPlayer)
+						&& numberOfMovesPlayed > 1) {
+					gameOver = true;
+					System.out.println("Player " + currentPlayer
+							+ " has won the game!");
+				}
+				currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 			}
-			if (DEBUG)
-				System.out.println("Reached CPU");
-			GameSolver solver = new GameSolver(gameBoard, currentPlayer,
-					NUMBER_OF_PLAYERS);
-			if (DEBUG)
-				System.out.println("GameSolver initialized");
-			GameBoard solvedBoard = solver.getBestGameBoard();
-			gameBoard = solvedBoard;
-			if (gameBoard.isWinningPosition(currentPlayer)
-					&& numberOfMovesPlayed > 1) {
-				gameOver = true;
-				System.out.println("Player " + currentPlayer
-						+ " has won the game!");
-			}
-			currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
-		}
-
-		// process user input
-		if (inputProcessor.isTouchedDown() && !gameOver) {
-			inputProcessor.unsetTouchDown();
-			// Checking whether the click is on an edge or a box.
-			// If on edge, then reject the click.
-			clickOnEdge = false;
-			clickCoordX = (int) (inputProcessor.getXCoord() / WIDTH_RECTANGLE);
-			if (inputProcessor.getXCoord() % WIDTH_RECTANGLE == 0.0) {
-				clickOnEdge = true;
-			}
-			clickCoordY = (int) ((HEIGHT_SCREEN - inputProcessor.getYCoord()) / HEIGHT_RECTANGLE);
-			if ((HEIGHT_SCREEN - inputProcessor.getYCoord()) % HEIGHT_RECTANGLE == 0.0) {
-				clickOnEdge = true;
-			}
-
-			// If the click is within bounds of any one rectangle
-			if (!clickOnEdge) {
-				// Checking the move's validity and changing the board
-				// accordingly.
-				// Also passing the move to the next player.
-				if (gameBoard.isValidMove(clickCoordX, clickCoordY,
-						currentPlayer)) {
-					gameBoard.changeBoard(clickCoordX, clickCoordY,
-							currentPlayer);
-					numberOfMovesPlayed += 1;
-					if (gameBoard.isWinningPosition(currentPlayer)
-							&& numberOfMovesPlayed > 1) {
-						gameOver = true;
-						System.out.println("Player " + currentPlayer
-								+ " has won the game!");
+	
+			// process user input
+			if (inputProcessor.isTouchedDown() && !gameOver) {
+				inputProcessor.unsetTouchDown();
+				// Checking whether the click is on an edge or a box.
+				// If on edge, then reject the click.
+				clickOnEdge = false;
+				clickCoordX = (int) (inputProcessor.getXCoord() / WIDTH_RECTANGLE);
+				if (inputProcessor.getXCoord() % WIDTH_RECTANGLE == 0.0) {
+					clickOnEdge = true;
+				}
+				clickCoordY = (int) ((HEIGHT_SCREEN - inputProcessor.getYCoord()) / HEIGHT_RECTANGLE);
+				if ((HEIGHT_SCREEN - inputProcessor.getYCoord()) % HEIGHT_RECTANGLE == 0.0) {
+					clickOnEdge = true;
+				}
+	
+				// If the click is within bounds of any one rectangle
+				if (!clickOnEdge) {
+					// Checking the move's validity and changing the board
+					// accordingly.
+					// Also passing the move to the next player.
+					if (gameBoard.isValidMove(clickCoordX, clickCoordY,
+							currentPlayer)) {
+						gameBoard.changeBoard(clickCoordX, clickCoordY,
+								currentPlayer);
+						numberOfMovesPlayed += 1;
+						if (gameBoard.isWinningPosition(currentPlayer)
+								&& numberOfMovesPlayed > 1) {
+							gameOver = true;
+							System.out.println("Player " + currentPlayer
+									+ " has won the game!");
+						}
+						currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 					}
-					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 				}
 			}
+		} else {
+			currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 		}
 
 		// Rendering here to have board updated
@@ -193,6 +206,15 @@ public class MainGameScreen implements Screen {
 		batch.begin();
 		drawGameBoard();
 		batch.end();
+		if (numberOfMovesPlayed > NUMBER_OF_PLAYERS) {
+			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
+				if (!lostPlayer[i]) {
+					if (gameBoard.hasLost(i)) {
+						lostPlayer[i] = true;
+					}
+				}
+			}
+		}
 	}
 
 	// Function to draw the game board using the three

@@ -243,6 +243,18 @@ public class GameBoard {
 	public int getGameGridSize() {
 		return gameGridSize;
 	}
+	
+	// Checks whether a given player has lost the game or not.
+	public boolean hasLost(int player) {
+		for (int i = 0; i < gameGridSize; i += 1) {
+			for (int j = 0; j < gameGridSize; j += 1) {
+				if (rectangleWinner[i][j] == player && numAtomsInRectangle[i][j] > 0) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
 	// Prints the GameBoard's state for Debugging purposes.
 	public void printBoard() {
