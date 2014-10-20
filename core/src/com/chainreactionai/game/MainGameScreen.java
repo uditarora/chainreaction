@@ -119,6 +119,8 @@ public class MainGameScreen implements Screen {
 		}
 	}
 	
+	// Populates the lostPlayer array to show that no player
+	// has lost the game initially.
 	private void setNoPlayerHasLost() {
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			lostPlayer[i] = false;
@@ -239,19 +241,6 @@ public class MainGameScreen implements Screen {
 			count++;
 		}
 	}
-
-	/*
-	 * Dialog and Shit public static class WinDialog extends Dialog {
-	 * 
-	 * public WinDialog(String title, Skin skin) { super(title, skin); // TODO
-	 * Auto-generated constructor stub }
-	 * 
-	 * { text("Do you really want to leave?"); button("Yes"); button("No"); }
-	 * 
-	 * @Override protected void result(Object object) { }
-	 * 
-	 * }
-	 */
 
 	@Override
 	public void dispose() {
