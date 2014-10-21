@@ -109,6 +109,7 @@ public class GameBoard {
 		while (positionsQueue.peek() != null && !gameOver) {
 			currentPosition = positionsQueue.poll();
 			rectangleWinner[currentPosition.coordX][currentPosition.coordY] = player;
+			numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] += 1;
 
 			// If the clicked box is corner-most
 			if ((currentPosition.coordX == 0 && currentPosition.coordY == 0)
