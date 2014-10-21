@@ -31,7 +31,7 @@ public class GameSolver {
 	
 	// Constructor to initialize the GameSolver with a BoardNode
 	// which has the current state as the state passed.
-	public GameSolver(GameBoard gameBoard, int player, int numberPlayers) {
+	public GameSolver(GameBoard gameBoard, int player, int numberPlayers, boolean [] lostPlayer) {
 		initialBoardNode = new BoardNode(gameBoard, 0, player, null);
 		initialBoardNode.setScore();
 		initialBoardNode.setSelfPropagatingScore(0);
@@ -41,7 +41,7 @@ public class GameSolver {
 
 	// AI solver - Returns the best move for the given player using minimax
 	// algorithm.
-	public GameBoard getBestGameBoard() {
+	public Position getBestGameBoard() {
 		BoardNode tempBoardNode, solutionBoardNode;
 		ArrayList<BoardNode> bestBoardNodesArr = new ArrayList<BoardNode>();
 		double lastPlyMaxScore = -99999999;
@@ -50,6 +50,8 @@ public class GameSolver {
 		LinkedList<BoardNode> possibleBoardNodeQueue = new LinkedList<BoardNode>();
 		possibleBoardNodeQueue.add(initialBoardNode);
 		BoardNode currentBoardNode = possibleBoardNodeQueue.peek();
+		if (DEBUG)
+			System.out.println("Starting the AI decision");
 		while (true) {
 			currentBoardNode = possibleBoardNodeQueue.poll();
 			int currentLevel = currentBoardNode.getLevel();
@@ -90,6 +92,8 @@ public class GameSolver {
 					tempBoardNode.setOpponentPropagatingScore(temp);
 				}
 				int nextPlayer = currentPlayer;
+				if (DEBUG)
+					System.out.println("New node added with current level : " + (currentLevel + 1));
 				possibleBoardNodeQueue.add(new BoardNode(tempBoardNode.board,
 						currentLevel + 1, nextPlayer, currentBoardNode));
 				if ((currentLevel == MAX_PLY_LEVEL - 1)
@@ -103,19 +107,23 @@ public class GameSolver {
 				}
 			}
 		}
+		if (DEBUG)
+			System.out.println("AI has decided the winning Position.");
 		//
 		numberOfBestBoardNodes = bestBoardNodesArr.size();
 		chosenBestBoardNodeIndex = rand.nextInt(numberOfBestBoardNodes);
 		solutionBoardNode = getPredecessorNode(bestBoardNodesArr
 				.get(chosenBestBoardNodeIndex));
-//		for (GameBoardAndCoord gbc: getAllPossibleMovesWithCoords(initialBoardNode.board, mainPlayer)) {
-//			if (gbc.board.isEqual(solutionBoardNode.board)) {
-//				solutionBoardNode.printBoard();
-//				gbc.board.printBoard();
-//				return gbc.position;
-//			}
-//		}
-		return solutionBoardNode.board;
+		if (DEBUG)
+			System.out.println("Solution boardNode selected");
+		for (GameBoardAndCoord gbc: getAllPossibleMovesWithCoords(initialBoardNode.board, mainPlayer)) {
+			if (DEBUG)
+				System.out.println("Iterating.");
+			if (gbc.board.isEqual(solutionBoardNode.board)) {
+				return gbc.position;
+			}
+		}
+		return null;
 	}
 
 	// Returns a list of all possible board positions from a

@@ -151,27 +151,16 @@ public class MainGameScreen implements Screen {
 					if (DEBUG)
 						System.out.println("Reached CPU");
 					GameSolver solver = new GameSolver(gameBoard, currentPlayer,
-							NUMBER_OF_PLAYERS);
+							NUMBER_OF_PLAYERS, lostPlayer);
 					if (DEBUG)
 						System.out.println("GameSolver initialized");
-					GameBoard solvedBoard = solver.getBestGameBoard();
-					solvedBoard.printBoard();
-					gameBoard = solvedBoard;
-					gameBoard.printBoard();
-//					if(winningMove == null) {
-//						System.out.println("Error Time.");
-//					}
-					numberOfMovesPlayed += 1;
-//					gameBoard.changeBoard2(winningMove.coordX, winningMove.coordY, currentPlayer);
-//					moveCompleted = false;
-					if (gameBoard.isWinningPosition(currentPlayer)
-							&& numberOfMovesPlayed > 1) {
-						gameOver = true;
-						System.out.println("Player " + currentPlayer
-								+ " has won the game!");
+					Position winningMove = solver.getBestGameBoard();
+					if(winningMove == null) {
+						System.out.println("Error Time.");
 					}
-					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
-					System.out.println("Move time.");
+					gameBoard.changeBoard2(winningMove.coordX, winningMove.coordY, currentPlayer);
+					moveCompleted = false;
+					numberOfMovesPlayed += 1;
 				}
 		
 				// process user input
