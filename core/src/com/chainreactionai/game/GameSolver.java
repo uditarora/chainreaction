@@ -18,7 +18,17 @@ public class GameSolver {
 	private int mainPlayer, numPlayers;
 	final private int MAX_PLY_LEVEL = 4;
 	final private boolean DEBUG = false;
-
+	
+	private class GameBoardAndCoord {
+		private GameBoard board;
+		private Position position;
+		
+		private GameBoardAndCoord(GameBoard gb, int coordX, int coordY) {
+			board = gb;
+			position = new Position(coordX, coordY);
+		}
+	}
+	
 	// Constructor to initialize the GameSolver with a BoardNode
 	// which has the current state as the state passed.
 	public GameSolver(GameBoard gameBoard, int player, int numberPlayers) {
@@ -98,6 +108,13 @@ public class GameSolver {
 		chosenBestBoardNodeIndex = rand.nextInt(numberOfBestBoardNodes);
 		solutionBoardNode = getPredecessorNode(bestBoardNodesArr
 				.get(chosenBestBoardNodeIndex));
+//		for (GameBoardAndCoord gbc: getAllPossibleMovesWithCoords(initialBoardNode.board, mainPlayer)) {
+//			if (gbc.board.isEqual(solutionBoardNode.board)) {
+//				solutionBoardNode.printBoard();
+//				gbc.board.printBoard();
+//				return gbc.position;
+//			}
+//		}
 		return solutionBoardNode.board;
 	}
 
@@ -118,6 +135,21 @@ public class GameSolver {
 		return possibleMoves;
 	}
 
+	private Iterable<GameBoardAndCoord> getAllPossibleMovesWithCoords(GameBoard board, int player) {
+		Stack<GameBoardAndCoord> possibleMoves = new Stack<GameBoardAndCoord>();
+		GameBoardAndCoord tempGameBoardAndCoord;
+		for (int i = 0; i < board.getGameGridSize(); ++i) {
+			for (int j = 0; j < board.getGameGridSize(); ++j) {
+				if (board.isValidMove(i, j, player)) {
+					tempGameBoardAndCoord = new GameBoardAndCoord(new GameBoard(board), i, j);
+					tempGameBoardAndCoord.board.changeBoard(i, j, player);
+					possibleMoves.add(tempGameBoardAndCoord);
+				}
+			}
+		}
+		return possibleMoves;
+	}
+	
 	// Returns the BoardNode which has the best possible move
 	// played by the player passed as parameter.
 	private BoardNode getBestPossibleMove(BoardNode oldBoardNode, int player) {

@@ -30,14 +30,14 @@ public class MainGameScreen implements Screen {
 	final private int HEIGHT_SCREEN = 480;
 	private OrthographicCamera camera;
 	private int NUMBER_OF_PLAYERS;
-	private Texture[][] atomImages = new Texture[NUM_STATES_POSSIBLE][8];
+	private Texture[][] atomImages = new Texture[NUM_STATES_POSSIBLE + 1][8];
 	private Array<Rectangle> rectangularGrid;
 	private GameBoard gameBoard;
 	private int clickCoordX, clickCoordY, currentPlayer, numberOfMovesPlayed;
 	private boolean clickOnEdge;
 	MyInputProcessor inputProcessor = new MyInputProcessor();
 	private boolean[] isCPU, lostPlayer;
-	private boolean gameOver;
+	private boolean gameOver, moveCompleted;
 	final private boolean DEBUG = true;
 
 	public MainGameScreen(ArrayList<Boolean> CPU) {
@@ -69,6 +69,7 @@ public class MainGameScreen implements Screen {
 		setDimsForRectangles();
 		setNoPlayerHasLost();
 		gameOver = false;
+		moveCompleted = true;
 	}
 
 	// This function loads the images into the arrays
@@ -102,6 +103,13 @@ public class MainGameScreen implements Screen {
 		atomImages[3][3] = new Texture("threeAtomPlayerFour.jpg");
 		atomImages[3][4] = new Texture("threeAtomPlayerFive.jpg");
 		atomImages[3][5] = new Texture("threeAtomPlayerSix.jpg");
+		// Three Atom Images Batch
+		atomImages[4][0] = new Texture("fourAtomPlayerOne.jpg");
+		atomImages[4][1] = new Texture("fourAtomPlayerTwo.jpg");
+		atomImages[4][2] = new Texture("fourAtomPlayerThree.jpg");
+		atomImages[4][3] = new Texture("fourAtomPlayerFour.jpg");
+		atomImages[4][4] = new Texture("fourAtomPlayerFive.jpg");
+		atomImages[4][5] = new Texture("fourAtomPlayerSix.jpg");
 	}
 
 	// This function loads the dimensions for all the
@@ -131,24 +139,57 @@ public class MainGameScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		if (lostPlayer[currentPlayer] == false) { 
-			// Check if current player is CPU and play its move
-			if (isCPU[currentPlayer] && !gameOver) {
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+		if (moveCompleted) {
+			if (lostPlayer[currentPlayer] == false) { 
+				// Check if current player is CPU and play its move
+				if (isCPU[currentPlayer] && !gameOver) {
+					try {
+						Thread.sleep(200);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					if (DEBUG)
+						System.out.println("Reached CPU");
+					GameSolver solver = new GameSolver(gameBoard, currentPlayer,
+							NUMBER_OF_PLAYERS);
+					if (DEBUG)
+						System.out.println("GameSolver initialized");
+					GameBoard solvedBoard = solver.getBestGameBoard();
+					solvedBoard.printBoard();
+					gameBoard = solvedBoard;
+					gameBoard.printBoard();
+//					if(winningMove == null) {
+//						System.out.println("Error Time.");
+//					}
+					numberOfMovesPlayed += 1;
+//					gameBoard.changeBoard2(winningMove.coordX, winningMove.coordY, currentPlayer);
+//					moveCompleted = false;
+					if (gameBoard.isWinningPosition(currentPlayer)
+							&& numberOfMovesPlayed > 1) {
+						gameOver = true;
+						System.out.println("Player " + currentPlayer
+								+ " has won the game!");
+					}
+					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
+					System.out.println("Move time.");
 				}
-				if (DEBUG)
-					System.out.println("Reached CPU");
-				GameSolver solver = new GameSolver(gameBoard, currentPlayer,
-						NUMBER_OF_PLAYERS);
-				if (DEBUG)
-					System.out.println("GameSolver initialized");
-				GameBoard solvedBoard = solver.getBestGameBoard();
-				numberOfMovesPlayed += 1;
-				gameBoard = solvedBoard;
+		
+				// process user input
+				if (inputProcessor.isTouchedDown() && !gameOver) {
+					inputProcessor.unsetTouchDown();
+					processInput();
+				}
+			} else {
+				currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
+			}
+		} else {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			moveCompleted = gameBoard.nextBoard(currentPlayer);
+			if (moveCompleted) {
 				if (gameBoard.isWinningPosition(currentPlayer)
 						&& numberOfMovesPlayed > 1) {
 					gameOver = true;
@@ -156,45 +197,8 @@ public class MainGameScreen implements Screen {
 							+ " has won the game!");
 				}
 				currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
+				System.out.println("Move time.");
 			}
-	
-			// process user input
-			if (inputProcessor.isTouchedDown() && !gameOver) {
-				inputProcessor.unsetTouchDown();
-				// Checking whether the click is on an edge or a box.
-				// If on edge, then reject the click.
-				clickOnEdge = false;
-				clickCoordX = (int) (inputProcessor.getXCoord() / WIDTH_RECTANGLE);
-				if (inputProcessor.getXCoord() % WIDTH_RECTANGLE == 0.0) {
-					clickOnEdge = true;
-				}
-				clickCoordY = (int) ((HEIGHT_SCREEN - inputProcessor.getYCoord()) / HEIGHT_RECTANGLE);
-				if ((HEIGHT_SCREEN - inputProcessor.getYCoord()) % HEIGHT_RECTANGLE == 0.0) {
-					clickOnEdge = true;
-				}
-	
-				// If the click is within bounds of any one rectangle
-				if (!clickOnEdge) {
-					// Checking the move's validity and changing the board
-					// accordingly.
-					// Also passing the move to the next player.
-					if (gameBoard.isValidMove(clickCoordX, clickCoordY,
-							currentPlayer)) {
-						gameBoard.changeBoard(clickCoordX, clickCoordY,
-								currentPlayer);
-						numberOfMovesPlayed += 1;
-						if (gameBoard.isWinningPosition(currentPlayer)
-								&& numberOfMovesPlayed > 1) {
-							gameOver = true;
-							System.out.println("Player " + currentPlayer
-									+ " has won the game!");
-						}
-						currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
-					}
-				}
-			}
-		} else {
-			currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 		}
 
 		// Rendering here to have board updated
@@ -219,6 +223,33 @@ public class MainGameScreen implements Screen {
 		}
 	}
 
+	private void processInput() {
+		// Checking whether the click is on an edge or a box.
+		// If on edge, then reject the click.
+		clickOnEdge = false;
+		clickCoordX = (int) (inputProcessor.getXCoord() / WIDTH_RECTANGLE);
+		if (inputProcessor.getXCoord() % WIDTH_RECTANGLE == 0.0) {
+			clickOnEdge = true;
+		}
+		clickCoordY = (int) ((HEIGHT_SCREEN - inputProcessor.getYCoord()) / HEIGHT_RECTANGLE);
+		if ((HEIGHT_SCREEN - inputProcessor.getYCoord()) % HEIGHT_RECTANGLE == 0.0) {
+			clickOnEdge = true;
+		}
+
+		// If the click is within bounds of any one rectangle
+		if (!clickOnEdge) {
+			// Checking the move's validity and changing the board
+			// accordingly.
+			// Also passing the move to the next player.
+			if (gameBoard.isValidMove(clickCoordX, clickCoordY,
+					currentPlayer)) {
+				gameBoard.changeBoard2(clickCoordX, clickCoordY,
+						currentPlayer);
+				moveCompleted = false;
+				numberOfMovesPlayed += 1;
+			}
+		}
+	}
 	// Function to draw the game board using the three
 	// arrays.
 	private void drawGameBoard() {
@@ -230,13 +261,20 @@ public class MainGameScreen implements Screen {
 			j = count % GRID_SIZE;
 			if (gameBoard.getRectangleWinner(i, j) == -1) {
 				batch.draw(
-						atomImages[gameBoard.getNumAtomsInRectangle(i, j)][0],
+						atomImages[0][0],
 						tempBlock.x, tempBlock.y);
 			} else {
-				batch.draw(
-						atomImages[gameBoard.getNumAtomsInRectangle(i, j)][gameBoard
-								.getRectangleWinner(i, j)], tempBlock.x,
-						tempBlock.y);
+				if (gameBoard.getNumAtomsInRectangle(i, j) > 4) {
+					batch.draw(
+							atomImages[0][gameBoard
+									.getRectangleWinner(i, j)], tempBlock.x,
+							tempBlock.y);
+				} else {
+					batch.draw(
+							atomImages[gameBoard.getNumAtomsInRectangle(i, j)][gameBoard
+									.getRectangleWinner(i, j)], tempBlock.x,
+							tempBlock.y);
+				}
 			}
 			count++;
 		}
