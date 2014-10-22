@@ -17,7 +17,7 @@ public class GameBoard {
 	private int gameGridSize, numPlayers, currentLevel;
 	private Position initialPosition, currentPosition;
 	private PositionLevelForBFS initialPositionLevel, currentPositionLevel;
-	private LinkedList<Position> positionsQueue;
+//	private LinkedList<Position> positionsQueue;
 	private LinkedList<PositionLevelForBFS> positionsLevelForBFSQueue;
 	final private boolean DEBUG = true;
 	
@@ -103,132 +103,76 @@ public class GameBoard {
 	// itself according to the input and the number of atoms
 	// currently in the rectangle using BFS
 	public void changeBoard(int coordX, int coordY, int player) {
-		initialPosition = new Position(coordX, coordY);
-		positionsQueue = new LinkedList<Position>();
+		Position initialPosition = new Position(coordX, coordY);
+		LinkedList<Position> positionsQueue = new LinkedList<Position>();
 		positionsQueue.add(initialPosition);
-		gameOver = false;
+		Position currentPosition;
+		boolean gameOver = false;
 		while (positionsQueue.peek() != null && !gameOver) {
 			currentPosition = positionsQueue.poll();
 			rectangleWinner[currentPosition.coordX][currentPosition.coordY] = player;
 			numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] += 1;
-
+			
 			// If the clicked box is corner-most
 			if ((currentPosition.coordX == 0 && currentPosition.coordY == 0)
 					|| (currentPosition.coordX == 0 && currentPosition.coordY == gameGridSize - 1)
 					|| (currentPosition.coordX == gameGridSize - 1 && currentPosition.coordY == 0)
 					|| (currentPosition.coordX == gameGridSize - 1 && currentPosition.coordY == gameGridSize - 1)) {
-				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] >= 2) {
-					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] -= 2;
-					if (DEBUG) {
-						if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] > 0)
-							System.out.println("Atoms = " + numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] + " after split");
-					}
-					if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 0)
-						rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
-					if (currentPosition.coordX == 0
-							&& currentPosition.coordY == 0) {
-						positionsQueue.add(new Position(
-								currentPosition.coordX + 1,
-								currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX,
-								currentPosition.coordY + 1));
-					} else if (currentPosition.coordX == 0
-							&& currentPosition.coordY == gameGridSize - 1) {
-						positionsQueue.add(new Position(
-								currentPosition.coordX + 1,
-								currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX,
-								currentPosition.coordY - 1));
-					} else if (currentPosition.coordX == gameGridSize - 1
-							&& currentPosition.coordY == 0) {
-						positionsQueue.add(new Position(
-								currentPosition.coordX - 1,
-								currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX,
-								currentPosition.coordY + 1));
+				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 2) {
+					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
+					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
+					if (currentPosition.coordX == 0 && currentPosition.coordY == 0) {
+						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
+					} else if (currentPosition.coordX == 0 && currentPosition.coordY == gameGridSize - 1) {
+						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
+					} else if (currentPosition.coordX == gameGridSize - 1 && currentPosition.coordY == 0) {
+						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
 					} else {
-						positionsQueue.add(new Position(
-								currentPosition.coordX - 1,
-								currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX,
-								currentPosition.coordY - 1));
+						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
 					}
-
+	
 				}
-			} else if (currentPosition.coordX == 0
-					|| currentPosition.coordY == 0
-					|| currentPosition.coordX == gameGridSize - 1
+			} else if (currentPosition.coordX == 0 || currentPosition.coordY == 0 || currentPosition.coordX == gameGridSize - 1
 					|| currentPosition.coordY == gameGridSize - 1) {
-				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] >= 3) {
-					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] -= 3;
-					if (DEBUG) {
-						if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] > 0)
-							System.out.println("Atoms = " + numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] + " after split");
-					}
-					if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 0)
-						rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
+				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 3) {
+					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
+					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
 					if (currentPosition.coordX == 0) {
-						positionsQueue.add(new Position(currentPosition.coordX,
-								currentPosition.coordY + 1));
-						positionsQueue.add(new Position(currentPosition.coordX,
-								currentPosition.coordY - 1));
-						positionsQueue.add(new Position(
-								currentPosition.coordX + 1,
-								currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
+						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
 					} else if (currentPosition.coordY == 0) {
-						positionsQueue.add(new Position(
-								currentPosition.coordX - 1,
-								currentPosition.coordY));
-						positionsQueue.add(new Position(
-								currentPosition.coordX + 1,
-								currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX,
-								currentPosition.coordY + 1));
+						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
 					} else if (currentPosition.coordX == gameGridSize - 1) {
-						positionsQueue.add(new Position(currentPosition.coordX,
-								currentPosition.coordY + 1));
-						positionsQueue.add(new Position(currentPosition.coordX,
-								currentPosition.coordY - 1));
-						positionsQueue.add(new Position(
-								currentPosition.coordX - 1,
-								currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
+						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
 					} else {
-						positionsQueue.add(new Position(
-								currentPosition.coordX - 1,
-								currentPosition.coordY));
-						positionsQueue.add(new Position(
-								currentPosition.coordX + 1,
-								currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX,
-								currentPosition.coordY - 1));
+						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
+						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
 					}
 				}
 			} else {
-				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] >= 4) {
-					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] -= 4;
-					if (DEBUG) {
-						if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] > 0)
-							System.out.println("Atoms = " + numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] + " after split");
-					}
-					if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 0)
-						rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
-					positionsQueue.add(new Position(currentPosition.coordX - 1,
-							currentPosition.coordY));
-					numAtomsInRectangle[currentPosition.coordX - 1][currentPosition.coordY] += 1;
-					positionsQueue.add(new Position(currentPosition.coordX + 1,
-							currentPosition.coordY));
-					numAtomsInRectangle[currentPosition.coordX + 1][currentPosition.coordY] += 1;
-					positionsQueue.add(new Position(currentPosition.coordX,
-							currentPosition.coordY - 1));
-					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY - 1] += 1;
-					positionsQueue.add(new Position(currentPosition.coordX,
-							currentPosition.coordY + 1));
-					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY + 1] += 1;
+				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 4) {
+					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
+					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
+					positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
+					positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
+					positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
+					positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
 				}
 			}
 			gameOver = isWinningPosition(player);
 		}
 	}
+
 	
 	public void changeBoard2(int coordX, int coordY, int player) {
 		initialPosition = new Position(coordX, coordY);
