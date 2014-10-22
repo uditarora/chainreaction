@@ -48,7 +48,7 @@ public class MainGameScreen implements Screen {
 	public MainGameScreen(ArrayList<Boolean> CPU) {
 		NUMBER_OF_PLAYERS = CPU.size();
 		if (DEBUG_CPU)
-			NUMBER_OF_PLAYERS = 4;
+			NUMBER_OF_PLAYERS = 2;
 		isCPU = new boolean[NUMBER_OF_PLAYERS];
 		lostPlayer = new boolean[NUMBER_OF_PLAYERS];
 		maxPlyLevels = new int[NUMBER_OF_PLAYERS]; //TODO: Remove this too when passing levels from previous screen
@@ -63,7 +63,8 @@ public class MainGameScreen implements Screen {
 			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 				isCPU[i] = true;
 			}
-			maxPlyLevels[0] = 2; maxPlyLevels[1] = 2; maxPlyLevels[2] = 2; maxPlyLevels[3] = 4;
+//			maxPlyLevels[0] = 2; maxPlyLevels[1] = 2; maxPlyLevels[2] = 2; maxPlyLevels[3] = 4;
+			maxPlyLevels[0] = 2; maxPlyLevels[1] = 3;
 		}
 		create();
 	}
@@ -270,6 +271,8 @@ public class MainGameScreen implements Screen {
 	private void processInput() {
 		// Checking whether the click is on an edge or a box.
 		// If on edge, then reject the click.
+		if (inputProcessor.getYCoord() < HEIGHT_SCREEN - WIDTH_SCREEN)
+			return;
 		clickOnEdge = false;
 		clickCoordX = (int) (inputProcessor.getXCoord() / WIDTH_RECTANGLE);
 		if (inputProcessor.getXCoord() % WIDTH_RECTANGLE == 0.0) {
@@ -285,7 +288,7 @@ public class MainGameScreen implements Screen {
 			// Checking the move's validity and changing the board
 			// accordingly.
 			// Also passing the move to the next player.
-			if (gameBoard.isValidMove(clickCoordX, clickCoordY,
+			if (!isCPU[currentPlayer] && gameBoard.isValidMove(clickCoordX, clickCoordY,
 					currentPlayer)) {
 				gameBoard.changeBoard2(clickCoordX, clickCoordY,
 						currentPlayer);
