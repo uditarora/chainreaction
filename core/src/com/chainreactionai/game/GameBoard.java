@@ -15,11 +15,11 @@ public class GameBoard {
 	private int[][] rectangleWinner;
 	private int[][] numAtomsInRectangle;
 	private int gameGridSize, numPlayers, currentLevel;
-	private Position initialPosition, currentPosition;
+	private Position initialPosition;
 	private PositionLevelForBFS initialPositionLevel, currentPositionLevel;
 //	private LinkedList<Position> positionsQueue;
 	private LinkedList<PositionLevelForBFS> positionsLevelForBFSQueue;
-	final private boolean DEBUG = true;
+//	final private boolean DEBUG = true;
 	
 	private class PositionLevelForBFS {
 		private int level;
