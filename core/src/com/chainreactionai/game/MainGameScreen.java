@@ -38,24 +38,32 @@ public class MainGameScreen implements Screen {
 	private boolean clickOnEdge;
 	MyInputProcessor inputProcessor = new MyInputProcessor();
 	private boolean[] isCPU, lostPlayer;
+	private int[] maxPlyLevels; //TODO: Remove this when the constructor receives an array containing the levels
 	private boolean gameOver, moveCompleted;
 	private Position highlightPos = new Position(-1, -1);
 	final private boolean DEBUG = true;
-	final private boolean DEBUG_CPU = false;
+	final private boolean DEBUG_CPU = true;
 
+	// TODO: Modify this to get an array containing the maxPlyLevels from the previous screen
 	public MainGameScreen(ArrayList<Boolean> CPU) {
 		NUMBER_OF_PLAYERS = CPU.size();
 		if (DEBUG_CPU)
-			NUMBER_OF_PLAYERS = 2;
+			NUMBER_OF_PLAYERS = 4;
 		isCPU = new boolean[NUMBER_OF_PLAYERS];
 		lostPlayer = new boolean[NUMBER_OF_PLAYERS];
+		maxPlyLevels = new int[NUMBER_OF_PLAYERS]; //TODO: Remove this too when passing levels from previous screen
 		System.out.println(CPU.size());
 		for (int i = 0; i < CPU.size(); i += 1) {
 			System.out.println("isCPU[" + i + "] = " + CPU.get(i));
 			isCPU[i] = CPU.get(i);
+			if (isCPU[i])
+				maxPlyLevels[i] = 4;
 		}
 		if (DEBUG_CPU) {
-			isCPU[0] = isCPU[1] = true;
+			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
+				isCPU[i] = true;
+			}
+			maxPlyLevels[0] = 2; maxPlyLevels[1] = 2; maxPlyLevels[2] = 2; maxPlyLevels[3] = 4;
 		}
 		create();
 	}
@@ -194,7 +202,7 @@ public class MainGameScreen implements Screen {
 					if (DEBUG)
 						System.out.println("Reached CPU");
 					GameSolver solver = new GameSolver(gameBoard, currentPlayer,
-							NUMBER_OF_PLAYERS, lostPlayer);
+							NUMBER_OF_PLAYERS, lostPlayer, maxPlyLevels[currentPlayer]);
 					if (DEBUG)
 						System.out.println("GameSolver initialized");
 					Position winningMove = solver.getBestGameBoard();
