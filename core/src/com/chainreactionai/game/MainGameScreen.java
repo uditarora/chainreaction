@@ -39,15 +39,21 @@ public class MainGameScreen implements Screen {
 	private boolean[] isCPU, lostPlayer;
 	private boolean gameOver, moveCompleted;
 	final private boolean DEBUG = true;
+	final private boolean DEBUG_CPU = false;
 
 	public MainGameScreen(ArrayList<Boolean> CPU) {
 		NUMBER_OF_PLAYERS = CPU.size();
+		if (DEBUG_CPU)
+			NUMBER_OF_PLAYERS = 2;
 		isCPU = new boolean[NUMBER_OF_PLAYERS];
 		lostPlayer = new boolean[NUMBER_OF_PLAYERS];
 		System.out.println(CPU.size());
 		for (int i = 0; i < CPU.size(); i += 1) {
 			System.out.println("isCPU[" + i + "] = " + CPU.get(i));
 			isCPU[i] = CPU.get(i);
+		}
+		if (DEBUG_CPU) {
+			isCPU[0] = isCPU[1] = true;
 		}
 		create();
 	}
@@ -144,7 +150,7 @@ public class MainGameScreen implements Screen {
 				// Check if current player is CPU and play its move
 				if (isCPU[currentPlayer] && !gameOver) {
 					try {
-						Thread.sleep(200);
+						Thread.sleep(100);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}

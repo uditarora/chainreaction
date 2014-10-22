@@ -116,7 +116,7 @@ public class GameBoard {
 					|| (currentPosition.coordX == 0 && currentPosition.coordY == gameGridSize - 1)
 					|| (currentPosition.coordX == gameGridSize - 1 && currentPosition.coordY == 0)
 					|| (currentPosition.coordX == gameGridSize - 1 && currentPosition.coordY == gameGridSize - 1)) {
-				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 2) {
+				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] >= 2) {
 					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
 					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
 					if (currentPosition.coordX == 0
@@ -153,7 +153,7 @@ public class GameBoard {
 					|| currentPosition.coordY == 0
 					|| currentPosition.coordX == gameGridSize - 1
 					|| currentPosition.coordY == gameGridSize - 1) {
-				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 3) {
+				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] >= 3) {
 					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
 					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
 					if (currentPosition.coordX == 0) {
@@ -193,7 +193,7 @@ public class GameBoard {
 					}
 				}
 			} else {
-				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 4) {
+				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] >= 4) {
 					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
 					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
 					positionsQueue.add(new Position(currentPosition.coordX - 1,
