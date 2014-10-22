@@ -16,7 +16,7 @@ import java.util.Stack;
 public class GameSolver {
 	private BoardNode initialBoardNode;
 	private int mainPlayer, numPlayers;
-	final private int MAX_PLY_LEVEL = 4;
+	private int MAX_PLY_LEVEL = 3;
 	final private boolean DEBUG = false;
 	
 	private class GameBoardAndCoord {
@@ -30,13 +30,23 @@ public class GameSolver {
 	}
 	
 	// Constructor to initialize the GameSolver with a BoardNode
-	// which has the current state as the state passed.
+	// which has the current state as the state passed and the default maxPlyLevel.
 	public GameSolver(GameBoard gameBoard, int player, int numberPlayers, boolean [] lostPlayer) {
 		initialBoardNode = new BoardNode(gameBoard, 0, player, null);
 		initialBoardNode.setScore();
 		initialBoardNode.setSelfPropagatingScore(0);
 		mainPlayer = player;
 		numPlayers = numberPlayers;
+	}
+	
+	//Constructor to initialize the GameSovler with a custom maxPlyLevel
+	public GameSolver(GameBoard gameBoard, int player, int numberPlayers, boolean [] lostPlayer, int maxPlyLevel) {
+		initialBoardNode = new BoardNode(gameBoard, 0, player, null);
+		initialBoardNode.setScore();
+		initialBoardNode.setSelfPropagatingScore(0);
+		mainPlayer = player;
+		numPlayers = numberPlayers;
+		MAX_PLY_LEVEL = maxPlyLevel;
 	}
 
 	// AI solver - Returns the best move for the given player using minimax
@@ -72,6 +82,15 @@ public class GameSolver {
 					tempBoardNode.setScore();
 					tempBoardNode.setSelfPropagatingScore(temp);
 					possibleBoardNodeQueue.add(tempBoardNode);
+					if ((currentLevel == MAX_PLY_LEVEL - 1)
+							&& (tempBoardNode.getPropagatedScore() > lastPlyMaxScore)) {
+						bestBoardNodesArr.clear();
+						bestBoardNodesArr.add(tempBoardNode);
+						lastPlyMaxScore = tempBoardNode.getPropagatedScore();
+					} else if ((currentLevel == MAX_PLY_LEVEL - 1)
+							&& (tempBoardNode.getPropagatedScore() == lastPlyMaxScore)) {
+						bestBoardNodesArr.add(tempBoardNode);
+					}
 				}
 			} else {
 				// This is where the opponents will be made to
