@@ -31,6 +31,7 @@ public class MainGameScreen implements Screen {
 	private OrthographicCamera camera;
 	private int NUMBER_OF_PLAYERS;
 	private Texture[][] atomImages = new Texture[NUM_STATES_POSSIBLE + 1][8];
+	private Texture[][] highlightedAtomImages = new Texture[NUM_STATES_POSSIBLE + 1][8];
 	private Array<Rectangle> rectangularGrid;
 	private GameBoard gameBoard;
 	private int clickCoordX, clickCoordY, currentPlayer, numberOfMovesPlayed;
@@ -38,8 +39,9 @@ public class MainGameScreen implements Screen {
 	MyInputProcessor inputProcessor = new MyInputProcessor();
 	private boolean[] isCPU, lostPlayer;
 	private boolean gameOver, moveCompleted;
+	private Position highlightPos = new Position(-1, -1);
 	final private boolean DEBUG = true;
-	final private boolean DEBUG_CPU = true;
+	final private boolean DEBUG_CPU = false;
 
 	public MainGameScreen(ArrayList<Boolean> CPU) {
 		NUMBER_OF_PLAYERS = CPU.size();
@@ -109,13 +111,48 @@ public class MainGameScreen implements Screen {
 		atomImages[3][3] = new Texture("threeAtomPlayerFour.jpg");
 		atomImages[3][4] = new Texture("threeAtomPlayerFive.jpg");
 		atomImages[3][5] = new Texture("threeAtomPlayerSix.jpg");
-		// Three Atom Images Batch
+		// Four Atom Images Batch
 		atomImages[4][0] = new Texture("fourAtomPlayerOne.jpg");
 		atomImages[4][1] = new Texture("fourAtomPlayerTwo.jpg");
 		atomImages[4][2] = new Texture("fourAtomPlayerThree.jpg");
 		atomImages[4][3] = new Texture("fourAtomPlayerFour.jpg");
 		atomImages[4][4] = new Texture("fourAtomPlayerFive.jpg");
 		atomImages[4][5] = new Texture("fourAtomPlayerSix.jpg");
+		// Background image loaded into first column
+		highlightedAtomImages[0][0] = new Texture("backgroundHigh.jpg");
+		highlightedAtomImages[0][1] = new Texture("backgroundHigh.jpg");
+		highlightedAtomImages[0][2] = new Texture("backgroundHigh.jpg");
+		highlightedAtomImages[0][3] = new Texture("backgroundHigh.jpg");
+		highlightedAtomImages[0][4] = new Texture("backgroundHigh.jpg");
+		highlightedAtomImages[0][5] = new Texture("backgroundHigh.jpg");
+		// One Atom Images Batch
+		highlightedAtomImages[1][0] = new Texture("oneAtomPlayerOneHigh.jpg");
+		highlightedAtomImages[1][1] = new Texture("oneAtomPlayerTwoHigh.jpg");
+		highlightedAtomImages[1][2] = new Texture("oneAtomPlayerThreeHigh.jpg");
+		highlightedAtomImages[1][3] = new Texture("oneAtomPlayerFourHigh.jpg");
+		highlightedAtomImages[1][4] = new Texture("oneAtomPlayerFiveHigh.jpg");
+		highlightedAtomImages[1][5] = new Texture("oneAtomPlayerSixHigh.jpg");
+		// Two Atom Images Batch
+		highlightedAtomImages[2][0] = new Texture("twoAtomPlayerOneHigh.jpg");
+		highlightedAtomImages[2][1] = new Texture("twoAtomPlayerTwoHigh.jpg");
+		highlightedAtomImages[2][2] = new Texture("twoAtomPlayerThreeHigh.jpg");
+		highlightedAtomImages[2][3] = new Texture("twoAtomPlayerFourHigh.jpg");
+		highlightedAtomImages[2][4] = new Texture("twoAtomPlayerFiveHigh.jpg");
+		highlightedAtomImages[2][5] = new Texture("twoAtomPlayerSixHigh.jpg");
+		// Three Atom Images Batch
+		highlightedAtomImages[3][0] = new Texture("threeAtomPlayerOneHigh.jpg");
+		highlightedAtomImages[3][1] = new Texture("threeAtomPlayerTwoHigh.jpg");
+		highlightedAtomImages[3][2] = new Texture("threeAtomPlayerThreeHigh.jpg");
+		highlightedAtomImages[3][3] = new Texture("threeAtomPlayerFourHigh.jpg");
+		highlightedAtomImages[3][4] = new Texture("threeAtomPlayerFiveHigh.jpg");
+		highlightedAtomImages[3][5] = new Texture("threeAtomPlayerSixHigh.jpg");
+		//Four Atom Images Batch
+		highlightedAtomImages[4][0] = new Texture("fourAtomPlayerOneHigh.jpg");
+		highlightedAtomImages[4][1] = new Texture("fourAtomPlayerTwoHigh.jpg");
+		highlightedAtomImages[4][2] = new Texture("fourAtomPlayerThreeHigh.jpg");
+		highlightedAtomImages[4][3] = new Texture("fourAtomPlayerFourHigh.jpg");
+		highlightedAtomImages[4][4] = new Texture("fourAtomPlayerFiveHigh.jpg");
+		highlightedAtomImages[4][5] = new Texture("fourAtomPlayerSixHigh.jpg");
 	}
 
 	// This function loads the dimensions for all the
@@ -165,6 +202,8 @@ public class MainGameScreen implements Screen {
 						System.out.println("Error Time.");
 					}
 					gameBoard.changeBoard2(winningMove.coordX, winningMove.coordY, currentPlayer);
+					highlightPos.coordX = winningMove.coordX;
+					highlightPos.coordY = winningMove.coordY;
 					moveCompleted = false;
 					numberOfMovesPlayed += 1;
 				}
@@ -184,6 +223,8 @@ public class MainGameScreen implements Screen {
 				e.printStackTrace();
 			}
 			moveCompleted = gameBoard.nextBoard(currentPlayer);
+			highlightPos.coordX = -1;
+			highlightPos.coordY = -1;
 			if (moveCompleted) {
 				if (gameBoard.isWinningPosition(currentPlayer)
 						&& numberOfMovesPlayed > 1) {
@@ -240,11 +281,14 @@ public class MainGameScreen implements Screen {
 					currentPlayer)) {
 				gameBoard.changeBoard2(clickCoordX, clickCoordY,
 						currentPlayer);
+				highlightPos.coordX = clickCoordX;
+				highlightPos.coordY = clickCoordY;
 				moveCompleted = false;
 				numberOfMovesPlayed += 1;
 			}
 		}
 	}
+	
 	// Function to draw the game board using the three
 	// arrays.
 	private void drawGameBoard() {
@@ -254,24 +298,45 @@ public class MainGameScreen implements Screen {
 			Rectangle tempBlock = iter.next();
 			i = count / GRID_SIZE;
 			j = count % GRID_SIZE;
-			if (gameBoard.getRectangleWinner(i, j) == -1) {
-				batch.draw(
-						atomImages[0][0],
-						tempBlock.x, tempBlock.y);
-			} else {
-				if (gameBoard.getNumAtomsInRectangle(i, j) > 4) {
+			if (highlightPos.coordX == i && highlightPos.coordY == j) {
+				if (gameBoard.getRectangleWinner(i, j) == -1) {
 					batch.draw(
-							atomImages[0][gameBoard
-									.getRectangleWinner(i, j)], tempBlock.x,
-							tempBlock.y);
+							highlightedAtomImages[0][0],
+							tempBlock.x, tempBlock.y);
 				} else {
-					batch.draw(
-							atomImages[gameBoard.getNumAtomsInRectangle(i, j)][gameBoard
-									.getRectangleWinner(i, j)], tempBlock.x,
-							tempBlock.y);
+					if (gameBoard.getNumAtomsInRectangle(i, j) > 4) {
+						batch.draw(
+								highlightedAtomImages[0][gameBoard
+										.getRectangleWinner(i, j)], tempBlock.x,
+								tempBlock.y);
+					} else {
+						batch.draw(
+								highlightedAtomImages[gameBoard.getNumAtomsInRectangle(i, j)][gameBoard
+										.getRectangleWinner(i, j)], tempBlock.x,
+								tempBlock.y);
+					}
 				}
+				count++;
+			} else {
+				if (gameBoard.getRectangleWinner(i, j) == -1) {
+					batch.draw(
+							atomImages[0][0],
+							tempBlock.x, tempBlock.y);
+				} else {
+					if (gameBoard.getNumAtomsInRectangle(i, j) > 4) {
+						batch.draw(
+								atomImages[0][gameBoard
+										.getRectangleWinner(i, j)], tempBlock.x,
+								tempBlock.y);
+					} else {
+						batch.draw(
+								atomImages[gameBoard.getNumAtomsInRectangle(i, j)][gameBoard
+										.getRectangleWinner(i, j)], tempBlock.x,
+								tempBlock.y);
+					}
+				}
+				count++;
 			}
-			count++;
 		}
 	}
 
