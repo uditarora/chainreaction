@@ -62,7 +62,7 @@ public class GameSolver {
 		BoardNode currentBoardNode = possibleBoardNodeQueue.peek();
 		if (DEBUG)
 			System.out.println("Starting the AI decision");
-		while (true) {
+		while (possibleBoardNodeQueue.peek() != null) {
 			currentBoardNode = possibleBoardNodeQueue.poll();
 			int currentLevel = currentBoardNode.getLevel();
 			if (DEBUG)
