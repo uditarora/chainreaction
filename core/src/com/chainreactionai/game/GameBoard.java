@@ -19,6 +19,7 @@ public class GameBoard {
 	private PositionLevelForBFS initialPositionLevel, currentPositionLevel;
 	private LinkedList<Position> positionsQueue;
 	private LinkedList<PositionLevelForBFS> positionsLevelForBFSQueue;
+	final private boolean DEBUG = true;
 	
 	private class PositionLevelForBFS {
 		private int level;
@@ -117,8 +118,13 @@ public class GameBoard {
 					|| (currentPosition.coordX == gameGridSize - 1 && currentPosition.coordY == 0)
 					|| (currentPosition.coordX == gameGridSize - 1 && currentPosition.coordY == gameGridSize - 1)) {
 				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] >= 2) {
-					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
-					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
+					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] -= 2;
+					if (DEBUG) {
+						if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] > 0)
+							System.out.println("Atoms = " + numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] + " after split");
+					}
+					if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 0)
+						rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
 					if (currentPosition.coordX == 0
 							&& currentPosition.coordY == 0) {
 						positionsQueue.add(new Position(
@@ -154,8 +160,13 @@ public class GameBoard {
 					|| currentPosition.coordX == gameGridSize - 1
 					|| currentPosition.coordY == gameGridSize - 1) {
 				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] >= 3) {
-					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
-					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
+					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] -= 3;
+					if (DEBUG) {
+						if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] > 0)
+							System.out.println("Atoms = " + numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] + " after split");
+					}
+					if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 0)
+						rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
 					if (currentPosition.coordX == 0) {
 						positionsQueue.add(new Position(currentPosition.coordX,
 								currentPosition.coordY + 1));
@@ -194,8 +205,13 @@ public class GameBoard {
 				}
 			} else {
 				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] >= 4) {
-					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
-					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
+					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] -= 4;
+					if (DEBUG) {
+						if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] > 0)
+							System.out.println("Atoms = " + numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] + " after split");
+					}
+					if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 0)
+						rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
 					positionsQueue.add(new Position(currentPosition.coordX - 1,
 							currentPosition.coordY));
 					numAtomsInRectangle[currentPosition.coordX - 1][currentPosition.coordY] += 1;

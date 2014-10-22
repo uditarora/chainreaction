@@ -39,7 +39,7 @@ public class MainGameScreen implements Screen {
 	private boolean[] isCPU, lostPlayer;
 	private boolean gameOver, moveCompleted;
 	final private boolean DEBUG = true;
-	final private boolean DEBUG_CPU = false;
+	final private boolean DEBUG_CPU = true;
 
 	public MainGameScreen(ArrayList<Boolean> CPU) {
 		NUMBER_OF_PLAYERS = CPU.size();
