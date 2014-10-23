@@ -51,7 +51,7 @@ public class GameEndScreen implements Screen {
 		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
 		// The elements are displayed in the order you add them.
 		// The first appear on top, the last at the bottom.
-		title = new Label("Player " + String.valueOf(winningPlayer) + " has won the game!", skin);
+		title = new Label("Player " + String.valueOf(winningPlayer + 1) + " has won the game!", skin);
 		table.add(title).padBottom(40).row();
 		table.add(buttonPlayAgain).size(150, 60).padBottom(20).row();
 		table.add(buttonExit).size(150, 60).padBottom(20).row();
