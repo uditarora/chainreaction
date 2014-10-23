@@ -12,8 +12,16 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  * @author Kartik Parnami
@@ -28,24 +36,32 @@ public class MainGameScreen implements Screen {
 	final private int HEIGHT_RECTANGLE = 55;
 	final private int WIDTH_SCREEN = 440;
 	final private int HEIGHT_SCREEN = 480;
+	final private int HEIGHT_PAUSE_BUTTON = 27;
+	final private int WIDTH_PAUSE_BUTTON = 55;
 	private OrthographicCamera camera;
 	private int NUMBER_OF_PLAYERS;
+	private Texture pauseButtonImg = new Texture("pauseButton.jpg");
 	private Texture[][] atomImages = new Texture[NUM_STATES_POSSIBLE + 1][8];
 	private Texture[][] highlightedAtomImages = new Texture[NUM_STATES_POSSIBLE + 1][8];
 	private Array<Rectangle> rectangularGrid;
 	private GameBoard gameBoard;
-	private int clickCoordX, clickCoordY, currentPlayer, numberOfMovesPlayed;
+	private int clickCoordX, clickCoordY, currentPlayer, numberOfMovesPlayed, gameState;
 	private boolean clickOnEdge;
 	MyInputProcessor inputProcessor = new MyInputProcessor();
 	private boolean[] isCPU, lostPlayer;
 	private int[] maxPlyLevels;
 	private boolean gameOver, moveCompleted;
 	private ChainReactionAIGame myGame;
+	private Stage stage = new Stage();
+	private Table table = new Table();
+	private Viewport viewport;
+	private Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"),
+			new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
+	private TextButton resumeButton = new TextButton(new String("Resume"), skin), exitButton = new TextButton("Exit", skin);
 	private Position highlightPos = new Position(-1, -1);
 	final private boolean DEBUG = true;
 	final private boolean DEBUG_CPU = false;
 
-	// TODO: Modify this to get an array containing the maxPlyLevels from the previous screen
 	public MainGameScreen(ChainReactionAIGame game, ArrayList<Boolean> CPU, ArrayList<Integer> plyLevelList) {
 		myGame = game;
 		NUMBER_OF_PLAYERS = CPU.size();
@@ -68,9 +84,9 @@ public class MainGameScreen implements Screen {
 			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 				isCPU[i] = true;
 			}
-//			maxPlyLevels[0] = 2; maxPlyLevels[1] = 2; maxPlyLevels[2] = 2; maxPlyLevels[3] = 4;
 			maxPlyLevels[0] = 2; maxPlyLevels[1] = 3;
 		}
+		setGameState(0);
 		create();
 	}
 
@@ -80,12 +96,34 @@ public class MainGameScreen implements Screen {
 		// size of the screen
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, WIDTH_SCREEN, 650);
+		viewport = new Viewport() {
+		};
+		viewport.setCamera(camera);
 		rectangularGrid = new Array<Rectangle>();
 		gameBoard = new GameBoard(GRID_SIZE, NUMBER_OF_PLAYERS);
 		Gdx.input.setInputProcessor(inputProcessor);
 		inputProcessor.unsetTouchDown();
 		numberOfMovesPlayed = currentPlayer = 0;
-
+		
+		table.add(resumeButton).size(150, 60).padBottom(2).row();
+		table.add(exitButton).size(150, 60).padBottom(2).row();
+		table.setFillParent(true);
+		resumeButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				// Same way we moved here from the Splash Screen
+				// We set it to new Splash because we got no other screens
+				// otherwise you put the screen there where you want to go
+				resume();
+			}
+		});
+		exitButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				Gdx.app.exit();
+			}
+		});
+		
 		// Load default values into arrays
 		loadImagesintoArrays();
 		setDimsForRectangles();
@@ -192,92 +230,112 @@ public class MainGameScreen implements Screen {
 		}
 	}
 
+	private void setGameState(int state) {
+		gameState = state;
+	}
+	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		if (moveCompleted) {
-			if (lostPlayer[currentPlayer] == false) { 
-				// Check if current player is CPU and play its move
-				if (isCPU[currentPlayer] && !gameOver) {
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					if (DEBUG)
-						System.out.println("Reached CPU");
-					GameSolver solver = new GameSolver(gameBoard, currentPlayer,
-							NUMBER_OF_PLAYERS, lostPlayer, maxPlyLevels[currentPlayer]);
-					if (DEBUG)
-						System.out.println("GameSolver initialized");
-					Position winningMove = solver.getBestGameBoard();
-					if(winningMove == null) {
-						System.out.println("Error Time.");
-					}
-					gameBoard.changeBoard2(winningMove.coordX, winningMove.coordY, currentPlayer);
-					highlightPos.coordX = winningMove.coordX;
-					highlightPos.coordY = winningMove.coordY;
-					moveCompleted = false;
-					numberOfMovesPlayed += 1;
-				}
 		
-				// process user input
-				if (inputProcessor.isTouchedDown() && !gameOver) {
-					inputProcessor.unsetTouchDown();
-					processInput();
+		// process user input
+		if (inputProcessor.isTouchedDown() && !gameOver) {
+			inputProcessor.unsetTouchDown();
+			if (gameState == 0) {
+				if (moveCompleted) {
+					if (lostPlayer[currentPlayer] == false) {
+						processUserInputForMove();
+					}
 				}
-			} else {
-				currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
-			}
-		} else {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			moveCompleted = gameBoard.nextBoard(currentPlayer);
-			highlightPos.coordX = -1;
-			highlightPos.coordY = -1;
-			if (moveCompleted) {
-				if (gameBoard.isWinningPosition(currentPlayer)
-						&& numberOfMovesPlayed > 1) {
-					gameOver = true;
-					System.out.println("Player " + currentPlayer
-							+ " has won the game!");
-					myGame.setScreen(new GameEndScreen(myGame, currentPlayer));
-				}
-				currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
-				System.out.println("Move time.");
+				processPauseAction();
 			}
 		}
-
-		// Rendering here to have board updated
-		// after every player's move.
-		// Tell the camera to update its matrices.
-		camera.update();
-
-		// Tell the SpriteBatch to render in the
-		// coordinate system specified by the camera.
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		drawGameBoard();
-		batch.end();
-		if (numberOfMovesPlayed > NUMBER_OF_PLAYERS) {
-			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
-				if (!lostPlayer[i]) {
-					if (gameBoard.hasLost(i)) {
-						lostPlayer[i] = true;
+		
+		if (gameState == 0) {
+			if (moveCompleted) {
+				if (lostPlayer[currentPlayer] == false) { 
+					// Check if current player is CPU and play its move
+					if (isCPU[currentPlayer] && !gameOver) {
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						if (DEBUG)
+							System.out.println("Reached CPU");
+						GameSolver solver = new GameSolver(gameBoard, currentPlayer,
+								NUMBER_OF_PLAYERS, lostPlayer, maxPlyLevels[currentPlayer]);
+						if (DEBUG)
+							System.out.println("GameSolver initialized");
+						Position winningMove = solver.getBestGameBoard();
+						if(winningMove == null) {
+							System.out.println("Error Time.");
+						}
+						gameBoard.changeBoard2(winningMove.coordX, winningMove.coordY, currentPlayer);
+						highlightPos.coordX = winningMove.coordX;
+						highlightPos.coordY = winningMove.coordY;
+						moveCompleted = false;
+						numberOfMovesPlayed += 1;
+					}
+				} else {
+					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
+				}
+			} else {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				moveCompleted = gameBoard.nextBoard(currentPlayer);
+				highlightPos.coordX = -1;
+				highlightPos.coordY = -1;
+				if (moveCompleted) {
+					if (gameBoard.isWinningPosition(currentPlayer)
+							&& numberOfMovesPlayed > 1) {
+						gameOver = true;
+						System.out.println("Player " + currentPlayer
+								+ " has won the game!");
+						myGame.setScreen(new GameEndScreen(myGame, currentPlayer));
+					}
+					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
+					System.out.println("Move time.");
+				}
+			}
+	
+			// Rendering here to have board updated
+			// after every player's move.
+			// Tell the camera to update its matrices.
+			camera.update();
+	
+			// Tell the SpriteBatch to render in the
+			// coordinate system specified by the camera.
+			batch = (SpriteBatch)stage.getBatch();
+			batch.setProjectionMatrix(camera.combined);
+			batch.begin();
+			drawGameBoard();
+			batch.end();
+			if (numberOfMovesPlayed > NUMBER_OF_PLAYERS) {
+				for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
+					if (!lostPlayer[i]) {
+						if (gameBoard.hasLost(i)) {
+							lostPlayer[i] = true;
+						}
 					}
 				}
 			}
+		} else {	
+			stage.addActor(table);
+			stage.act();
+			stage.draw();
+			Gdx.input.setInputProcessor(stage);
 		}
 	}
 
-	private void processInput() {
+	private void processUserInputForMove() {
 		// Checking whether the click is on an edge or a box.
 		// If on edge, then reject the click.
-		if (inputProcessor.getYCoord() < HEIGHT_SCREEN - WIDTH_SCREEN)
+		if (inputProcessor.getYCoord() < HEIGHT_SCREEN - WIDTH_SCREEN || inputProcessor.getYCoord() > ((HEIGHT_SCREEN - WIDTH_SCREEN) + (GRID_SIZE*HEIGHT_RECTANGLE)))
 			return;
 		clickOnEdge = false;
 		clickCoordX = (int) (inputProcessor.getXCoord() / WIDTH_RECTANGLE);
@@ -304,6 +362,16 @@ public class MainGameScreen implements Screen {
 				numberOfMovesPlayed += 1;
 			}
 		}
+	}
+	
+	private void processPauseAction() {
+		if (inputProcessor.getYCoord() > HEIGHT_SCREEN - (GRID_SIZE * HEIGHT_RECTANGLE) || inputProcessor.getYCoord() < HEIGHT_SCREEN - (GRID_SIZE * HEIGHT_RECTANGLE) - HEIGHT_PAUSE_BUTTON) {
+			return;
+		}
+		if (inputProcessor.getXCoord() > WIDTH_PAUSE_BUTTON || inputProcessor.getXCoord() < 0) {
+			return;
+		}
+		pause();
 	}
 	
 	// Function to draw the game board using the three
@@ -355,6 +423,7 @@ public class MainGameScreen implements Screen {
 				count++;
 			}
 		}
+		batch.draw(pauseButtonImg, 0, (GRID_SIZE*HEIGHT_RECTANGLE)+170);
 	}
 
 	@Override
@@ -368,10 +437,13 @@ public class MainGameScreen implements Screen {
 
 	@Override
 	public void pause() {
+		gameState = 1;
 	}
 
 	@Override
 	public void resume() {
+		setGameState(0);
+		Gdx.input.setInputProcessor(inputProcessor);
 	}
 
 	@Override
