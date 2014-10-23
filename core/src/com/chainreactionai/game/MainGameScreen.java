@@ -40,12 +40,14 @@ public class MainGameScreen implements Screen {
 	private boolean[] isCPU, lostPlayer;
 	private int[] maxPlyLevels;
 	private boolean gameOver, moveCompleted;
+	private ChainReactionAIGame myGame;
 	private Position highlightPos = new Position(-1, -1);
 	final private boolean DEBUG = true;
 	final private boolean DEBUG_CPU = false;
 
 	// TODO: Modify this to get an array containing the maxPlyLevels from the previous screen
-	public MainGameScreen(ArrayList<Boolean> CPU, ArrayList<Integer> plyLevelList) {
+	public MainGameScreen(ChainReactionAIGame game, ArrayList<Boolean> CPU, ArrayList<Integer> plyLevelList) {
+		myGame = game;
 		NUMBER_OF_PLAYERS = CPU.size();
 		if (DEBUG_CPU)
 			NUMBER_OF_PLAYERS = 2;
@@ -243,6 +245,7 @@ public class MainGameScreen implements Screen {
 					gameOver = true;
 					System.out.println("Player " + currentPlayer
 							+ " has won the game!");
+					myGame.setScreen(new GameEndScreen(myGame, currentPlayer));
 				}
 				currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 				System.out.println("Move time.");

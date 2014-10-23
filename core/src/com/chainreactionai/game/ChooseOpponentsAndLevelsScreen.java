@@ -81,7 +81,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		}
 		tempStringArr.clear();
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
-			Label tempLabel = new Label("Player " + String.valueOf(i) + ":", skin);
+			Label tempLabel = new Label("Player " + String.valueOf(i+1) + ":", skin);
 			table.add(tempLabel).padBottom(0).row();
 			table.add(userSelectBoxes.get(i)).padBottom(0).row();
 			table.add(plySelectBoxes.get(i)).padBottom(2).row();
@@ -105,7 +105,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 					}
 					plyLevelList.add((plySelectBoxes.get(j).getSelectedIndex()) + 1);
 				}
-				myGame.setScreen(new MainGameScreen(isCPU, plyLevelList));
+				myGame.setScreen(new MainGameScreen(myGame, isCPU, plyLevelList));
 			}
 		});
 		Gdx.input.setInputProcessor(stage);
