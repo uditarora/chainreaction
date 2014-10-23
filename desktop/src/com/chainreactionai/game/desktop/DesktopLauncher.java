@@ -9,7 +9,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "ChainReaction";
 		config.width = 440;
-		config.height = 480;
+		config.height = 650;
 		new LwjglApplication(new ChainReactionAIGame(), config);
 	}
 }

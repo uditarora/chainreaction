@@ -38,26 +38,29 @@ public class MainGameScreen implements Screen {
 	private boolean clickOnEdge;
 	MyInputProcessor inputProcessor = new MyInputProcessor();
 	private boolean[] isCPU, lostPlayer;
-	private int[] maxPlyLevels; //TODO: Remove this when the constructor receives an array containing the levels
+	private int[] maxPlyLevels;
 	private boolean gameOver, moveCompleted;
 	private Position highlightPos = new Position(-1, -1);
 	final private boolean DEBUG = true;
-	final private boolean DEBUG_CPU = true;
+	final private boolean DEBUG_CPU = false;
 
 	// TODO: Modify this to get an array containing the maxPlyLevels from the previous screen
-	public MainGameScreen(ArrayList<Boolean> CPU) {
+	public MainGameScreen(ArrayList<Boolean> CPU, ArrayList<Integer> plyLevelList) {
 		NUMBER_OF_PLAYERS = CPU.size();
 		if (DEBUG_CPU)
 			NUMBER_OF_PLAYERS = 2;
 		isCPU = new boolean[NUMBER_OF_PLAYERS];
 		lostPlayer = new boolean[NUMBER_OF_PLAYERS];
-		maxPlyLevels = new int[NUMBER_OF_PLAYERS]; //TODO: Remove this too when passing levels from previous screen
+		maxPlyLevels = new int[NUMBER_OF_PLAYERS];
 		System.out.println(CPU.size());
-		for (int i = 0; i < CPU.size(); i += 1) {
-			System.out.println("isCPU[" + i + "] = " + CPU.get(i));
+		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			isCPU[i] = CPU.get(i);
-			if (isCPU[i])
-				maxPlyLevels[i] = 4;
+			if (isCPU[i]) {
+				maxPlyLevels[i] = plyLevelList.get(i);
+				System.out.println("isCPU[" + i + "] = " + isCPU[i] + " with Ply Level = " + maxPlyLevels[i]);
+			} else {
+				System.out.println("isCPU[" + i + "] = " + isCPU[i]);
+			}
 		}
 		if (DEBUG_CPU) {
 			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
@@ -74,7 +77,7 @@ public class MainGameScreen implements Screen {
 		// Show the world to be 440*480 no matter the
 		// size of the screen
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
+		camera.setToOrtho(false, WIDTH_SCREEN, 650);
 		rectangularGrid = new Array<Rectangle>();
 		gameBoard = new GameBoard(GRID_SIZE, NUMBER_OF_PLAYERS);
 		Gdx.input.setInputProcessor(inputProcessor);
@@ -171,7 +174,7 @@ public class MainGameScreen implements Screen {
 			for (int j = 0; j < GRID_SIZE; j += 1) {
 				Rectangle tempBlock = new Rectangle();
 				tempBlock.x = (float) (i * WIDTH_RECTANGLE);
-				tempBlock.y = (float) (j * HEIGHT_RECTANGLE);
+				tempBlock.y = (float) ((j * HEIGHT_RECTANGLE) + 170);
 				tempBlock.height = (float) (HEIGHT_RECTANGLE);
 				tempBlock.width = (float) (WIDTH_RECTANGLE);
 				rectangularGrid.add(tempBlock);

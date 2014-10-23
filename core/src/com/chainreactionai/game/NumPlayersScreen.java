@@ -12,16 +12,18 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * @author Kartik Parnami
  * 
  */
-public class MainMenuScreen implements Screen {
+public class NumPlayersScreen implements Screen {
 	SpriteBatch batch;
 	private OrthographicCamera camera;
 	private ChainReactionAIGame myGame;
@@ -29,14 +31,14 @@ public class MainMenuScreen implements Screen {
 	final private int HEIGHT_SCREEN = 650;
 	private Stage stage = new Stage();
 	private Table table = new Table();
+	private int MAX_NUMBER_OF_PLAYERS = 6, NUMBER_OF_DIFFICULTY_LEVELS = 4;
 	private Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"),
 			new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
-	private TextButton buttonPlay = new TextButton("Play",
-			skin),
-			buttonExit = new TextButton("Exit", skin);
-	private Label title = new Label("Chain Reaction", skin);
+	private TextButton submitButton;
+	private Label title;
+	private SelectBox<String> selectBox;
 
-	public MainMenuScreen(ChainReactionAIGame game) {
+	public NumPlayersScreen(ChainReactionAIGame game) {
 		myGame = game;
 		create();
 	}
@@ -49,25 +51,25 @@ public class MainMenuScreen implements Screen {
 		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
 		// The elements are displayed in the order you add them.
 		// The first appear on top, the last at the bottom.
+		title = new Label("Choose number of players", skin);
 		table.add(title).padBottom(40).row();
-		table.add(buttonPlay).size(150, 60).padBottom(20).row();
-		table.add(buttonExit).size(150, 60).padBottom(20).row();
-
+		selectBox = new SelectBox<String>(skin);
+		selectBox.setMaxListCount(MAX_NUMBER_OF_PLAYERS);
+		Array<String> tempStringArr = new Array<String>();
+		for (int i = 1; i < MAX_NUMBER_OF_PLAYERS; i += 1) {
+			tempStringArr.add(String.valueOf(i+1));
+		}
+		selectBox.setItems(tempStringArr);
+		table.add(selectBox).size(100, 40).padBottom(20).row();
+		submitButton = new TextButton(new String("Submit"), skin);
+		table.add(submitButton).size(100, 40).padBottom(20).row();
 		table.setFillParent(true);
 		stage.addActor(table);
-		buttonPlay.addListener(new ClickListener() {
+		submitButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// Same way we moved here from the Splash Screen
-				// We set it to new Splash because we got no other screens
-				// otherwise you put the screen there where you want to go
-				myGame.setScreen(new NumPlayersScreen(myGame));
-			}
-		});
-		buttonExit.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				Gdx.app.exit();
+				int chosenNumOfPlayers = Integer.parseInt(selectBox.getSelected());
+				myGame.setScreen(new ChooseOpponentsAndLevelsScreen(myGame, chosenNumOfPlayers, NUMBER_OF_DIFFICULTY_LEVELS));
 			}
 		});
 		Gdx.input.setInputProcessor(stage);
