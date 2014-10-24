@@ -36,6 +36,7 @@ public class MainGameScreen implements Screen {
 	final private int HEIGHT_RECTANGLE = 55;
 	final private int WIDTH_SCREEN = 440;
 	final private int HEIGHT_SCREEN = 480;
+	final private int HEIGHT_GAME = 650;
 	final private int HEIGHT_PAUSE_BUTTON = 27;
 	final private int WIDTH_PAUSE_BUTTON = 55;
 	private OrthographicCamera camera;
@@ -242,6 +243,8 @@ public class MainGameScreen implements Screen {
 		// process user input
 		if (inputProcessor.isTouchedDown() && !gameOver) {
 			inputProcessor.unsetTouchDown();
+			Gdx.app.log("Click found at", inputProcessor.getXCoord() + " " + inputProcessor.getYCoord());
+			Gdx.app.log("Click found at", normalizeClickCoord(inputProcessor.getXCoord(), ChainReactionAIGame.WIDTH, WIDTH_SCREEN) + " " + normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN));
 			if (gameState == 0) {
 				if (moveCompleted) {
 					if (lostPlayer[currentPlayer] == false) {
@@ -335,15 +338,15 @@ public class MainGameScreen implements Screen {
 	private void processUserInputForMove() {
 		// Checking whether the click is on an edge or a box.
 		// If on edge, then reject the click.
-		if (inputProcessor.getYCoord() < HEIGHT_SCREEN - WIDTH_SCREEN || inputProcessor.getYCoord() > ((HEIGHT_SCREEN - WIDTH_SCREEN) + (GRID_SIZE*HEIGHT_RECTANGLE)))
+		if (normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_GAME) < HEIGHT_SCREEN - WIDTH_SCREEN || normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_GAME) > ((HEIGHT_SCREEN - WIDTH_SCREEN) + (GRID_SIZE*HEIGHT_RECTANGLE)))
 			return;
 		clickOnEdge = false;
-		clickCoordX = (int) (inputProcessor.getXCoord() / WIDTH_RECTANGLE);
-		if (inputProcessor.getXCoord() % WIDTH_RECTANGLE == 0.0) {
+		clickCoordX = (int) (normalizeClickCoord(inputProcessor.getXCoord(), ChainReactionAIGame.WIDTH, WIDTH_SCREEN) / WIDTH_RECTANGLE);
+		if (normalizeClickCoord(inputProcessor.getXCoord(), ChainReactionAIGame.WIDTH, WIDTH_SCREEN) % WIDTH_RECTANGLE == 0.0) {
 			clickOnEdge = true;
 		}
-		clickCoordY = (int) ((HEIGHT_SCREEN - inputProcessor.getYCoord()) / HEIGHT_RECTANGLE);
-		if ((HEIGHT_SCREEN - inputProcessor.getYCoord()) % HEIGHT_RECTANGLE == 0.0) {
+		clickCoordY = (int) ((HEIGHT_SCREEN - normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_GAME)) / HEIGHT_RECTANGLE);
+		if ((HEIGHT_SCREEN - normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_GAME)) % HEIGHT_RECTANGLE == 0.0) {
 			clickOnEdge = true;
 		}
 
@@ -365,10 +368,10 @@ public class MainGameScreen implements Screen {
 	}
 	
 	private void processPauseAction() {
-		if (inputProcessor.getYCoord() > HEIGHT_SCREEN - (GRID_SIZE * HEIGHT_RECTANGLE) || inputProcessor.getYCoord() < HEIGHT_SCREEN - (GRID_SIZE * HEIGHT_RECTANGLE) - HEIGHT_PAUSE_BUTTON) {
+		if (normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_GAME) > HEIGHT_SCREEN - (GRID_SIZE * HEIGHT_RECTANGLE) || normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_GAME) < HEIGHT_SCREEN - (GRID_SIZE * HEIGHT_RECTANGLE) - HEIGHT_PAUSE_BUTTON) {
 			return;
 		}
-		if (inputProcessor.getXCoord() > WIDTH_PAUSE_BUTTON || inputProcessor.getXCoord() < 0) {
+		if (normalizeClickCoord(inputProcessor.getXCoord(), ChainReactionAIGame.WIDTH, WIDTH_SCREEN) > WIDTH_PAUSE_BUTTON || normalizeClickCoord(inputProcessor.getXCoord(), ChainReactionAIGame.WIDTH, WIDTH_SCREEN) < 0) {
 			return;
 		}
 		pause();
@@ -424,6 +427,10 @@ public class MainGameScreen implements Screen {
 			}
 		}
 		batch.draw(pauseButtonImg, 0, (GRID_SIZE*HEIGHT_RECTANGLE)+170);
+	}
+	
+	private float normalizeClickCoord(float coordVal, float screenVal, float normalizeTo) {
+		return ((coordVal*normalizeTo)/screenVal);
 	}
 
 	@Override
