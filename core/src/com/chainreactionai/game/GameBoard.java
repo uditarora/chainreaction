@@ -17,10 +17,11 @@ public class GameBoard {
 	private int gameGridSize, numPlayers, currentLevel;
 	private Position initialPosition;
 	private PositionLevelForBFS initialPositionLevel, currentPositionLevel;
-//	private LinkedList<Position> positionsQueue;
 	private LinkedList<PositionLevelForBFS> positionsLevelForBFSQueue;
-//	final private boolean DEBUG = true;
 	
+	// This is the class which helps in BFS for animation.
+	// The level variable helps in expanding one level at a time
+	// before sending the board for drawing.
 	private class PositionLevelForBFS {
 		private int level;
 		private Position position;
@@ -30,6 +31,7 @@ public class GameBoard {
 			level = lev;
 		}
 	}
+	
 	// Constructor to initialize the grid size, number of players
 	// and setting the default values for rectangle winners and
 	// number of atoms in each rectangle.
@@ -42,6 +44,7 @@ public class GameBoard {
 		setDefaultNumAtomsInRectangle();
 	}
 
+	// Another constructor which returns a clone of the passed GameBoard.
 	public GameBoard(GameBoard board) {
 		this.gameGridSize = board.gameGridSize;
 		this.numPlayers = board.numPlayers;
@@ -173,7 +176,8 @@ public class GameBoard {
 		}
 	}
 
-	
+	// This is the initialization function for changing the GameBoard
+	// with animation.
 	public void changeBoard2(int coordX, int coordY, int player) {
 		initialPosition = new Position(coordX, coordY);
 		positionsLevelForBFSQueue = new LinkedList<PositionLevelForBFS>();
@@ -185,6 +189,9 @@ public class GameBoard {
 		currentLevel = 0;
 	}
 	
+	// This board expands the board by one level of BFS and returns
+	// to the drawing board to give animation effect. Also returns 
+	// whether the BFS is complete yet or not.
 	public boolean nextBoard(int player) {
 		if (positionsLevelForBFSQueue.peek() != null && !gameOver) {
 			while(positionsLevelForBFSQueue.peek() != null && positionsLevelForBFSQueue.peek().level == currentLevel) {
@@ -428,6 +435,7 @@ public class GameBoard {
 		}
 	}
 	
+	// Checks if two GameBoards are equal or not.
 	public boolean isEqual(GameBoard gb) {
 		for (int i = 0; i < gameGridSize; i += 1) {
 			for (int j = 0; j < gameGridSize; j += 1) {

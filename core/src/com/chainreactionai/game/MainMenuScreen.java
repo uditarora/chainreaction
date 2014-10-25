@@ -52,20 +52,21 @@ public class MainMenuScreen implements Screen {
 		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
 		// The elements are displayed in the order you add them.
 		// The first appear on top, the last at the bottom.
+		// Up-scale Factors are used to get proper sized buttons
+		// upscaled or downscaled according to the Screen Dimensions
 		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
 		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
+		// Adds the title and buttons to the Table.
 		table.add(title).padBottom(40).row();
 		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*heightUpscaleFactor).padBottom(20).row();
 		table.add(buttonExit).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*heightUpscaleFactor).padBottom(20).row();
-
 		table.setFillParent(true);
+		// Adding the table to stage.
 		stage.addActor(table);
+		// Attaching ClickListeners to the Play and Exit buttons.
 		buttonPlay.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// Same way we moved here from the Splash Screen
-				// We set it to new Splash because we got no other screens
-				// otherwise you put the screen there where you want to go
 				myGame.setScreen(new NumPlayersScreen(myGame));
 			}
 		});

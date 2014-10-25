@@ -19,6 +19,8 @@ public class GameSolver {
 	private int MAX_PLY_LEVEL = 3;
 	final private boolean DEBUG = false;
 	
+	// Class to keep the click coordinates which were done
+	// by the player to get this GameBoard.
 	private class GameBoardAndCoord {
 		private GameBoard board;
 		private Position position;
@@ -128,7 +130,8 @@ public class GameSolver {
 		}
 		if (DEBUG)
 			System.out.println("AI has decided the winning Position.");
-		//
+		// Picks a random move out of the possible Best Moves and retraces
+		// it to the top to get the coordinates of the desired click.
 		numberOfBestBoardNodes = bestBoardNodesArr.size();
 		chosenBestBoardNodeIndex = rand.nextInt(numberOfBestBoardNodes);
 		solutionBoardNode = getPredecessorNode(bestBoardNodesArr
@@ -162,6 +165,9 @@ public class GameSolver {
 		return possibleMoves;
 	}
 
+	// Returns a list of all possible board positions from a
+	// given board for the given player along with the coords
+	// of the click used to get there.
 	private Iterable<GameBoardAndCoord> getAllPossibleMovesWithCoords(GameBoard board, int player) {
 		Stack<GameBoardAndCoord> possibleMoves = new Stack<GameBoardAndCoord>();
 		GameBoardAndCoord tempGameBoardAndCoord;

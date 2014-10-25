@@ -51,12 +51,16 @@ public class GameEndScreen implements Screen {
 		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
 		// The elements are displayed in the order you add them.
 		// The first appear on top, the last at the bottom.
+		// Initialize and add the winning quote to the Table
 		title = new Label("Player " + String.valueOf(winningPlayer + 1) + " has won the game!", skin);
 		table.add(title).padBottom(40).row();
+		// Add the PlayAgain and Exit buttons to the Table.
 		table.add(buttonPlayAgain).size(150, 60).padBottom(20).row();
 		table.add(buttonExit).size(150, 60).padBottom(20).row();
 		table.setFillParent(true);
+		// Add table to the stage.
 		stage.addActor(table);
+		// Add ClickListeners to the Play Again and Exit buttons
 		buttonPlayAgain.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
