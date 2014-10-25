@@ -48,6 +48,7 @@ public class NumPlayersScreen implements Screen {
 		create();
 	}
 
+	// Initialization function
 	private void create() {
 		batch = new SpriteBatch();
 		// Show the world to be 440*480 no matter the
@@ -56,10 +57,14 @@ public class NumPlayersScreen implements Screen {
 		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
 		// The elements are displayed in the order you add them.
 		// The first appear on top, the last at the bottom.
+		// Up-scale Factors are used to get proper sized buttons
+		// upscaled or downscaled according to the Screen Dimensions
 		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
 		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
+		// Initializing and adding the title to Table.
 		title = new Label("Choose number of players", skin);
 		table.add(title).padBottom(10).row();
+		// Initializing the Drop-Down menu
 		selectBox = new SelectBox<String>(skin);
 		selectBox.setMaxListCount(MAX_NUMBER_OF_PLAYERS);
 		Array<String> tempStringArr = new Array<String>();
@@ -67,11 +72,15 @@ public class NumPlayersScreen implements Screen {
 			tempStringArr.add(String.valueOf(i+1));
 		}
 		selectBox.setItems(tempStringArr);
+		// Adding the DropDown to the Table.
 		table.add(selectBox).size(WIDTH_DROP_DOWN_MENUS*widthUpscaleFactor, HEIGHT_DROP_DOWN_MENUS*heightUpscaleFactor).padBottom(10).row();
+		// Initializing and adding the Submit Button to Table.
 		submitButton = new TextButton(new String("Submit"), skin);
 		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*widthUpscaleFactor, HEIGHT_SUBMIT_BUTTON*heightUpscaleFactor).padBottom(2).row();
 		table.setFillParent(true);
+		// Adding the table to the stage.
 		stage.addActor(table);
+		// Attaching the ClickListener to the submit button.
 		submitButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {

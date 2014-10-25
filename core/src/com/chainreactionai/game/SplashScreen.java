@@ -21,19 +21,21 @@ public class SplashScreen implements Screen {
 	private ChainReactionAIGame myGame;
 	private Texture splashScreenBackground;
 	final private int WIDTH_SCREEN = 440;
-	final private int HEIGHT_SCREEN = 650;
+	final private int HEIGHT_SCREEN = 480;
 
 	public SplashScreen(ChainReactionAIGame game) {
 		myGame = game;
 		create();
 	}
 
+	// Initialization function
 	private void create() {
 		batch = new SpriteBatch();
 		// Show the world to be 440*480 no matter the
 		// size of the screen
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
+		// Load the SplashScreen image.
 		splashScreenBackground = new Texture("SplashScreen.jpg");
 	}
 

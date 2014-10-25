@@ -62,9 +62,12 @@ public class MainGameScreen implements Screen {
 			new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
 	private TextButton resumeButton, exitButton, newGameButton;
 	private Position highlightPos = new Position(-1, -1);
+	// All debug printing should go under this flag.
 	final private boolean DEBUG = true;
 	final private boolean DEBUG_CPU = false;
 
+	// Constructor to initialize which player is CPU and which is human.
+	// Also sets difficulty levels for CPU players.
 	public MainGameScreen(ChainReactionAIGame game, ArrayList<Boolean> CPU, ArrayList<Integer> plyLevelList) {
 		myGame = game;
 		NUMBER_OF_PLAYERS = CPU.size();
@@ -102,35 +105,37 @@ public class MainGameScreen implements Screen {
 		viewport = new Viewport() {
 		};
 		viewport.setCamera(camera);
+		
+		// Initializing stuff.
 		rectangularGrid = new Array<Rectangle>();
 		gameBoard = new GameBoard(GRID_SIZE, NUMBER_OF_PLAYERS);
 		Gdx.input.setInputProcessor(inputProcessor);
 		inputProcessor.unsetTouchDown();
 		numberOfMovesPlayed = currentPlayer = 0;
+		// Up-scale Factors are used to get proper sized buttons
+		// upscaled or downscaled according to the Screen Dimensions
 		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
 		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
 		resumeButton = new TextButton(new String("Resume"), skin);
 		newGameButton = new TextButton(new String("New Game"), skin);
 		exitButton = new TextButton("Exit", skin);
+		
+		// Populating the Pause menu with the buttons.
 		table.add(resumeButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*heightUpscaleFactor).padBottom(2).row();
 		table.add(newGameButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*heightUpscaleFactor).padBottom(2).row();
 		table.add(exitButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*heightUpscaleFactor).padBottom(2).row();
 		table.setFillParent(true);
+		
+		//Attaching click handlers to the pause menu buttons.
 		resumeButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// Same way we moved here from the Splash Screen
-				// We set it to new Splash because we got no other screens
-				// otherwise you put the screen there where you want to go
 				resume();
 			}
 		});
 		newGameButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// Same way we moved here from the Splash Screen
-				// We set it to new Splash because we got no other screens
-				// otherwise you put the screen there where you want to go
 				shiftToNewGameScreen();
 			}
 		});
@@ -187,35 +192,35 @@ public class MainGameScreen implements Screen {
 		atomImages[4][3] = new Texture("fourAtomPlayerFour.jpg");
 		atomImages[4][4] = new Texture("fourAtomPlayerFive.jpg");
 		atomImages[4][5] = new Texture("fourAtomPlayerSix.jpg");
-		// Background image loaded into first column
+		// Background highlighted image loaded into first column
 		highlightedAtomImages[0][0] = new Texture("backgroundHigh.jpg");
 		highlightedAtomImages[0][1] = new Texture("backgroundHigh.jpg");
 		highlightedAtomImages[0][2] = new Texture("backgroundHigh.jpg");
 		highlightedAtomImages[0][3] = new Texture("backgroundHigh.jpg");
 		highlightedAtomImages[0][4] = new Texture("backgroundHigh.jpg");
 		highlightedAtomImages[0][5] = new Texture("backgroundHigh.jpg");
-		// One Atom Images Batch
+		// One Atom highlighted Images Batch
 		highlightedAtomImages[1][0] = new Texture("oneAtomPlayerOneHigh.jpg");
 		highlightedAtomImages[1][1] = new Texture("oneAtomPlayerTwoHigh.jpg");
 		highlightedAtomImages[1][2] = new Texture("oneAtomPlayerThreeHigh.jpg");
 		highlightedAtomImages[1][3] = new Texture("oneAtomPlayerFourHigh.jpg");
 		highlightedAtomImages[1][4] = new Texture("oneAtomPlayerFiveHigh.jpg");
 		highlightedAtomImages[1][5] = new Texture("oneAtomPlayerSixHigh.jpg");
-		// Two Atom Images Batch
+		// Two Atom highlighted Images Batch
 		highlightedAtomImages[2][0] = new Texture("twoAtomPlayerOneHigh.jpg");
 		highlightedAtomImages[2][1] = new Texture("twoAtomPlayerTwoHigh.jpg");
 		highlightedAtomImages[2][2] = new Texture("twoAtomPlayerThreeHigh.jpg");
 		highlightedAtomImages[2][3] = new Texture("twoAtomPlayerFourHigh.jpg");
 		highlightedAtomImages[2][4] = new Texture("twoAtomPlayerFiveHigh.jpg");
 		highlightedAtomImages[2][5] = new Texture("twoAtomPlayerSixHigh.jpg");
-		// Three Atom Images Batch
+		// Three Atom highlighted Images Batch
 		highlightedAtomImages[3][0] = new Texture("threeAtomPlayerOneHigh.jpg");
 		highlightedAtomImages[3][1] = new Texture("threeAtomPlayerTwoHigh.jpg");
 		highlightedAtomImages[3][2] = new Texture("threeAtomPlayerThreeHigh.jpg");
 		highlightedAtomImages[3][3] = new Texture("threeAtomPlayerFourHigh.jpg");
 		highlightedAtomImages[3][4] = new Texture("threeAtomPlayerFiveHigh.jpg");
 		highlightedAtomImages[3][5] = new Texture("threeAtomPlayerSixHigh.jpg");
-		//Four Atom Images Batch
+		//Four Atom highlighted Images Batch
 		highlightedAtomImages[4][0] = new Texture("fourAtomPlayerOneHigh.jpg");
 		highlightedAtomImages[4][1] = new Texture("fourAtomPlayerTwoHigh.jpg");
 		highlightedAtomImages[4][2] = new Texture("fourAtomPlayerThreeHigh.jpg");
@@ -248,6 +253,7 @@ public class MainGameScreen implements Screen {
 		}
 	}
 
+	// This function sets the gameState to given argument val.
 	private void setGameState(int state) {
 		gameState = state;
 	}
@@ -260,20 +266,28 @@ public class MainGameScreen implements Screen {
 		// process user input
 		if (inputProcessor.isTouchedDown() && !gameOver) {
 			inputProcessor.unsetTouchDown();
-			Gdx.app.log("Click found at", inputProcessor.getXCoord() + " " + inputProcessor.getYCoord());
-			Gdx.app.log("Click found at", normalizeClickCoord(inputProcessor.getXCoord(), ChainReactionAIGame.WIDTH, WIDTH_SCREEN) + " " + normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN));
+			// Log the clicks for Debugging
+			if(DEBUG) {
+				Gdx.app.log("Click found at", inputProcessor.getXCoord() + " " + inputProcessor.getYCoord());
+				Gdx.app.log("Click found at", normalizeClickCoord(inputProcessor.getXCoord(), ChainReactionAIGame.WIDTH, WIDTH_SCREEN) + " " + normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN));
+			}
 			if (gameState == 0) {
+				// Used to process the clicks
 				if (moveCompleted) {
 					if (lostPlayer[currentPlayer] == false) {
 						processUserInputForMove();
 					}
 				}
+				// Used to process pause button click
 				processPauseAction();
 			}
 		}
 		
+		// If game is not paused
 		if (gameState == 0) {
+			// If the move is sone after the animation
 			if (moveCompleted) {
+				// If the player has not lost the game yet
 				if (lostPlayer[currentPlayer] == false) { 
 					// Check if current player is CPU and play its move
 					if (isCPU[currentPlayer] && !gameOver) {
@@ -284,21 +298,28 @@ public class MainGameScreen implements Screen {
 						}
 						if (DEBUG)
 							System.out.println("Reached CPU");
+						// Initializing the GameSolver
 						GameSolver solver = new GameSolver(gameBoard, currentPlayer,
 								NUMBER_OF_PLAYERS, lostPlayer, maxPlyLevels[currentPlayer]);
 						if (DEBUG)
 							System.out.println("GameSolver initialized");
+						// Get the position where we should place the new ball
+						// so that the GameSolver's best move is executed.
 						Position winningMove = solver.getBestGameBoard();
 						if(winningMove == null) {
 							System.out.println("Error Time.");
 						}
+						// Initialize the animation for changing the Board.
 						gameBoard.changeBoard2(winningMove.coordX, winningMove.coordY, currentPlayer);
+						// Store these coordinates so they can be shown as highlighted.
 						highlightPos.coordX = winningMove.coordX;
 						highlightPos.coordY = winningMove.coordY;
+						// Set the moveCompleted flag to be false, so as to start the animation.
 						moveCompleted = false;
 						numberOfMovesPlayed += 1;
 					}
 				} else {
+					// Giving the chance to the next player to play.
 					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 				}
 			} else {
@@ -307,9 +328,14 @@ public class MainGameScreen implements Screen {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				// Animates board to show new board with next level of BFS
+				// calls done. Returns whether the BFS is complete or not.
 				moveCompleted = gameBoard.nextBoard(currentPlayer);
+				// Empties the highlight position so every recursive split
+				// is not highlighted.
 				highlightPos.coordX = -1;
 				highlightPos.coordY = -1;
+				// Check after the move if it was the winning move or not.
 				if (moveCompleted) {
 					if (gameBoard.isWinningPosition(currentPlayer)
 							&& numberOfMovesPlayed > 1) {
@@ -335,6 +361,8 @@ public class MainGameScreen implements Screen {
 			batch.begin();
 			drawGameBoard();
 			batch.end();
+			// Check if any player has lost the game and doesn't permit
+			// it to play any further.
 			if (numberOfMovesPlayed > NUMBER_OF_PLAYERS) {
 				for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 					if (!lostPlayer[i]) {
@@ -344,7 +372,8 @@ public class MainGameScreen implements Screen {
 					}
 				}
 			}
-		} else {	
+		} else {
+			// If the game is paused, add the pause menu to the stage.
 			stage.addActor(table);
 			stage.act();
 			stage.draw();
@@ -352,6 +381,8 @@ public class MainGameScreen implements Screen {
 		}
 	}
 
+	// This function processes the User input for a new move and changes
+	// the board accordingly.
 	private void processUserInputForMove() {
 		// Checking whether the click is on an edge or a box.
 		// If on edge, then reject the click.
@@ -384,7 +415,10 @@ public class MainGameScreen implements Screen {
 		}
 	}
 	
+	// This function processes the user input if the user 
+	// tries to pause the game.
 	private void processPauseAction() {
+		// Checks if the click is on the pause button, else returns
 		if (normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN) > HEIGHT_SCREEN - (GRID_SIZE * HEIGHT_RECTANGLE) || normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN) < HEIGHT_SCREEN - (GRID_SIZE * HEIGHT_RECTANGLE) - HEIGHT_PAUSE_BUTTON) {
 			return;
 		}
@@ -400,10 +434,13 @@ public class MainGameScreen implements Screen {
 		Iterator<Rectangle> iter = rectangularGrid.iterator();
 		int i, j, count = 0;
 		batch.draw(gameBackground, 0, 0);
+		// Goes through all the rectangles pre-fed into the 
+		// rectangularGrid and draws them to the board.
 		while (iter.hasNext()) {
 			Rectangle tempBlock = iter.next();
 			i = count / GRID_SIZE;
 			j = count % GRID_SIZE;
+			// Checks if a given rectangle has to be highlighted indicating a move.
 			if (highlightPos.coordX == i && highlightPos.coordY == j) {
 				if (gameBoard.getRectangleWinner(i, j) == -1) {
 					batch.draw(
@@ -444,13 +481,17 @@ public class MainGameScreen implements Screen {
 				count++;
 			}
 		}
+		// Draws the pause button to the right place on the screen.
 		batch.draw(pauseButtonImg, 0, (GRID_SIZE*HEIGHT_RECTANGLE));
 	}
 	
+	// Normalizes the coordinates of a click to the correct coordinates
+	// according to the screen size and the game dimensions.
 	private float normalizeClickCoord(float coordVal, float screenVal, float normalizeTo) {
 		return ((coordVal*normalizeTo)/screenVal);
 	}
 
+	// This function shifts the Screen to the NumPlayersScreen.
 	private void shiftToNewGameScreen() {
 		myGame.setScreen(new NumPlayersScreen(myGame));
 	}
@@ -460,17 +501,21 @@ public class MainGameScreen implements Screen {
 		// dispose of all the native resources
 	}
 
+	// On window resize changes the dimensions for 
+	// continued pleasure (if you know what I mean :P)
 	@Override
 	public void resize(int width, int height) {
 		ChainReactionAIGame.WIDTH = width;
 		ChainReactionAIGame.HEIGHT = height;
 	}
 
+	// Sets game state to 1 thereby Pausing the game.
 	@Override
 	public void pause() {
-		gameState = 1;
+		setGameState(1);
 	}
 
+	// Sets game state to 0 thereby resuming the game.
 	@Override
 	public void resume() {
 		setGameState(0);
