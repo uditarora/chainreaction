@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -30,9 +31,15 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	private OrthographicCamera camera;
 	private ChainReactionAIGame myGame;
 	final private int WIDTH_SCREEN = 440;
-	final private int HEIGHT_SCREEN = 650;
+	final private int HEIGHT_SCREEN = 480;
+	final private int HEIGHT_DROP_DOWN_MENUS = 30;
+	final private int WIDTH_DROP_DOWN_MENUS = 150;
+	final private int WIDTH_SUBMIT_BUTTON = 100;
+	final private int HEIGHT_SUBMIT_BUTTON = 40;
+	private float heightUpscaleFactor, widthUpscaleFactor;
 	private Stage stage = new Stage();
-	private Table table = new Table();
+	private Table table = new Table(), container = new Table();
+	private ScrollPane scroll;
 	private int NUMBER_OF_PLAYERS, NUMBER_OF_DIFFICULTY_LEVELS;
 	private Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"),
 			new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
@@ -58,8 +65,10 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
 		// The elements are displayed in the order you add them.
 		// The first appear on top, the last at the bottom.
+		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
+		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
 		title = new Label("Choose specifications for the players", skin);
-		table.add(title).padBottom(2).row();
+		table.add(title).padTop(20).row();
 		Array<String> tempStringArr = new Array<String>();
 		tempStringArr.add("Human");
 		tempStringArr.add("CPU");
@@ -83,13 +92,16 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			Label tempLabel = new Label("Player " + String.valueOf(i+1) + ":", skin);
 			table.add(tempLabel).padBottom(0).row();
-			table.add(userSelectBoxes.get(i)).padBottom(0).row();
-			table.add(plySelectBoxes.get(i)).padBottom(2).row();
+			table.add(userSelectBoxes.get(i)).size(WIDTH_DROP_DOWN_MENUS*widthUpscaleFactor, HEIGHT_DROP_DOWN_MENUS*heightUpscaleFactor).padBottom(0).row();
+			table.add(plySelectBoxes.get(i)).size(WIDTH_DROP_DOWN_MENUS*widthUpscaleFactor, HEIGHT_DROP_DOWN_MENUS*heightUpscaleFactor).padBottom(2).row();
 		}
 		submitButton = new TextButton(new String("Submit"), skin);
-		table.add(submitButton).size(100, 40).padBottom(20).row();
-		table.setFillParent(true);
-		stage.addActor(table);
+		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*widthUpscaleFactor, HEIGHT_SUBMIT_BUTTON*heightUpscaleFactor).padBottom(20).row();
+		//table.setFillParent(true);
+		scroll = new ScrollPane(table);
+		container.setFillParent(true);
+		container.add(scroll).fill().expand().row();
+		stage.addActor(container);
 		submitButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
