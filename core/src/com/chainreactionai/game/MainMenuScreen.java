@@ -26,7 +26,10 @@ public class MainMenuScreen implements Screen {
 	private OrthographicCamera camera;
 	private ChainReactionAIGame myGame;
 	final private int WIDTH_SCREEN = 440;
-	final private int HEIGHT_SCREEN = 650;
+	final private int HEIGHT_SCREEN = 480;
+	final private int HEIGHT_MAIN_MENU_BUTTONS = 60;
+	final private int WIDTH_MAIN_MENU_BUTTONS = 150;
+	private float heightUpscaleFactor, widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
 	private Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"),
@@ -49,9 +52,11 @@ public class MainMenuScreen implements Screen {
 		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
 		// The elements are displayed in the order you add them.
 		// The first appear on top, the last at the bottom.
+		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
+		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
 		table.add(title).padBottom(40).row();
-		table.add(buttonPlay).size(150, 60).padBottom(20).row();
-		table.add(buttonExit).size(150, 60).padBottom(20).row();
+		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*heightUpscaleFactor).padBottom(20).row();
+		table.add(buttonExit).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*heightUpscaleFactor).padBottom(20).row();
 
 		table.setFillParent(true);
 		stage.addActor(table);

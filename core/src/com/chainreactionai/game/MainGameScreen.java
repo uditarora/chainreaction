@@ -36,17 +36,19 @@ public class MainGameScreen implements Screen {
 	final private int HEIGHT_RECTANGLE = 55;
 	final private int WIDTH_SCREEN = 440;
 	final private int HEIGHT_SCREEN = 480;
-	final private int HEIGHT_GAME = 650;
 	final private int HEIGHT_PAUSE_BUTTON = 27;
 	final private int WIDTH_PAUSE_BUTTON = 55;
+	final private int HEIGHT_PAUSE_MENU_BUTTONS = 60;
+	final private int WIDTH_PAUSE_MENU_BUTTONS = 150;
 	private OrthographicCamera camera;
 	private int NUMBER_OF_PLAYERS;
-	private Texture pauseButtonImg = new Texture("pauseButton.jpg");
+	private Texture pauseButtonImg = new Texture("pauseButton.jpg"), gameBackground = new Texture("gameBackground.jpg");
 	private Texture[][] atomImages = new Texture[NUM_STATES_POSSIBLE + 1][8];
 	private Texture[][] highlightedAtomImages = new Texture[NUM_STATES_POSSIBLE + 1][8];
 	private Array<Rectangle> rectangularGrid;
 	private GameBoard gameBoard;
 	private int clickCoordX, clickCoordY, currentPlayer, numberOfMovesPlayed, gameState;
+	private float heightUpscaleFactor, widthUpscaleFactor;
 	private boolean clickOnEdge;
 	MyInputProcessor inputProcessor = new MyInputProcessor();
 	private boolean[] isCPU, lostPlayer;
@@ -58,7 +60,7 @@ public class MainGameScreen implements Screen {
 	private Viewport viewport;
 	private Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"),
 			new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
-	private TextButton resumeButton = new TextButton(new String("Resume"), skin), exitButton = new TextButton("Exit", skin);
+	private TextButton resumeButton, exitButton, newGameButton;
 	private Position highlightPos = new Position(-1, -1);
 	final private boolean DEBUG = true;
 	final private boolean DEBUG_CPU = false;
@@ -96,7 +98,7 @@ public class MainGameScreen implements Screen {
 		// Show the world to be 440*480 no matter the
 		// size of the screen
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, WIDTH_SCREEN, 650);
+		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
 		viewport = new Viewport() {
 		};
 		viewport.setCamera(camera);
@@ -105,9 +107,14 @@ public class MainGameScreen implements Screen {
 		Gdx.input.setInputProcessor(inputProcessor);
 		inputProcessor.unsetTouchDown();
 		numberOfMovesPlayed = currentPlayer = 0;
-		
-		table.add(resumeButton).size(150, 60).padBottom(2).row();
-		table.add(exitButton).size(150, 60).padBottom(2).row();
+		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
+		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
+		resumeButton = new TextButton(new String("Resume"), skin);
+		newGameButton = new TextButton(new String("New Game"), skin);
+		exitButton = new TextButton("Exit", skin);
+		table.add(resumeButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*heightUpscaleFactor).padBottom(2).row();
+		table.add(newGameButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*heightUpscaleFactor).padBottom(2).row();
+		table.add(exitButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*heightUpscaleFactor).padBottom(2).row();
 		table.setFillParent(true);
 		resumeButton.addListener(new ClickListener() {
 			@Override
@@ -116,6 +123,15 @@ public class MainGameScreen implements Screen {
 				// We set it to new Splash because we got no other screens
 				// otherwise you put the screen there where you want to go
 				resume();
+			}
+		});
+		newGameButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				// Same way we moved here from the Splash Screen
+				// We set it to new Splash because we got no other screens
+				// otherwise you put the screen there where you want to go
+				shiftToNewGameScreen();
 			}
 		});
 		exitButton.addListener(new ClickListener() {
@@ -215,9 +231,10 @@ public class MainGameScreen implements Screen {
 			for (int j = 0; j < GRID_SIZE; j += 1) {
 				Rectangle tempBlock = new Rectangle();
 				tempBlock.x = (float) (i * WIDTH_RECTANGLE);
-				tempBlock.y = (float) ((j * HEIGHT_RECTANGLE) + 170);
+				tempBlock.y = (float) (j * HEIGHT_RECTANGLE);
 				tempBlock.height = (float) (HEIGHT_RECTANGLE);
 				tempBlock.width = (float) (WIDTH_RECTANGLE);
+				System.out.println(tempBlock.x + " " + tempBlock.y);
 				rectangularGrid.add(tempBlock);
 			}
 		}
@@ -338,15 +355,15 @@ public class MainGameScreen implements Screen {
 	private void processUserInputForMove() {
 		// Checking whether the click is on an edge or a box.
 		// If on edge, then reject the click.
-		if (normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_GAME) < HEIGHT_SCREEN - WIDTH_SCREEN || normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_GAME) > ((HEIGHT_SCREEN - WIDTH_SCREEN) + (GRID_SIZE*HEIGHT_RECTANGLE)))
+		if (normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN) < HEIGHT_SCREEN - WIDTH_SCREEN || normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN) > ((HEIGHT_SCREEN - WIDTH_SCREEN) + (GRID_SIZE*HEIGHT_RECTANGLE)))
 			return;
 		clickOnEdge = false;
 		clickCoordX = (int) (normalizeClickCoord(inputProcessor.getXCoord(), ChainReactionAIGame.WIDTH, WIDTH_SCREEN) / WIDTH_RECTANGLE);
 		if (normalizeClickCoord(inputProcessor.getXCoord(), ChainReactionAIGame.WIDTH, WIDTH_SCREEN) % WIDTH_RECTANGLE == 0.0) {
 			clickOnEdge = true;
 		}
-		clickCoordY = (int) ((HEIGHT_SCREEN - normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_GAME)) / HEIGHT_RECTANGLE);
-		if ((HEIGHT_SCREEN - normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_GAME)) % HEIGHT_RECTANGLE == 0.0) {
+		clickCoordY = (int) ((HEIGHT_SCREEN - normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN)) / HEIGHT_RECTANGLE);
+		if ((HEIGHT_SCREEN - normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN)) % HEIGHT_RECTANGLE == 0.0) {
 			clickOnEdge = true;
 		}
 
@@ -368,7 +385,7 @@ public class MainGameScreen implements Screen {
 	}
 	
 	private void processPauseAction() {
-		if (normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_GAME) > HEIGHT_SCREEN - (GRID_SIZE * HEIGHT_RECTANGLE) || normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_GAME) < HEIGHT_SCREEN - (GRID_SIZE * HEIGHT_RECTANGLE) - HEIGHT_PAUSE_BUTTON) {
+		if (normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN) > HEIGHT_SCREEN - (GRID_SIZE * HEIGHT_RECTANGLE) || normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN) < HEIGHT_SCREEN - (GRID_SIZE * HEIGHT_RECTANGLE) - HEIGHT_PAUSE_BUTTON) {
 			return;
 		}
 		if (normalizeClickCoord(inputProcessor.getXCoord(), ChainReactionAIGame.WIDTH, WIDTH_SCREEN) > WIDTH_PAUSE_BUTTON || normalizeClickCoord(inputProcessor.getXCoord(), ChainReactionAIGame.WIDTH, WIDTH_SCREEN) < 0) {
@@ -382,6 +399,7 @@ public class MainGameScreen implements Screen {
 	private void drawGameBoard() {
 		Iterator<Rectangle> iter = rectangularGrid.iterator();
 		int i, j, count = 0;
+		batch.draw(gameBackground, 0, 0);
 		while (iter.hasNext()) {
 			Rectangle tempBlock = iter.next();
 			i = count / GRID_SIZE;
@@ -426,13 +444,17 @@ public class MainGameScreen implements Screen {
 				count++;
 			}
 		}
-		batch.draw(pauseButtonImg, 0, (GRID_SIZE*HEIGHT_RECTANGLE)+170);
+		batch.draw(pauseButtonImg, 0, (GRID_SIZE*HEIGHT_RECTANGLE));
 	}
 	
 	private float normalizeClickCoord(float coordVal, float screenVal, float normalizeTo) {
 		return ((coordVal*normalizeTo)/screenVal);
 	}
 
+	private void shiftToNewGameScreen() {
+		myGame.setScreen(new NumPlayersScreen(myGame));
+	}
+	
 	@Override
 	public void dispose() {
 		// dispose of all the native resources
@@ -440,6 +462,8 @@ public class MainGameScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+		ChainReactionAIGame.WIDTH = width;
+		ChainReactionAIGame.HEIGHT = height;
 	}
 
 	@Override

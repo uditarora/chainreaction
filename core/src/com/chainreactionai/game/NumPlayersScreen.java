@@ -29,6 +29,11 @@ public class NumPlayersScreen implements Screen {
 	private ChainReactionAIGame myGame;
 	final private int WIDTH_SCREEN = 440;
 	final private int HEIGHT_SCREEN = 650;
+	final private int HEIGHT_DROP_DOWN_MENUS = 35;
+	final private int WIDTH_DROP_DOWN_MENUS = 150;
+	final private int WIDTH_SUBMIT_BUTTON = 100;
+	final private int HEIGHT_SUBMIT_BUTTON = 40;
+	private float heightUpscaleFactor, widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
 	private int MAX_NUMBER_OF_PLAYERS = 6, NUMBER_OF_DIFFICULTY_LEVELS = 4;
@@ -51,8 +56,10 @@ public class NumPlayersScreen implements Screen {
 		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
 		// The elements are displayed in the order you add them.
 		// The first appear on top, the last at the bottom.
+		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
+		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
 		title = new Label("Choose number of players", skin);
-		table.add(title).padBottom(40).row();
+		table.add(title).padBottom(10).row();
 		selectBox = new SelectBox<String>(skin);
 		selectBox.setMaxListCount(MAX_NUMBER_OF_PLAYERS);
 		Array<String> tempStringArr = new Array<String>();
@@ -60,9 +67,9 @@ public class NumPlayersScreen implements Screen {
 			tempStringArr.add(String.valueOf(i+1));
 		}
 		selectBox.setItems(tempStringArr);
-		table.add(selectBox).size(100, 40).padBottom(20).row();
+		table.add(selectBox).size(WIDTH_DROP_DOWN_MENUS*widthUpscaleFactor, HEIGHT_DROP_DOWN_MENUS*heightUpscaleFactor).padBottom(10).row();
 		submitButton = new TextButton(new String("Submit"), skin);
-		table.add(submitButton).size(100, 40).padBottom(20).row();
+		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*widthUpscaleFactor, HEIGHT_SUBMIT_BUTTON*heightUpscaleFactor).padBottom(2).row();
 		table.setFillParent(true);
 		stage.addActor(table);
 		submitButton.addListener(new ClickListener() {
