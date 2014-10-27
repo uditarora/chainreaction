@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.Stack;
 
+import com.badlogic.gdx.Game;
+
 /**
  * @author Kartik Parnami
  * 
@@ -17,6 +19,7 @@ public class GameSolver {
 	private BoardNode initialBoardNode;
 	private int mainPlayer, numPlayers;
 	private int MAX_PLY_LEVEL = 3;
+	final private int INF = 999999999;
 	final private boolean DEBUG = false;
 	
 	// Class to keep the click coordinates which were done
@@ -28,6 +31,32 @@ public class GameSolver {
 		private GameBoardAndCoord(GameBoard gb, int coordX, int coordY) {
 			board = gb;
 			position = new Position(coordX, coordY);
+		}
+		
+		public GameBoard getGameBoard() {
+			return board;
+		}
+		
+		public Position getPosition() {
+			return position;
+		}
+	}
+	
+	private class PositionAndScore {
+		private Position position;
+		private double score;
+		
+		private PositionAndScore(int x, int y, double score) {
+			position = new Position(x, y);
+			this.score = score;
+		}
+		
+		public Position getPosition () {
+			return position;
+		}
+		
+		public double getScore() {
+			return score;
 		}
 	}
 	
@@ -146,6 +175,84 @@ public class GameSolver {
 			}
 		}
 		return null;
+	}
+	
+	public Position getWinningGameBoard() {
+		return alphaBetaPruneMaximizer(new GameBoardAndCoord(initialBoardNode.board, -1, -1), -INF, INF, MAX_PLY_LEVEL, 0).getPosition(); 
+	}
+	
+	private PositionAndScore alphaBetaPruneMaximizer(GameBoardAndCoord node, double alpha, double beta, int level, double score) {
+		PositionAndScore tempPositionAndScore, maxPositionAndScore = new PositionAndScore(-1, -1, 0);
+		System.out.println("Alpha:" + alpha + " Beta:" + beta + " level:" + level + " score:" + score);
+		if (level == 0) {
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return new PositionAndScore(node.position.coordX, node.position.coordY, score);
+		}
+		for (GameBoardAndCoord b: getAllPossibleMovesWithCoords(node.board, mainPlayer)) {
+			if (level != MAX_PLY_LEVEL) {
+				b.position = new Position(node.position.coordX, node.position.coordY);
+			}
+			BoardNode tempBoardNode = new BoardNode(b.board, -1, mainPlayer, null);
+			tempBoardNode.setScore();
+			tempBoardNode.setSelfPropagatingScore(score);
+			tempPositionAndScore = alphaBetaPruneMinimizer(b, alpha, beta, level - 1, tempBoardNode.getPropagatedScore());
+			if (tempPositionAndScore.getScore() > alpha) {
+				alpha = tempPositionAndScore.getScore();
+				maxPositionAndScore = new PositionAndScore(tempPositionAndScore.getPosition().coordX, tempPositionAndScore.getPosition().coordY, alpha);
+			}
+			if (alpha > beta) {
+				break;
+			}
+		}
+		if (maxPositionAndScore.getPosition().coordX == -1) {
+			System.out.println("What The??");
+		}
+		return maxPositionAndScore;
+	}
+	
+	private PositionAndScore alphaBetaPruneMinimizer(GameBoardAndCoord node, double alpha, double beta, int level, double score) {
+		int currentPlayer = (mainPlayer + 1) % numPlayers;
+		PositionAndScore tempPositionAndScore, minPositionAndScore = new PositionAndScore(-1, -1, 0);
+		BoardNode tempBoardNode;
+		System.out.println("Alpha:" + alpha + " Beta:" + beta + " level:" + level + " score:" + score);
+		if (level == 0) {
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return new PositionAndScore(node.position.coordX, node.position.coordY, score);
+		}
+		tempBoardNode = new BoardNode(node.board, -1, currentPlayer, null);
+		for (int i = 0; i < numPlayers - 1; i += 1) {
+			if (DEBUG)
+				System.out.println("Current Player is: "
+						+ currentPlayer);
+			tempBoardNode = getBestPossibleMove(tempBoardNode,
+					currentPlayer);
+			tempBoardNode.setScore();
+			tempBoardNode.setOpponentPropagatingScore(score);
+			score = tempBoardNode.getPropagatedScore();
+			currentPlayer = (currentPlayer + 1) % numPlayers;
+		}
+		tempPositionAndScore = alphaBetaPruneMaximizer(new GameBoardAndCoord(tempBoardNode.board, node.position.coordX, node.position.coordY), alpha, beta, level - 1, score);
+		if (tempPositionAndScore.getScore() < beta) {
+			if (level == MAX_PLY_LEVEL - 1) {
+				System.out.println("HEY HEY");
+			}
+			beta = tempPositionAndScore.getScore();
+			minPositionAndScore = new PositionAndScore(tempPositionAndScore.getPosition().coordX, tempPositionAndScore.getPosition().coordY, beta);
+		}
+		if (minPositionAndScore.getPosition().coordX == -1) {
+			System.out.println("What The??");
+		}
+		return minPositionAndScore;
 	}
 
 	// Returns a list of all possible board positions from a
