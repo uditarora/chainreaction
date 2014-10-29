@@ -62,7 +62,7 @@ public class MainGameScreenChar implements Screen {
 	private TextButton resumeButton, exitButton, newGameButton;
 	private Position highlightPos = new Position(-1, -1);
 	// All debug printing should go under this flag.
-	final private boolean DEBUG = true;
+	final private boolean DEBUG = false;
 	final private boolean DEBUG_CPU = false;
 
 	// Constructor to initialize which player is CPU and which is human.
@@ -262,6 +262,10 @@ public class MainGameScreenChar implements Screen {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
+		if (delta < 0.05) {
+			return;
+		}
+		
 		// process user input
 		if (inputProcessor.isTouchedDown() && !gameOver) {
 			inputProcessor.unsetTouchDown();
@@ -448,13 +452,11 @@ public class MainGameScreenChar implements Screen {
 				} else {
 					if (gameBoard.getNumAtomsInRectangle(i, j) > 4) {
 						batch.draw(
-								highlightedAtomImages[0][gameBoard
-										.getRectangleWinner(i, j)], tempBlock.x,
+								highlightedAtomImages[0][gameBoard.getRectangleWinner(i, j)], tempBlock.x,
 								tempBlock.y);
 					} else {
 						batch.draw(
-								highlightedAtomImages[gameBoard.getNumAtomsInRectangle(i, j)][gameBoard
-										.getRectangleWinner(i, j)], tempBlock.x,
+								highlightedAtomImages[gameBoard.getNumAtomsInRectangle(i, j)][gameBoard.getRectangleWinner(i, j)], tempBlock.x,
 								tempBlock.y);
 					}
 				}
@@ -467,13 +469,11 @@ public class MainGameScreenChar implements Screen {
 				} else {
 					if (gameBoard.getNumAtomsInRectangle(i, j) > 4) {
 						batch.draw(
-								atomImages[0][gameBoard
-										.getRectangleWinner(i, j)], tempBlock.x,
+								atomImages[0][gameBoard.getRectangleWinner(i, j)], tempBlock.x,
 								tempBlock.y);
 					} else {
 						batch.draw(
-								atomImages[gameBoard.getNumAtomsInRectangle(i, j)][gameBoard
-										.getRectangleWinner(i, j)], tempBlock.x,
+								atomImages[gameBoard.getNumAtomsInRectangle(i, j)][gameBoard.getRectangleWinner(i, j)], tempBlock.x,
 								tempBlock.y);
 					}
 				}

@@ -13,8 +13,8 @@ import java.util.LinkedList;
 public class GameBoardChar {
 	
 	private boolean gameOver;
-	private char[][] rectangleWinner;
-	private char[][] numAtomsInRectangle;
+	public char[][] rectangleWinner;
+	public char[][] numAtomsInRectangle;
 	private int gameGridSize, numPlayers, currentLevel;
 	private Position initialPosition;
 	private PositionLevelForBFS initialPositionLevel, currentPositionLevel;
@@ -125,73 +125,63 @@ public class GameBoardChar {
 	// itself according to the input and the number of atoms
 	// currently in the rectangle using BFS
 	public void changeBoard(int coordX, int coordY, int player) {
-		Position initialPosition = new Position(coordX, coordY);
-		LinkedList<Position> positionsQueue = new LinkedList<Position>();
-		positionsQueue.add(initialPosition);
-		Position currentPosition;
-		boolean gameOver = false;
-		while (positionsQueue.peek() != null && !gameOver) {
-			currentPosition = positionsQueue.poll();
-			setRectangleWinner(currentPosition.coordX, currentPosition.coordY, player);
-			setNumAtomsInRectangle(currentPosition.coordX, currentPosition.coordY, (getNumAtomsInRectangle(currentPosition.coordX, currentPosition.coordY) + 1));
-			
-			// If the clicked box is corner-most
-			if ((currentPosition.coordX == 0 && currentPosition.coordY == 0)
-					|| (currentPosition.coordX == 0 && currentPosition.coordY == gameGridSize - 1)
-					|| (currentPosition.coordX == gameGridSize - 1 && currentPosition.coordY == 0)
-					|| (currentPosition.coordX == gameGridSize - 1 && currentPosition.coordY == gameGridSize - 1)) {
-				if (getNumAtomsInRectangle(currentPosition.coordX, currentPosition.coordY) == 2) {
-					setNumAtomsInRectangle(currentPosition.coordX, currentPosition.coordY, 0);
-					setRectangleWinner(currentPosition.coordX, currentPosition.coordY, -1);
-					if (currentPosition.coordX == 0 && currentPosition.coordY == 0) {
-						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
-					} else if (currentPosition.coordX == 0 && currentPosition.coordY == gameGridSize - 1) {
-						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
-					} else if (currentPosition.coordX == gameGridSize - 1 && currentPosition.coordY == 0) {
-						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
-					} else {
-						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
-					}
-	
+		setRectangleWinner(coordX, coordY, player);
+		setNumAtomsInRectangle(coordX, coordY, getNumAtomsInRectangle(coordX, coordY) + 1);
+		// If the clicked box is corner-most
+		if ((coordX == 0 && coordY == 0)
+				|| (coordX == 0 && coordY == gameGridSize - 1)
+				|| (coordX == gameGridSize - 1 && coordY == 0)
+				|| (coordX == gameGridSize - 1 && coordY == gameGridSize - 1)) {
+			if (getNumAtomsInRectangle(coordX, coordY) == 2) {
+				setNumAtomsInRectangle(coordX, coordY, 0);
+				setRectangleWinner(coordX, coordY, -1);
+				if (coordX == 0 && coordY == 0) {
+					changeBoard(coordX + 1, coordY, player);
+					changeBoard(coordX, coordY + 1, player);
+				} else if (coordX == 0 && coordY == gameGridSize - 1) {
+					changeBoard(coordX + 1, coordY, player);
+					changeBoard(coordX, coordY - 1, player);
+				} else if (coordX == gameGridSize - 1 && coordY == 0) {
+					changeBoard(coordX - 1, coordY, player);
+					changeBoard(coordX, coordY + 1, player);
+				} else {
+					changeBoard(coordX - 1, coordY, player);
+					changeBoard(coordX, coordY - 1, player);
 				}
-			} else if (currentPosition.coordX == 0 || currentPosition.coordY == 0 || currentPosition.coordX == gameGridSize - 1
-					|| currentPosition.coordY == gameGridSize - 1) {
-				if (getNumAtomsInRectangle(currentPosition.coordX, currentPosition.coordY) == 3) {
-					setNumAtomsInRectangle(currentPosition.coordX, currentPosition.coordY, 0);
-					setRectangleWinner(currentPosition.coordX, currentPosition.coordY, -1);
-					if (currentPosition.coordX == 0) {
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
-						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
-					} else if (currentPosition.coordY == 0) {
-						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
-					} else if (currentPosition.coordX == gameGridSize - 1) {
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
-						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
-					} else {
-						positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
-						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
-					}
-				}
-			} else {
-				if (getNumAtomsInRectangle(currentPosition.coordX, currentPosition.coordY) == 4) {
-					setNumAtomsInRectangle(currentPosition.coordX, currentPosition.coordY, 0);
-					setRectangleWinner(currentPosition.coordX, currentPosition.coordY, -1);
-					positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
-					positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
-					positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
-					positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
+
+			}
+		} else if (coordX == 0 || coordY == 0 || coordX == gameGridSize - 1
+				|| coordY == gameGridSize - 1) {
+			if (getNumAtomsInRectangle(coordX, coordY) == 3) {
+				setNumAtomsInRectangle(coordX, coordY, 0);
+				setRectangleWinner(coordX, coordY, -1);
+				if (coordX == 0) {
+					changeBoard(coordX, coordY + 1, player);
+					changeBoard(coordX, coordY - 1, player);
+					changeBoard(coordX + 1, coordY, player);
+				} else if (coordY == 0) {
+					changeBoard(coordX - 1, coordY, player);
+					changeBoard(coordX + 1, coordY, player);
+					changeBoard(coordX, coordY + 1, player);
+				} else if (coordX == gameGridSize - 1) {
+					changeBoard(coordX, coordY + 1, player);
+					changeBoard(coordX, coordY - 1, player);
+					changeBoard(coordX - 1, coordY, player);
+				} else {
+					changeBoard(coordX - 1, coordY, player);
+					changeBoard(coordX + 1, coordY, player);
+					changeBoard(coordX, coordY - 1, player);
 				}
 			}
-			gameOver = isWinningPosition(player);
+		} else {
+			if (getNumAtomsInRectangle(coordX, coordY) == 4) {
+				setNumAtomsInRectangle(coordX, coordY, 0);
+				setRectangleWinner(coordX, coordY, -1);
+				changeBoard(coordX - 1, coordY, player);
+				changeBoard(coordX + 1, coordY, player);
+				changeBoard(coordX, coordY - 1, player);
+				changeBoard(coordX, coordY + 1, player);
+			}
 		}
 	}
 
@@ -203,7 +193,7 @@ public class GameBoardChar {
 		initialPositionLevel = new PositionLevelForBFS(initialPosition, 0);
 		positionsLevelForBFSQueue.add(initialPositionLevel);
 		gameOver = false;
-		setNumAtomsInRectangle(coordX, coordY, (getNumAtomsInRectangle(coordX, coordY) + 1));
+		setNumAtomsInRectangle(coordX, coordY, (getRectangleWinner(coordX, coordY) + 1));
 		setRectangleWinner(coordX, coordY, player);
 		currentLevel = 0;
 	}
@@ -230,7 +220,6 @@ public class GameBoardChar {
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX + 1,
 									currentPositionLevel.position.coordY), currentPositionLevel.level+1));
-							// setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY, (getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY) - 2));
 							setNumAtomsInRectangle(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY, getNumAtomsInRectangle(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY) + 1);
 							setRectangleWinner(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY, player);
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
