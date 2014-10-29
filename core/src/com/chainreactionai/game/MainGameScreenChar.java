@@ -28,7 +28,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * 
  */
 
-public class MainGameScreen implements Screen {
+public class MainGameScreenChar implements Screen {
 	SpriteBatch batch;
 	final private int GRID_SIZE = 8;
 	final private int NUM_STATES_POSSIBLE = 4;
@@ -46,7 +46,7 @@ public class MainGameScreen implements Screen {
 	private Texture[][] atomImages = new Texture[NUM_STATES_POSSIBLE + 1][8];
 	private Texture[][] highlightedAtomImages = new Texture[NUM_STATES_POSSIBLE + 1][8];
 	private Array<Rectangle> rectangularGrid;
-	private GameBoard gameBoard;
+	private GameBoardChar gameBoard;
 	private int clickCoordX, clickCoordY, currentPlayer, numberOfMovesPlayed, gameState;
 	private float heightUpscaleFactor, widthUpscaleFactor;
 	private boolean clickOnEdge;
@@ -67,7 +67,7 @@ public class MainGameScreen implements Screen {
 
 	// Constructor to initialize which player is CPU and which is human.
 	// Also sets difficulty levels for CPU players.
-	public MainGameScreen(ChainReactionAIGame game, ArrayList<Boolean> CPU, ArrayList<Integer> plyLevelList) {
+	public MainGameScreenChar(ChainReactionAIGame game, ArrayList<Boolean> CPU, ArrayList<Integer> plyLevelList) {
 		myGame = game;
 		NUMBER_OF_PLAYERS = CPU.size();
 		if (DEBUG_CPU)
@@ -107,7 +107,7 @@ public class MainGameScreen implements Screen {
 		
 		// Initializing stuff.
 		rectangularGrid = new Array<Rectangle>();
-		gameBoard = new GameBoard(GRID_SIZE, NUMBER_OF_PLAYERS);
+		gameBoard = new GameBoardChar(GRID_SIZE, NUMBER_OF_PLAYERS);
 		Gdx.input.setInputProcessor(inputProcessor);
 		inputProcessor.unsetTouchDown();
 		numberOfMovesPlayed = currentPlayer = 0;
@@ -298,7 +298,7 @@ public class MainGameScreen implements Screen {
 						if (DEBUG)
 							System.out.println("Reached CPU");
 						// Initializing the GameSolver
-						GameSolver solver = new GameSolver(gameBoard, currentPlayer,
+						GameSolverChar solver = new GameSolverChar(gameBoard, currentPlayer,
 								NUMBER_OF_PLAYERS, lostPlayer, maxPlyLevels[currentPlayer]);
 						if (DEBUG)
 							System.out.println("GameSolver initialized");
