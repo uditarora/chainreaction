@@ -378,6 +378,11 @@ public class MainGameScreen implements Screen {
 			stage.draw();
 			Gdx.input.setInputProcessor(stage);
 		}
+		try {
+			Thread.sleep((long)((1000/5)-Gdx.graphics.getDeltaTime()));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// This function processes the User input for a new move and changes
