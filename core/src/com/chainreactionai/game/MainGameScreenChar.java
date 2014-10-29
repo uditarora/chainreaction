@@ -62,7 +62,7 @@ public class MainGameScreenChar implements Screen {
 	private TextButton resumeButton, exitButton, newGameButton;
 	private Position highlightPos = new Position(-1, -1);
 	// All debug printing should go under this flag.
-	final private boolean DEBUG = false;
+	final private boolean DEBUG = true;
 	final private boolean DEBUG_CPU = false;
 
 	// Constructor to initialize which player is CPU and which is human.
@@ -262,10 +262,6 @@ public class MainGameScreenChar implements Screen {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		if (delta < 0.05) {
-			return;
-		}
-		
 		// process user input
 		if (inputProcessor.isTouchedDown() && !gameOver) {
 			inputProcessor.unsetTouchDown();
@@ -279,6 +275,7 @@ public class MainGameScreenChar implements Screen {
 				if (moveCompleted) {
 					if (lostPlayer[currentPlayer] == false) {
 						processUserInputForMove();
+						gameBoard.printBoard();
 					}
 				}
 				// Used to process pause button click
@@ -309,6 +306,7 @@ public class MainGameScreenChar implements Screen {
 						// Get the position where we should place the new ball
 						// so that the GameSolver's best move is executed.
 						Position winningMove = solver.getBestGameBoard();
+						gameBoard.printBoard();
 						if(winningMove == null) {
 							System.out.println("Error Time.");
 						}

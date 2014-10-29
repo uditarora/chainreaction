@@ -193,7 +193,7 @@ public class GameBoardChar {
 		initialPositionLevel = new PositionLevelForBFS(initialPosition, 0);
 		positionsLevelForBFSQueue.add(initialPositionLevel);
 		gameOver = false;
-		setNumAtomsInRectangle(coordX, coordY, (getRectangleWinner(coordX, coordY) + 1));
+		setNumAtomsInRectangle(coordX, coordY, (getNumAtomsInRectangle(coordX, coordY) + 1));
 		setRectangleWinner(coordX, coordY, player);
 		currentLevel = 0;
 	}
