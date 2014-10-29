@@ -40,7 +40,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	private Stage stage = new Stage();
 	private Table table = new Table(), container = new Table();
 	private ScrollPane scroll;
-	private int NUMBER_OF_PLAYERS, NUMBER_OF_DIFFICULTY_LEVELS;
+	private int NUMBER_OF_PLAYERS, NUMBER_OF_DIFFICULTY_LEVELS, TYPE_OF_VARS = 1;
 	private Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"),
 			new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
 	private TextButton submitButton;
@@ -133,7 +133,11 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 					}
 					plyLevelList.add((plySelectBoxes.get(j).getSelectedIndex()) + 1);
 				}
-				myGame.setScreen(new MainGameScreen(myGame, isCPU, plyLevelList));
+				if (TYPE_OF_VARS == 0) {
+					myGame.setScreen(new MainGameScreen(myGame, isCPU, plyLevelList));
+				} else {
+					myGame.setScreen(new MainGameScreenChar(myGame, isCPU, plyLevelList));
+				}
 			}
 		});
 		Gdx.input.setInputProcessor(stage);

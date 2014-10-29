@@ -10,11 +10,11 @@ import java.util.LinkedList;
  * @author Kartik Parnami
  */
 
-public class GameBoard {
+public class GameBoardChar {
 	
 	private boolean gameOver;
-	private int[][] rectangleWinner;
-	private int[][] numAtomsInRectangle;
+	private char[][] rectangleWinner;
+	private char[][] numAtomsInRectangle;
 	private int gameGridSize, numPlayers, currentLevel;
 	private Position initialPosition;
 	private PositionLevelForBFS initialPositionLevel, currentPositionLevel;
@@ -36,21 +36,21 @@ public class GameBoard {
 	// Constructor to initialize the grid size, number of players
 	// and setting the default values for rectangle winners and
 	// number of atoms in each rectangle.
-	GameBoard(int gridSize, int gameNumPlayers) {
+	GameBoardChar(int gridSize, int gameNumPlayers) {
 		numPlayers = gameNumPlayers;
 		gameGridSize = gridSize;
-		rectangleWinner = new int[gameGridSize][gameGridSize];
-		numAtomsInRectangle = new int[gameGridSize][gameGridSize];
+		rectangleWinner = new char[gameGridSize][gameGridSize];
+		numAtomsInRectangle = new char[gameGridSize][gameGridSize];
 		setDefaultRectangleWinners();
 		setDefaultNumAtomsInRectangle();
 	}
 
 	// Another constructor which returns a clone of the passed GameBoard.
-	public GameBoard(GameBoard board) {
+	public GameBoardChar(GameBoardChar board) {
 		this.gameGridSize = board.gameGridSize;
 		this.numPlayers = board.numPlayers;
-		this.numAtomsInRectangle = new int[this.gameGridSize][this.gameGridSize];
-		this.rectangleWinner = new int[this.gameGridSize][this.gameGridSize];
+		this.numAtomsInRectangle = new char[this.gameGridSize][this.gameGridSize];
+		this.rectangleWinner = new char[this.gameGridSize][this.gameGridSize];
 
 		for (int i = 0; i < this.gameGridSize; ++i) {
 			for (int j = 0; j < this.gameGridSize; ++j) {
@@ -61,7 +61,7 @@ public class GameBoard {
 	}
 	
 	//
-	public void cloneBoard(GameBoard board) {
+	public void cloneBoard(GameBoardChar board) {
 		for (int i = 0; i < this.gameGridSize; ++i) {
 			for (int j = 0; j < this.gameGridSize; ++j) {
 				this.numAtomsInRectangle[i][j] = board.numAtomsInRectangle[i][j];
@@ -75,7 +75,7 @@ public class GameBoard {
 	private void setDefaultRectangleWinners() {
 		for (int i = 0; i < gameGridSize; i += 1) {
 			for (int j = 0; j < gameGridSize; j += 1) {
-				rectangleWinner[i][j] = -1;
+				rectangleWinner[i][j] = '/';
 			}
 		}
 	}
@@ -85,7 +85,7 @@ public class GameBoard {
 	private void setDefaultNumAtomsInRectangle() {
 		for (int i = 0; i < gameGridSize; i += 1) {
 			for (int j = 0; j < gameGridSize; j += 1) {
-				numAtomsInRectangle[i][j] = 0;
+				numAtomsInRectangle[i][j] = '0';
 			}
 		}
 	}
@@ -93,20 +93,28 @@ public class GameBoard {
 	// This function returns the current winning player
 	// for the given rectangle.
 	public int getRectangleWinner(int row, int col) {
-		return rectangleWinner[row][col];
+		return (rectangleWinner[row][col] - '0');
 	}
 
 	// This function returns the number of atoms currently
 	// present in a rectangle.
 	public int getNumAtomsInRectangle(int row, int col) {
-		return numAtomsInRectangle[row][col];
+		return (numAtomsInRectangle[row][col] - '0');
+	}
+	
+	public void setRectangleWinner(int row, int col, int winner) {
+		rectangleWinner[row][col] = (char)(winner + (int)('0'));
+	}
+	
+	public void setNumAtomsInRectangle(int row, int col, int number) {
+		numAtomsInRectangle[row][col] = (char)(number + (int)('0'));
 	}
 
 	// This function checks whether the user-clicked move is
 	// valid according to the current board position
 	public boolean isValidMove(int coordX, int coordY, int player) {
-		if ((rectangleWinner[coordX][coordY] == -1)
-				|| (rectangleWinner[coordX][coordY] == player)) {
+		if ((getRectangleWinner(coordX, coordY) == -1)
+				|| (getRectangleWinner(coordX, coordY) == player)) {
 			return true;
 		}
 		return false;
@@ -124,17 +132,17 @@ public class GameBoard {
 		boolean gameOver = false;
 		while (positionsQueue.peek() != null && !gameOver) {
 			currentPosition = positionsQueue.poll();
-			rectangleWinner[currentPosition.coordX][currentPosition.coordY] = player;
-			numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] += 1;
+			setRectangleWinner(currentPosition.coordX, currentPosition.coordY, player);
+			setNumAtomsInRectangle(currentPosition.coordX, currentPosition.coordY, (getNumAtomsInRectangle(currentPosition.coordX, currentPosition.coordY) + 1));
 			
 			// If the clicked box is corner-most
 			if ((currentPosition.coordX == 0 && currentPosition.coordY == 0)
 					|| (currentPosition.coordX == 0 && currentPosition.coordY == gameGridSize - 1)
 					|| (currentPosition.coordX == gameGridSize - 1 && currentPosition.coordY == 0)
 					|| (currentPosition.coordX == gameGridSize - 1 && currentPosition.coordY == gameGridSize - 1)) {
-				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 2) {
-					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
-					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
+				if (getNumAtomsInRectangle(currentPosition.coordX, currentPosition.coordY) == 2) {
+					setNumAtomsInRectangle(currentPosition.coordX, currentPosition.coordY, 0);
+					setRectangleWinner(currentPosition.coordX, currentPosition.coordY, -1);
 					if (currentPosition.coordX == 0 && currentPosition.coordY == 0) {
 						positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
 						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
@@ -152,9 +160,9 @@ public class GameBoard {
 				}
 			} else if (currentPosition.coordX == 0 || currentPosition.coordY == 0 || currentPosition.coordX == gameGridSize - 1
 					|| currentPosition.coordY == gameGridSize - 1) {
-				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 3) {
-					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
-					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
+				if (getNumAtomsInRectangle(currentPosition.coordX, currentPosition.coordY) == 3) {
+					setNumAtomsInRectangle(currentPosition.coordX, currentPosition.coordY, 0);
+					setRectangleWinner(currentPosition.coordX, currentPosition.coordY, -1);
 					if (currentPosition.coordX == 0) {
 						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY + 1));
 						positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
@@ -174,9 +182,9 @@ public class GameBoard {
 					}
 				}
 			} else {
-				if (numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] == 4) {
-					numAtomsInRectangle[currentPosition.coordX][currentPosition.coordY] = 0;
-					rectangleWinner[currentPosition.coordX][currentPosition.coordY] = -1;
+				if (getNumAtomsInRectangle(currentPosition.coordX, currentPosition.coordY) == 4) {
+					setNumAtomsInRectangle(currentPosition.coordX, currentPosition.coordY, 0);
+					setRectangleWinner(currentPosition.coordX, currentPosition.coordY, -1);
 					positionsQueue.add(new Position(currentPosition.coordX - 1, currentPosition.coordY));
 					positionsQueue.add(new Position(currentPosition.coordX + 1, currentPosition.coordY));
 					positionsQueue.add(new Position(currentPosition.coordX, currentPosition.coordY - 1));
@@ -195,8 +203,8 @@ public class GameBoard {
 		initialPositionLevel = new PositionLevelForBFS(initialPosition, 0);
 		positionsLevelForBFSQueue.add(initialPositionLevel);
 		gameOver = false;
-		numAtomsInRectangle[coordX][coordY] += 1;
-		rectangleWinner[coordX][coordY] = player;
+		setNumAtomsInRectangle(coordX, coordY, (getNumAtomsInRectangle(coordX, coordY) + 1));
+		setRectangleWinner(coordX, coordY, player);
 		currentLevel = 0;
 	}
 	
@@ -212,161 +220,162 @@ public class GameBoard {
 						|| (currentPositionLevel.position.coordX == 0 && currentPositionLevel.position.coordY == gameGridSize - 1)
 						|| (currentPositionLevel.position.coordX == gameGridSize - 1 && currentPositionLevel.position.coordY == 0)
 						|| (currentPositionLevel.position.coordX == gameGridSize - 1 && currentPositionLevel.position.coordY == gameGridSize - 1)) {
-					if (numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY] >= 2) {
-						numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY] -= 2;
-						if (numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY] == 0) {
-							rectangleWinner[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY] = -1;
+					if (getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY) >= 2) {
+						setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY, (getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY) - 2));
+						if (getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY) == 0) {
+							setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY, -1);
 						}
 						if (currentPositionLevel.position.coordX == 0
 								&& currentPositionLevel.position.coordY == 0) {
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX + 1,
 									currentPositionLevel.position.coordY), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX + 1][currentPositionLevel.position.coordY] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX + 1][currentPositionLevel.position.coordY] = player;
+							// setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY, (getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY) - 2));
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY, getNumAtomsInRectangle(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY, player);
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX,
 									currentPositionLevel.position.coordY + 1), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY + 1] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY + 1] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1, player);
 						} else if (currentPositionLevel.position.coordX == 0
 								&& currentPositionLevel.position.coordY == gameGridSize - 1) {
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX + 1,
 									currentPositionLevel.position.coordY), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX + 1][currentPositionLevel.position.coordY] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX + 1][currentPositionLevel.position.coordY] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY, getNumAtomsInRectangle(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY, player);
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX,
 									currentPositionLevel.position.coordY - 1), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY - 1] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY - 1] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1, player);
 						} else if (currentPositionLevel.position.coordX == gameGridSize - 1
 								&& currentPositionLevel.position.coordY == 0) {
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX - 1,
 									currentPositionLevel.position.coordY), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX - 1][currentPositionLevel.position.coordY] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX - 1][currentPositionLevel.position.coordY] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY, getNumAtomsInRectangle(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY, player);
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX,
 									currentPositionLevel.position.coordY + 1), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY + 1] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY + 1] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1, player);
 						} else {
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX - 1,
 									currentPositionLevel.position.coordY), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX - 1][currentPositionLevel.position.coordY] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX - 1][currentPositionLevel.position.coordY] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY, getNumAtomsInRectangle(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY, player);
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX,
 									currentPositionLevel.position.coordY - 1), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY - 1] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY - 1] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1, player);
 						}
 					}
 				} else if (currentPositionLevel.position.coordX == 0
 						|| currentPositionLevel.position.coordY == 0
 						|| currentPositionLevel.position.coordX == gameGridSize - 1
 						|| currentPositionLevel.position.coordY == gameGridSize - 1) {
-					if (numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY] >= 3) {
-						numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY] -= 3;
-						if (numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY] == 0) {
-							rectangleWinner[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY] = -1;
+					if (getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY) >= 3) {
+						setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY) - 3);
+						if (getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY) == 0) {
+							setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY, -1);
 						}
 						if (currentPositionLevel.position.coordX == 0) {
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX,
 									currentPositionLevel.position.coordY + 1), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY + 1] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY + 1] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1, player);
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX,
 									currentPositionLevel.position.coordY - 1), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY - 1] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY - 1] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1, player);
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX + 1,
 									currentPositionLevel.position.coordY), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX + 1][currentPositionLevel.position.coordY] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX + 1][currentPositionLevel.position.coordY] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY, getNumAtomsInRectangle(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY, player);
 						} else if (currentPositionLevel.position.coordY == 0) {
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX - 1,
 									currentPositionLevel.position.coordY), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX - 1][currentPositionLevel.position.coordY] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX - 1][currentPositionLevel.position.coordY] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY, getNumAtomsInRectangle(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY, player);
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX + 1,
 									currentPositionLevel.position.coordY), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX + 1][currentPositionLevel.position.coordY] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX + 1][currentPositionLevel.position.coordY] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY, getNumAtomsInRectangle(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY, player);
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX,
 									currentPositionLevel.position.coordY + 1), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY + 1] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY + 1] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1, player);
 						} else if (currentPositionLevel.position.coordX == gameGridSize - 1) {
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX,
 									currentPositionLevel.position.coordY + 1), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY + 1] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY + 1] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1, player);
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX,
 									currentPositionLevel.position.coordY - 1), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY - 1] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY - 1] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1, player);
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX - 1,
 									currentPositionLevel.position.coordY), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX - 1][currentPositionLevel.position.coordY] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX - 1][currentPositionLevel.position.coordY] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY, getNumAtomsInRectangle(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY, player);
 						} else {
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX - 1,
 									currentPositionLevel.position.coordY), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX - 1][currentPositionLevel.position.coordY] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX - 1][currentPositionLevel.position.coordY] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY, getNumAtomsInRectangle(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY, player);
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX + 1,
 									currentPositionLevel.position.coordY), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX + 1][currentPositionLevel.position.coordY] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX + 1][currentPositionLevel.position.coordY] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY, getNumAtomsInRectangle(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY, player);
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX,
 									currentPositionLevel.position.coordY - 1), currentPositionLevel.level+1));
-							numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY - 1] += 1;
-							rectangleWinner[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY - 1] = player;
+							setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1) + 1);
+							setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1, player);
 						}
 					}
 				} else {
-					if (numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY] >= 4) {
-						numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY] -= 4;
-						if (numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY] == 0) {
-							rectangleWinner[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY] = -1;
+					if (getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY) >= 4) {
+						setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY) - 4);
+						if (getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY) == 0) {
+							setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY, -1);
 						}
 						positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 								currentPositionLevel.position.coordX - 1,
 								currentPositionLevel.position.coordY), currentPositionLevel.level+1));
-						numAtomsInRectangle[currentPositionLevel.position.coordX - 1][currentPositionLevel.position.coordY] += 1;
-						rectangleWinner[currentPositionLevel.position.coordX - 1][currentPositionLevel.position.coordY] = player;
+						setNumAtomsInRectangle(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY, getNumAtomsInRectangle(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY) + 1);
+						setRectangleWinner(currentPositionLevel.position.coordX - 1, currentPositionLevel.position.coordY, player);
 						positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 								currentPositionLevel.position.coordX + 1,
 								currentPositionLevel.position.coordY), currentPositionLevel.level+1));
-						numAtomsInRectangle[currentPositionLevel.position.coordX + 1][currentPositionLevel.position.coordY] += 1;
-						rectangleWinner[currentPositionLevel.position.coordX + 1][currentPositionLevel.position.coordY] = player;
+						setNumAtomsInRectangle(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY, getNumAtomsInRectangle(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY) + 1);
+						setRectangleWinner(currentPositionLevel.position.coordX + 1, currentPositionLevel.position.coordY, player);
 						positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 								currentPositionLevel.position.coordX,
 								currentPositionLevel.position.coordY - 1), currentPositionLevel.level+1));
-						numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY - 1] += 1;
-						rectangleWinner[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY - 1] = player;
+						setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1) + 1);
+						setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1, player);
 						positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 								currentPositionLevel.position.coordX,
 								currentPositionLevel.position.coordY + 1), currentPositionLevel.level+1));
-						numAtomsInRectangle[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY + 1] += 1;
-						rectangleWinner[currentPositionLevel.position.coordX][currentPositionLevel.position.coordY + 1] = player;
+						setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1) + 1);
+						setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1, player);
 					}
 				}
 				gameOver = isWinningPosition(player);
@@ -382,8 +391,8 @@ public class GameBoard {
 	public boolean isWinningPosition(int player) {
 		for (int i = 0; i < gameGridSize; i += 1) {
 			for (int j = 0; j < gameGridSize; j += 1) {
-				if (rectangleWinner[i][j] != player
-						&& rectangleWinner[i][j] != -1) {
+				if (getRectangleWinner(i, j) != player
+						&& getRectangleWinner(i, j) != -1) {
 					return false;
 				}
 			}
@@ -398,8 +407,8 @@ public class GameBoard {
 		double numBallsWeight = 0.5, numBoxesWeight = 0.5, totalScore;
 		for (int i = 0; i < gameGridSize; i += 1) {
 			for (int j = 0; j < gameGridSize; j += 1) {
-				if (rectangleWinner[i][j] == player) {
-					runningNumBallsTotal += numAtomsInRectangle[i][j];
+				if (getRectangleWinner(i, j) == player) {
+					runningNumBallsTotal += getNumAtomsInRectangle(i, j);
 					runningNumBoxesTotal += 1;
 				}
 			}
@@ -418,7 +427,7 @@ public class GameBoard {
 	public boolean hasLost(int player) {
 		for (int i = 0; i < gameGridSize; i += 1) {
 			for (int j = 0; j < gameGridSize; j += 1) {
-				if (rectangleWinner[i][j] == player && numAtomsInRectangle[i][j] > 0) {
+				if (getRectangleWinner(i, j) == player && getNumAtomsInRectangle(i, j) > 0) {
 					return false;
 				}
 			}
@@ -435,7 +444,7 @@ public class GameBoard {
 		System.out.println("Rectangle Winners:");
 		for (int i = 0; i < gameGridSize; i += 1) {
 			for (int j = 0; j < gameGridSize; j += 1) {
-				System.out.print(rectangleWinner[i][j]);
+				System.out.print(getRectangleWinner(i, j));
 				System.out.print(" ");
 			}
 			System.out.println();
@@ -443,7 +452,7 @@ public class GameBoard {
 		System.out.println("Num Atoms:");
 		for (int i = 0; i < gameGridSize; i += 1) {
 			for (int j = 0; j < gameGridSize; j += 1) {
-				System.out.print(numAtomsInRectangle[i][j]);
+				System.out.print(getNumAtomsInRectangle(i, j));
 				System.out.print(" ");
 			}
 			System.out.println();
@@ -451,13 +460,13 @@ public class GameBoard {
 	}
 	
 	// Checks if two GameBoards are equal or not.
-	public boolean isEqual(GameBoard gb) {
+	public boolean isEqual(GameBoardChar gb) {
 		for (int i = 0; i < gameGridSize; i += 1) {
 			for (int j = 0; j < gameGridSize; j += 1) {
-				if (numAtomsInRectangle[i][j] != gb.getNumAtomsInRectangle(i, j)) {
+				if (getNumAtomsInRectangle(i, j) != gb.getNumAtomsInRectangle(i, j)) {
 					return false;
 				}
-				if (rectangleWinner[i][j] != gb.getRectangleWinner(i, j)) {
+				if (getRectangleWinner(i, j) != gb.getRectangleWinner(i, j)) {
 					return false;
 				}
 			}
