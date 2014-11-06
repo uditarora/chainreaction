@@ -17,7 +17,8 @@ public class GameSolverChar {
 	private BoardNodeChar initialBoardNode;
 	private int mainPlayer, numPlayers;
 	private int MAX_PLY_LEVEL = 3;
-//	final private int INF = 999999999;
+	private double percentageMovesSearched, takeThisMoveOrNot;
+	private Random rand;
 	final private boolean DEBUG = false;
 	
 	// Class to keep the click coordinates which were done
@@ -66,16 +67,19 @@ public class GameSolverChar {
 		initialBoardNode.setSelfPropagatingScore(0);
 		mainPlayer = player;
 		numPlayers = numberPlayers;
+		rand = new Random();
 	}
 	
 	//Constructor to initialize the GameSovler with a custom maxPlyLevel
-	public GameSolverChar(GameBoardChar gameBoard, int player, int numberPlayers, boolean [] lostPlayer, int maxPlyLevel) {
+	public GameSolverChar(GameBoardChar gameBoard, int player, int numberPlayers, boolean [] lostPlayer, int maxPlyLevel, double percentageMovesSearched) {
 		initialBoardNode = new BoardNodeChar(gameBoard, 0, player, null);
 		initialBoardNode.setScore();
 		initialBoardNode.setSelfPropagatingScore(0);
 		mainPlayer = player;
 		numPlayers = numberPlayers;
 		MAX_PLY_LEVEL = maxPlyLevel;
+		this.percentageMovesSearched = percentageMovesSearched;
+		rand = new Random();
 	}
 
 	// AI solver - Returns the best move for the given player using minimax
@@ -85,7 +89,6 @@ public class GameSolverChar {
 		ArrayList<BoardNodeChar> bestBoardNodesArr = new ArrayList<BoardNodeChar>();
 		double lastPlyMaxScore = -99999999;
 		int numberOfBestBoardNodes, chosenBestBoardNodeIndex;
-		Random rand = new Random();
 		LinkedList<BoardNodeChar> possibleBoardNodeQueue = new LinkedList<BoardNodeChar>();
 		possibleBoardNodeQueue.add(initialBoardNode);
 		BoardNodeChar currentBoardNode = possibleBoardNodeQueue.peek();
@@ -174,84 +177,6 @@ public class GameSolverChar {
 		}
 		return null;
 	}
-	
-//	public Position getWinningGameBoard() {
-//		return alphaBetaPruneMaximizer(new GameBoardAndCoord(initialBoardNode.board, -1, -1), -INF, INF, MAX_PLY_LEVEL, 0).getPosition(); 
-//	}
-//	
-//	private PositionAndScore alphaBetaPruneMaximizer(GameBoardAndCoord node, double alpha, double beta, int level, double score) {
-//		PositionAndScore tempPositionAndScore, maxPositionAndScore = new PositionAndScore(-1, -1, 0);
-//		System.out.println("Alpha:" + alpha + " Beta:" + beta + " level:" + level + " score:" + score);
-//		if (level == 0) {
-//			try {
-//				Thread.sleep(50);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			return new PositionAndScore(node.position.coordX, node.position.coordY, score);
-//		}
-//		for (GameBoardAndCoord b: getAllPossibleMovesWithCoords(node.board, mainPlayer)) {
-//			if (level != MAX_PLY_LEVEL) {
-//				b.position = new Position(node.position.coordX, node.position.coordY);
-//			}
-//			BoardNode tempBoardNode = new BoardNode(b.board, -1, mainPlayer, null);
-//			tempBoardNode.setScore();
-//			tempBoardNode.setSelfPropagatingScore(score);
-//			tempPositionAndScore = alphaBetaPruneMinimizer(b, alpha, beta, level - 1, tempBoardNode.getPropagatedScore());
-//			if (tempPositionAndScore.getScore() > alpha) {
-//				alpha = tempPositionAndScore.getScore();
-//				maxPositionAndScore = new PositionAndScore(tempPositionAndScore.getPosition().coordX, tempPositionAndScore.getPosition().coordY, alpha);
-//			}
-//			if (alpha > beta) {
-//				break;
-//			}
-//		}
-//		if (maxPositionAndScore.getPosition().coordX == -1) {
-//			System.out.println("What The??");
-//		}
-//		return maxPositionAndScore;
-//	}
-//	
-//	private PositionAndScore alphaBetaPruneMinimizer(GameBoardAndCoord node, double alpha, double beta, int level, double score) {
-//		int currentPlayer = (mainPlayer + 1) % numPlayers;
-//		PositionAndScore tempPositionAndScore, minPositionAndScore = new PositionAndScore(-1, -1, 0);
-//		BoardNode tempBoardNode;
-//		System.out.println("Alpha:" + alpha + " Beta:" + beta + " level:" + level + " score:" + score);
-//		if (level == 0) {
-//			try {
-//				Thread.sleep(50);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			return new PositionAndScore(node.position.coordX, node.position.coordY, score);
-//		}
-//		tempBoardNode = new BoardNode(node.board, -1, currentPlayer, null);
-//		for (int i = 0; i < numPlayers - 1; i += 1) {
-//			if (DEBUG)
-//				System.out.println("Current Player is: "
-//						+ currentPlayer);
-//			tempBoardNode = getBestPossibleMove(tempBoardNode,
-//					currentPlayer);
-//			tempBoardNode.setScore();
-//			tempBoardNode.setOpponentPropagatingScore(score);
-//			score = tempBoardNode.getPropagatedScore();
-//			currentPlayer = (currentPlayer + 1) % numPlayers;
-//		}
-//		tempPositionAndScore = alphaBetaPruneMaximizer(new GameBoardAndCoord(tempBoardNode.board, node.position.coordX, node.position.coordY), alpha, beta, level - 1, score);
-//		if (tempPositionAndScore.getScore() < beta) {
-//			if (level == MAX_PLY_LEVEL - 1) {
-//				System.out.println("HEY HEY");
-//			}
-//			beta = tempPositionAndScore.getScore();
-//			minPositionAndScore = new PositionAndScore(tempPositionAndScore.getPosition().coordX, tempPositionAndScore.getPosition().coordY, beta);
-//		}
-//		if (minPositionAndScore.getPosition().coordX == -1) {
-//			System.out.println("What The??");
-//		}
-//		return minPositionAndScore;
-//	}
 
 	// Returns a list of all possible board positions from a
 	// given board for the given player
@@ -261,9 +186,12 @@ public class GameSolverChar {
 		for (int i = 0; i < board.getGameGridSize(); ++i) {
 			for (int j = 0; j < board.getGameGridSize(); ++j) {
 				if (board.isValidMove(i, j, player)) {
-					tempGameBoard = new GameBoardChar(board);
-					tempGameBoard.changeBoard(i, j, player);
-					possibleMoves.add(tempGameBoard);
+					takeThisMoveOrNot = rand.nextDouble();
+					if (takeThisMoveOrNot <= percentageMovesSearched) {
+						tempGameBoard = new GameBoardChar(board);
+						tempGameBoard.changeBoard(i, j, player);
+						possibleMoves.add(tempGameBoard);
+					}
 				}
 			}
 		}

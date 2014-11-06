@@ -34,12 +34,13 @@ public class GameEndScreen implements Screen {
 	private TextButton buttonPlayAgain = new TextButton("Play Again",
 			skin),
 			buttonExit = new TextButton("Exit", skin);
-	private int winningPlayer;
+	private int winningPlayer, numMovesPlayed;
 	private Label title;
 	
-	public GameEndScreen (ChainReactionAIGame game, int winner) {
+	public GameEndScreen (ChainReactionAIGame game, int winner, int numMovesPlayed) {
 		myGame = game;
 		winningPlayer = winner;
+		this.numMovesPlayed = numMovesPlayed;
 		create();
 	}
 	
@@ -52,7 +53,7 @@ public class GameEndScreen implements Screen {
 		// The elements are displayed in the order you add them.
 		// The first appear on top, the last at the bottom.
 		// Initialize and add the winning quote to the Table
-		title = new Label("Player " + String.valueOf(winningPlayer + 1) + " has won the game!", skin);
+		title = new Label("Player " + String.valueOf(winningPlayer + 1) + " has won the game after " + numMovesPlayed + " moves!", skin);
 		table.add(title).padBottom(40).row();
 		// Add the PlayAgain and Exit buttons to the Table.
 		table.add(buttonPlayAgain).size(150, 60).padBottom(20).row();
