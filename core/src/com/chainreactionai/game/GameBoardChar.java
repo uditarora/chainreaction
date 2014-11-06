@@ -125,6 +125,10 @@ public class GameBoardChar {
 	// itself according to the input and the number of atoms
 	// currently in the rectangle using BFS
 	public void changeBoard(int coordX, int coordY, int player) {
+		gameOver = isWinningPosition(player);
+		if (gameOver) {
+			return;
+		}
 		setRectangleWinner(coordX, coordY, player);
 		setNumAtomsInRectangle(coordX, coordY, getNumAtomsInRectangle(coordX, coordY) + 1);
 		// If the clicked box is corner-most

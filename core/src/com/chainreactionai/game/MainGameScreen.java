@@ -341,7 +341,7 @@ public class MainGameScreen implements Screen {
 						gameOver = true;
 						System.out.println("Player " + currentPlayer
 								+ " has won the game!");
-						myGame.setScreen(new GameEndScreen(myGame, currentPlayer));
+						myGame.setScreen(new GameEndScreen(myGame, currentPlayer, numberOfMovesPlayed));
 					}
 					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 					System.out.println("Move time.");

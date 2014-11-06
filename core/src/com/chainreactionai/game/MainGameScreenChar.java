@@ -47,8 +47,9 @@ public class MainGameScreenChar implements Screen {
 	private Texture[][] highlightedAtomImages = new Texture[NUM_STATES_POSSIBLE + 1][8];
 	private Array<Rectangle> rectangularGrid;
 	private GameBoardChar gameBoard;
-	private int clickCoordX, clickCoordY, currentPlayer, numberOfMovesPlayed, gameState;
+	private int clickCoordX, clickCoordY, currentPlayer, numberOfMovesPlayed, gameState, maxPlyLevel;
 	private float heightUpscaleFactor, widthUpscaleFactor;
+	private double percentageMovesSearched, incrementValForPercentageMovesSearched;
 	private boolean clickOnEdge;
 	MyInputProcessor inputProcessor = new MyInputProcessor();
 	private boolean[] isCPU, lostPlayer;
@@ -63,7 +64,7 @@ public class MainGameScreenChar implements Screen {
 	private Position highlightPos = new Position(-1, -1);
 	// All debug printing should go under this flag.
 	final private boolean DEBUG = true;
-	final private boolean DEBUG_CPU = false;
+	final private boolean DEBUG_CPU = true;
 
 	// Constructor to initialize which player is CPU and which is human.
 	// Also sets difficulty levels for CPU players.
@@ -89,7 +90,7 @@ public class MainGameScreenChar implements Screen {
 			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 				isCPU[i] = true;
 			}
-			maxPlyLevels[0] = 2; maxPlyLevels[1] = 3;
+			maxPlyLevels[0] = 4; maxPlyLevels[1] = 4;
 		}
 		setGameState(0);
 		create();
@@ -115,6 +116,14 @@ public class MainGameScreenChar implements Screen {
 		// upscaled or downscaled according to the Screen Dimensions
 		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
 		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
+		maxPlyLevel = 0;
+		for (int i = 0; i < maxPlyLevels.length; i += 1) {
+			if (maxPlyLevels[i] > maxPlyLevel) {
+				maxPlyLevel = maxPlyLevels[i];
+			}
+		}
+		percentageMovesSearched = 1/(double)(maxPlyLevel);
+		incrementValForPercentageMovesSearched = 1/(double)(3*maxPlyLevel*maxPlyLevel);
 		resumeButton = new TextButton(new String("Resume"), skin);
 		newGameButton = new TextButton(new String("New Game"), skin);
 		exitButton = new TextButton("Exit", skin);
@@ -285,7 +294,7 @@ public class MainGameScreenChar implements Screen {
 		
 		// If game is not paused
 		if (gameState == 0) {
-			// If the move is sone after the animation
+			// If the move is done after the animation
 			if (moveCompleted) {
 				// If the player has not lost the game yet
 				if (lostPlayer[currentPlayer] == false) { 
@@ -299,14 +308,14 @@ public class MainGameScreenChar implements Screen {
 						if (DEBUG)
 							System.out.println("Reached CPU");
 						// Initializing the GameSolver
+						System.out.println("MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed);
 						GameSolverChar solver = new GameSolverChar(gameBoard, currentPlayer,
-								NUMBER_OF_PLAYERS, lostPlayer, maxPlyLevels[currentPlayer]);
+								NUMBER_OF_PLAYERS, lostPlayer, maxPlyLevels[currentPlayer], percentageMovesSearched);
 						if (DEBUG)
 							System.out.println("GameSolver initialized");
 						// Get the position where we should place the new ball
 						// so that the GameSolver's best move is executed.
 						Position winningMove = solver.getBestGameBoard();
-						gameBoard.printBoard();
 						if(winningMove == null) {
 							System.out.println("Error Time.");
 						}
@@ -318,6 +327,7 @@ public class MainGameScreenChar implements Screen {
 						// Set the moveCompleted flag to be false, so as to start the animation.
 						moveCompleted = false;
 						numberOfMovesPlayed += 1;
+						percentageMovesSearched += incrementValForPercentageMovesSearched;
 					}
 				} else {
 					// Giving the chance to the next player to play.
@@ -343,7 +353,7 @@ public class MainGameScreenChar implements Screen {
 						gameOver = true;
 						System.out.println("Player " + currentPlayer
 								+ " has won the game!");
-						myGame.setScreen(new GameEndScreen(myGame, currentPlayer));
+						myGame.setScreen(new GameEndScreen(myGame, currentPlayer, numberOfMovesPlayed));
 					}
 					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 					System.out.println("Move time.");
@@ -412,6 +422,7 @@ public class MainGameScreenChar implements Screen {
 				highlightPos.coordY = clickCoordY;
 				moveCompleted = false;
 				numberOfMovesPlayed += 1;
+				percentageMovesSearched += incrementValForPercentageMovesSearched;
 			}
 		}
 	}
