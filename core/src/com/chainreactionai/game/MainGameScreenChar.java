@@ -72,25 +72,32 @@ public class MainGameScreenChar implements Screen {
 		myGame = game;
 		NUMBER_OF_PLAYERS = CPU.size();
 		if (DEBUG_CPU)
-			NUMBER_OF_PLAYERS = 2;
+			NUMBER_OF_PLAYERS = 6;
 		isCPU = new boolean[NUMBER_OF_PLAYERS];
 		lostPlayer = new boolean[NUMBER_OF_PLAYERS];
 		maxPlyLevels = new int[NUMBER_OF_PLAYERS];
-		System.out.println(CPU.size());
-		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
-			isCPU[i] = CPU.get(i);
-			if (isCPU[i]) {
-				maxPlyLevels[i] = plyLevelList.get(i);
-				System.out.println("isCPU[" + i + "] = " + isCPU[i] + " with Ply Level = " + maxPlyLevels[i]);
-			} else {
-				System.out.println("isCPU[" + i + "] = " + isCPU[i]);
-			}
-		}
+		
+		//Simulating with only CPU Players for testing
 		if (DEBUG_CPU) {
 			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 				isCPU[i] = true;
+				maxPlyLevels[i] = 4;
 			}
-			maxPlyLevels[0] = 4; maxPlyLevels[1] = 4;
+			maxPlyLevels[0] = 2; maxPlyLevels[1] = 2;
+		}
+		else {
+			if (DEBUG)
+				System.out.println(CPU.size());
+			
+			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
+				isCPU[i] = CPU.get(i);
+				if (isCPU[i]) {
+					maxPlyLevels[i] = plyLevelList.get(i);
+					System.out.println("isCPU[" + i + "] = " + isCPU[i] + " with Ply Level = " + maxPlyLevels[i]);
+				} else {
+					System.out.println("isCPU[" + i + "] = " + isCPU[i]);
+				}
+			}
 		}
 		setGameState(0);
 		create();
