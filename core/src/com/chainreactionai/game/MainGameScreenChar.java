@@ -8,11 +8,15 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -32,9 +36,9 @@ public class MainGameScreenChar implements Screen {
 	SpriteBatch batch;
 	final private int GRID_SIZE = 8;
 	final private int NUM_STATES_POSSIBLE = 4;
-	final private int WIDTH_RECTANGLE = 55;
-	final private int HEIGHT_RECTANGLE = 55;
-	final private int WIDTH_SCREEN = 440;
+	final private float WIDTH_RECTANGLE = (float)(55);
+	final private float HEIGHT_RECTANGLE = (float)(55);
+	final private int WIDTH_SCREEN = 452;
 	final private int HEIGHT_SCREEN = 480;
 	final private int HEIGHT_PAUSE_BUTTON = 27;
 	final private int WIDTH_PAUSE_BUTTON = 55;
@@ -62,6 +66,9 @@ public class MainGameScreenChar implements Screen {
 	private Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"), new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
 	private TextButton resumeButton, exitButton, newGameButton;
 	private Position highlightPos = new Position(-1, -1);
+	private long prevTime, newTime;
+	private FileHandle handle = Gdx.files.external("data/myfile.txt");
+	private ShapeRenderer shapeRenderer = new ShapeRenderer();
 	// All debug printing should go under this flag.
 	final private boolean DEBUG = true;
 	final private boolean DEBUG_CPU = true;
@@ -72,7 +79,7 @@ public class MainGameScreenChar implements Screen {
 		myGame = game;
 		NUMBER_OF_PLAYERS = CPU.size();
 		if (DEBUG_CPU)
-			NUMBER_OF_PLAYERS = 6;
+			NUMBER_OF_PLAYERS = 2;
 		isCPU = new boolean[NUMBER_OF_PLAYERS];
 		lostPlayer = new boolean[NUMBER_OF_PLAYERS];
 		maxPlyLevels = new int[NUMBER_OF_PLAYERS];
@@ -81,9 +88,9 @@ public class MainGameScreenChar implements Screen {
 		if (DEBUG_CPU) {
 			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 				isCPU[i] = true;
-				maxPlyLevels[i] = 4;
+				maxPlyLevels[i] = 6;
 			}
-			maxPlyLevels[0] = 2; maxPlyLevels[1] = 2;
+			//maxPlyLevels[0] = 2;
 		}
 		else {
 			if (DEBUG)
@@ -124,6 +131,7 @@ public class MainGameScreenChar implements Screen {
 		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
 		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
 		maxPlyLevel = 0;
+		prevTime = System.currentTimeMillis();
 		for (int i = 0; i < maxPlyLevels.length; i += 1) {
 			if (maxPlyLevels[i] > maxPlyLevel) {
 				maxPlyLevel = maxPlyLevels[i];
@@ -134,6 +142,7 @@ public class MainGameScreenChar implements Screen {
 		resumeButton = new TextButton(new String("Resume"), skin);
 		newGameButton = new TextButton(new String("New Game"), skin);
 		exitButton = new TextButton("Exit", skin);
+		handle.writeString("--------------------------------------------------------------------------\r\n", true);
 		
 		// Populating the Pause menu with the buttons.
 		table.add(resumeButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*heightUpscaleFactor).padBottom(2).row();
@@ -250,8 +259,8 @@ public class MainGameScreenChar implements Screen {
 		for (int i = 0; i < GRID_SIZE; i += 1) {
 			for (int j = 0; j < GRID_SIZE; j += 1) {
 				Rectangle tempBlock = new Rectangle();
-				tempBlock.x = (float) (i * WIDTH_RECTANGLE);
-				tempBlock.y = (float) (j * HEIGHT_RECTANGLE);
+				tempBlock.x = (float) (i * WIDTH_RECTANGLE) + 4;
+				tempBlock.y = (float) (j * HEIGHT_RECTANGLE) + 4;
 				tempBlock.height = (float) (HEIGHT_RECTANGLE);
 				tempBlock.width = (float) (WIDTH_RECTANGLE);
 				System.out.println(tempBlock.x + " " + tempBlock.y);
@@ -291,7 +300,6 @@ public class MainGameScreenChar implements Screen {
 				if (moveCompleted) {
 					if (lostPlayer[currentPlayer] == false) {
 						processUserInputForMove();
-						gameBoard.printBoard();
 					}
 				}
 				// Used to process pause button click
@@ -315,9 +323,12 @@ public class MainGameScreenChar implements Screen {
 						if (DEBUG)
 							System.out.println("Reached CPU");
 						// Initializing the GameSolver
-						System.out.println("MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed);
+						newTime = System.currentTimeMillis();
+						Gdx.app.log("mainPlayerAndPercentageMoves","MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed + " and Time taken : " + ((newTime - prevTime)/1000));
+						handle.writeString("MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed + " and Time taken : " + ((newTime - prevTime)/1000) +"\r\n", true);
 						GameSolverChar solver = new GameSolverChar(gameBoard, currentPlayer,
 								NUMBER_OF_PLAYERS, lostPlayer, maxPlyLevels[currentPlayer], percentageMovesSearched);
+						prevTime = System.currentTimeMillis();
 						if (DEBUG)
 							System.out.println("GameSolver initialized");
 						// Get the position where we should place the new ball
@@ -377,8 +388,17 @@ public class MainGameScreenChar implements Screen {
 			batch = (SpriteBatch)stage.getBatch();
 			batch.setProjectionMatrix(camera.combined);
 			batch.begin();
-			drawGameBoard();
+			//batch.draw(gameBackground, 0, 0);
 			batch.end();
+			shapeRenderer.setProjectionMatrix(camera.combined);
+			shapeRenderer.begin(ShapeType.Line);
+			shapeRenderer.setColor(1, 1, 0, 1);
+			drawGameBoard2();
+			shapeRenderer.end();
+			//batch.setProjectionMatrix(camera.combined);
+			//batch.begin();
+			//drawGameBoard();
+			//batch.end();
 			// Check if any player has lost the game and doesn't permit
 			// it to play any further.
 			if (numberOfMovesPlayed > NUMBER_OF_PLAYERS) {
@@ -498,6 +518,42 @@ public class MainGameScreenChar implements Screen {
 		}
 		// Draws the pause button to the right place on the screen.
 		batch.draw(pauseButtonImg, 0, (GRID_SIZE*HEIGHT_RECTANGLE));
+	}
+	
+	private void drawGameBoard2() {
+		Iterator<Rectangle> iter = rectangularGrid.iterator();
+		int i, j, count = 0;
+		shapeRenderer.setColor(Color.BLACK);
+		filledRect(0, 0, WIDTH_SCREEN, HEIGHT_SCREEN);
+		shapeRenderer.setColor(Color.RED);
+		// Goes through all the rectangles pre-fed into the 
+		// rectangularGrid and draws them to the board.
+		while (iter.hasNext()) {
+			Rectangle tempBlock = iter.next();
+			i = count / GRID_SIZE;
+			j = count % GRID_SIZE;
+			shapeRenderer.line(tempBlock.x, tempBlock.y, tempBlock.x + WIDTH_RECTANGLE, tempBlock.y);
+			shapeRenderer.line(tempBlock.x, tempBlock.y, tempBlock.x, tempBlock.y + HEIGHT_RECTANGLE);
+			shapeRenderer.line(tempBlock.x, tempBlock.y + HEIGHT_RECTANGLE, tempBlock.x + WIDTH_RECTANGLE, tempBlock.y + HEIGHT_RECTANGLE);
+			shapeRenderer.line(tempBlock.x + WIDTH_RECTANGLE, tempBlock.y, tempBlock.x + WIDTH_RECTANGLE, tempBlock.y + HEIGHT_RECTANGLE);
+			shapeRenderer.line(tempBlock.x + 4, tempBlock.y + 4, tempBlock.x + WIDTH_RECTANGLE + 4, tempBlock.y + 4);
+			shapeRenderer.line(tempBlock.x + 4, tempBlock.y + 4, tempBlock.x + 4, tempBlock.y + HEIGHT_RECTANGLE + 4);
+			shapeRenderer.line(tempBlock.x + 4, tempBlock.y + HEIGHT_RECTANGLE + 4, tempBlock.x + WIDTH_RECTANGLE + 4, tempBlock.y + HEIGHT_RECTANGLE + 4);
+			shapeRenderer.line(tempBlock.x + WIDTH_RECTANGLE + 4, tempBlock.y + 4, tempBlock.x + WIDTH_RECTANGLE + 4, tempBlock.y + HEIGHT_RECTANGLE + 4);
+			shapeRenderer.line(tempBlock.x, tempBlock.y, tempBlock.x + 4, tempBlock.y + 4);
+			shapeRenderer.line(tempBlock.x, tempBlock.y + HEIGHT_RECTANGLE, tempBlock.x + 4, tempBlock.y + HEIGHT_RECTANGLE + 4);
+			shapeRenderer.line(tempBlock.x + WIDTH_RECTANGLE, tempBlock.y, tempBlock.x + WIDTH_RECTANGLE + 4, tempBlock.y + 4);
+			shapeRenderer.line(tempBlock.x + WIDTH_RECTANGLE, tempBlock.y + HEIGHT_RECTANGLE, tempBlock.x + WIDTH_RECTANGLE + 4, tempBlock.y + HEIGHT_RECTANGLE + 4);
+			// Checks if a given rectangle has to be highlighted indicating a move.
+		}
+		// Draws the pause button to the right place on the screen.
+		//batch.draw(pauseButtonImg, 0, (GRID_SIZE*HEIGHT_RECTANGLE));
+	}
+	
+	private void filledRect(int coordX, int coordY, int width, int height) {
+		for (int i = 0; i < height; i += 1) {
+			shapeRenderer.line(0, i, WIDTH_SCREEN, i);
+		}
 	}
 	
 	// Normalizes the coordinates of a click to the correct coordinates

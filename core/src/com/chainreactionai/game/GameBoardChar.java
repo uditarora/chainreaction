@@ -428,6 +428,7 @@ public class GameBoardChar {
 		return true;
 	}
 	
+	// Returns the number of players playing the game
 	public int getNumPlayers() {
 		return numPlayers;
 	}
@@ -466,5 +467,39 @@ public class GameBoardChar {
 		}
 		return true;
 	}
-
+	
+	// Returns if the node is having an atom of the player in question.
+	public boolean isNodeFilled(int player, int coordX, int coordY) {
+		if ((getNumAtomsInRectangle(coordX, coordY) > 0) && (getRectangleWinner(coordX, coordY) == player)) {
+			return true;
+		}
+		return false;
+	}
+	
+	// Returns if the node will split if a new atom is added to it.
+	public boolean isSplittableNode (int coordX, int coordY, int player) {
+		if (getRectangleWinner(coordX, coordY) == player && getNumAtomsInRectangle(coordX, coordY) > 0) {
+			if ((coordX == 0 && coordY == 0)
+					|| (coordX == 0 && coordY == gameGridSize - 1)
+					|| (coordX == gameGridSize - 1 && coordY == 0)
+					|| (coordX == gameGridSize - 1 && coordY == gameGridSize - 1)) {
+				if (getNumAtomsInRectangle(coordX, coordY) == 1) {
+					return true;
+				}
+			} else if (coordX == 0 || coordY == 0 || coordX == gameGridSize - 1
+					|| coordY == gameGridSize - 1) {
+				if (getNumAtomsInRectangle(coordX, coordY) == 2) {
+					return true;
+				}
+			} else {
+				if (getNumAtomsInRectangle(coordX, coordY) == 3) {
+					return true;
+				}
+			}
+			return false;
+		} else {
+			return false;
+		}
+	}
+	
 }

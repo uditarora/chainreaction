@@ -31,34 +31,8 @@ public class GameSolverChar {
 			board = gb;
 			position = new Position(coordX, coordY);
 		}
-		
-		public GameBoardChar getGameBoard() {
-			return board;
-		}
-		
-		public Position getPosition() {
-			return position;
-		}
 	}
-	
-	private class PositionAndScore {
-		private Position position;
-		private double score;
 		
-		private PositionAndScore(int x, int y, double score) {
-			position = new Position(x, y);
-			this.score = score;
-		}
-		
-		public Position getPosition () {
-			return position;
-		}
-		
-		public double getScore() {
-			return score;
-		}
-	}
-	
 	// Constructor to initialize the GameSolver with a BoardNode
 	// which has the current state as the state passed and the default maxPlyLevel.
 	public GameSolverChar(GameBoardChar gameBoard, int player, int numberPlayers, boolean [] lostPlayer) {
@@ -187,6 +161,9 @@ public class GameSolverChar {
 			for (int j = 0; j < board.getGameGridSize(); ++j) {
 				if (board.isValidMove(i, j, player)) {
 					takeThisMoveOrNot = rand.nextDouble();
+					if (board.isNodeFilled(player, i, j)) {
+						takeThisMoveOrNot = 0;
+					}
 					if (takeThisMoveOrNot <= percentageMovesSearched) {
 						tempGameBoard = new GameBoardChar(board);
 						tempGameBoard.changeBoard(i, j, player);
