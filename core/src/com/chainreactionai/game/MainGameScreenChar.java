@@ -35,7 +35,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class MainGameScreenChar implements Screen {
 	SpriteBatch batch;
 	final private int GRID_SIZE = 8;
-	final private int NUM_STATES_POSSIBLE = 4;
 	final private float WIDTH_RECTANGLE = (float)(55);
 	final private float HEIGHT_RECTANGLE = (float)(55);
 	final private int WIDTH_SCREEN = 452;
@@ -46,9 +45,7 @@ public class MainGameScreenChar implements Screen {
 	final private int WIDTH_PAUSE_MENU_BUTTONS = 150;
 	private OrthographicCamera camera;
 	private int NUMBER_OF_PLAYERS;
-	private Texture pauseButtonImg = new Texture("pauseButton.jpg"), gameBackground = new Texture("gameBackground.jpg");
-	private Texture[][] atomImages = new Texture[NUM_STATES_POSSIBLE + 1][8];
-	private Texture[][] highlightedAtomImages = new Texture[NUM_STATES_POSSIBLE + 1][8];
+	private Texture pauseButtonImg = new Texture("pauseButton.jpg");
 	private Array<Rectangle> rectangularGrid;
 	private GameBoardChar gameBoard;
 	private int clickCoordX, clickCoordY, currentPlayer, numberOfMovesPlayed, gameState, maxPlyLevel;
@@ -180,86 +177,10 @@ public class MainGameScreenChar implements Screen {
 		});
 		
 		// Load default values into arrays
-		loadImagesintoArrays();
 		setDimsForRectangles();
 		setNoPlayerHasLost();
 		gameOver = false;
 		moveCompleted = true;
-	}
-
-	// This function loads the images into the arrays
-	// of textures.
-	private void loadImagesintoArrays() {
-		// Background image loaded into first column
-		atomImages[0][0] = new Texture("background.jpg");
-		atomImages[0][1] = new Texture("background.jpg");
-		atomImages[0][2] = new Texture("background.jpg");
-		atomImages[0][3] = new Texture("background.jpg");
-		atomImages[0][4] = new Texture("background.jpg");
-		atomImages[0][5] = new Texture("background.jpg");
-		// One Atom Images Batch
-		atomImages[1][0] = new Texture("oneAtomPlayerOne.jpg");
-		atomImages[1][1] = new Texture("oneAtomPlayerTwo.jpg");
-		atomImages[1][2] = new Texture("oneAtomPlayerThree.jpg");
-		atomImages[1][3] = new Texture("oneAtomPlayerFour.jpg");
-		atomImages[1][4] = new Texture("oneAtomPlayerFive.jpg");
-		atomImages[1][5] = new Texture("oneAtomPlayerSix.jpg");
-		// Two Atom Images Batch
-		atomImages[2][0] = new Texture("twoAtomPlayerOne.jpg");
-		atomImages[2][1] = new Texture("twoAtomPlayerTwo.jpg");
-		atomImages[2][2] = new Texture("twoAtomPlayerThree.jpg");
-		atomImages[2][3] = new Texture("twoAtomPlayerFour.jpg");
-		atomImages[2][4] = new Texture("twoAtomPlayerFive.jpg");
-		atomImages[2][5] = new Texture("twoAtomPlayerSix.jpg");
-		// Three Atom Images Batch
-		atomImages[3][0] = new Texture("threeAtomPlayerOne.jpg");
-		atomImages[3][1] = new Texture("threeAtomPlayerTwo.jpg");
-		atomImages[3][2] = new Texture("threeAtomPlayerThree.jpg");
-		atomImages[3][3] = new Texture("threeAtomPlayerFour.jpg");
-		atomImages[3][4] = new Texture("threeAtomPlayerFive.jpg");
-		atomImages[3][5] = new Texture("threeAtomPlayerSix.jpg");
-		// Four Atom Images Batch
-		atomImages[4][0] = new Texture("fourAtomPlayerOne.jpg");
-		atomImages[4][1] = new Texture("fourAtomPlayerTwo.jpg");
-		atomImages[4][2] = new Texture("fourAtomPlayerThree.jpg");
-		atomImages[4][3] = new Texture("fourAtomPlayerFour.jpg");
-		atomImages[4][4] = new Texture("fourAtomPlayerFive.jpg");
-		atomImages[4][5] = new Texture("fourAtomPlayerSix.jpg");
-		// Background highlighted image loaded into first column
-		highlightedAtomImages[0][0] = new Texture("backgroundHigh.jpg");
-		highlightedAtomImages[0][1] = new Texture("backgroundHigh.jpg");
-		highlightedAtomImages[0][2] = new Texture("backgroundHigh.jpg");
-		highlightedAtomImages[0][3] = new Texture("backgroundHigh.jpg");
-		highlightedAtomImages[0][4] = new Texture("backgroundHigh.jpg");
-		highlightedAtomImages[0][5] = new Texture("backgroundHigh.jpg");
-		// One Atom highlighted Images Batch
-		highlightedAtomImages[1][0] = new Texture("oneAtomPlayerOneHigh.jpg");
-		highlightedAtomImages[1][1] = new Texture("oneAtomPlayerTwoHigh.jpg");
-		highlightedAtomImages[1][2] = new Texture("oneAtomPlayerThreeHigh.jpg");
-		highlightedAtomImages[1][3] = new Texture("oneAtomPlayerFourHigh.jpg");
-		highlightedAtomImages[1][4] = new Texture("oneAtomPlayerFiveHigh.jpg");
-		highlightedAtomImages[1][5] = new Texture("oneAtomPlayerSixHigh.jpg");
-		// Two Atom highlighted Images Batch
-		highlightedAtomImages[2][0] = new Texture("twoAtomPlayerOneHigh.jpg");
-		highlightedAtomImages[2][1] = new Texture("twoAtomPlayerTwoHigh.jpg");
-		highlightedAtomImages[2][2] = new Texture("twoAtomPlayerThreeHigh.jpg");
-		highlightedAtomImages[2][3] = new Texture("twoAtomPlayerFourHigh.jpg");
-		highlightedAtomImages[2][4] = new Texture("twoAtomPlayerFiveHigh.jpg");
-		highlightedAtomImages[2][5] = new Texture("twoAtomPlayerSixHigh.jpg");
-		// Three Atom highlighted Images Batch
-		highlightedAtomImages[3][0] = new Texture("threeAtomPlayerOneHigh.jpg");
-		highlightedAtomImages[3][1] = new Texture("threeAtomPlayerTwoHigh.jpg");
-		highlightedAtomImages[3][2] = new Texture("threeAtomPlayerThreeHigh.jpg");
-		highlightedAtomImages[3][3] = new Texture("threeAtomPlayerFourHigh.jpg");
-		highlightedAtomImages[3][4] = new Texture("threeAtomPlayerFiveHigh.jpg");
-		highlightedAtomImages[3][5] = new Texture("threeAtomPlayerSixHigh.jpg");
-		//Four Atom highlighted Images Batch
-		highlightedAtomImages[4][0] = new Texture("fourAtomPlayerOneHigh.jpg");
-		highlightedAtomImages[4][1] = new Texture("fourAtomPlayerTwoHigh.jpg");
-		highlightedAtomImages[4][2] = new Texture("fourAtomPlayerThreeHigh.jpg");
-		highlightedAtomImages[4][3] = new Texture("fourAtomPlayerFourHigh.jpg");
-		highlightedAtomImages[4][4] = new Texture("fourAtomPlayerFiveHigh.jpg");
-		highlightedAtomImages[4][5] = new Texture("fourAtomPlayerSixHigh.jpg");
 	}
 
 	// This function loads the dimensions for all the
