@@ -69,9 +69,10 @@ public class MainGameScreenChar implements Screen {
 	private long prevTime, newTime;
 	private FileHandle handle = Gdx.files.external("data/myfile.txt");
 	private ShapeRenderer shapeRenderer = new ShapeRenderer();
+	private Color[] colors;
 	// All debug printing should go under this flag.
 	final private boolean DEBUG = true;
-	final private boolean DEBUG_CPU = true;
+	final private boolean DEBUG_CPU = false;
 
 	// Constructor to initialize which player is CPU and which is human.
 	// Also sets difficulty levels for CPU players.
@@ -126,6 +127,14 @@ public class MainGameScreenChar implements Screen {
 		Gdx.input.setInputProcessor(inputProcessor);
 		inputProcessor.unsetTouchDown();
 		numberOfMovesPlayed = currentPlayer = 0;
+		// Initialize colors
+		colors = new Color[6];
+		colors[0] = Color.BLUE;
+		colors[1] = Color.GREEN;
+		colors[2] = Color.MAROON;
+		colors[3] = Color.ORANGE;
+		colors[4] = Color.PURPLE;
+		colors[5] = Color.WHITE;
 		// Up-scale Factors are used to get proper sized buttons
 		// upscaled or downscaled according to the Screen Dimensions
 		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
@@ -284,7 +293,7 @@ public class MainGameScreenChar implements Screen {
 	
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		// process user input
@@ -388,17 +397,14 @@ public class MainGameScreenChar implements Screen {
 			batch = (SpriteBatch)stage.getBatch();
 			batch.setProjectionMatrix(camera.combined);
 			batch.begin();
-			//batch.draw(gameBackground, 0, 0);
+			batch.draw(pauseButtonImg, 0, (GRID_SIZE*HEIGHT_RECTANGLE + 10));
 			batch.end();
 			shapeRenderer.setProjectionMatrix(camera.combined);
 			shapeRenderer.begin(ShapeType.Line);
+			shapeRenderer.setAutoShapeType(true);
 			shapeRenderer.setColor(1, 1, 0, 1);
-			drawGameBoard2();
+			drawGameBoard();
 			shapeRenderer.end();
-			//batch.setProjectionMatrix(camera.combined);
-			//batch.begin();
-			//drawGameBoard();
-			//batch.end();
 			// Check if any player has lost the game and doesn't permit
 			// it to play any further.
 			if (numberOfMovesPlayed > NUMBER_OF_PLAYERS) {
@@ -472,66 +478,14 @@ public class MainGameScreenChar implements Screen {
 	private void drawGameBoard() {
 		Iterator<Rectangle> iter = rectangularGrid.iterator();
 		int i, j, count = 0;
-		batch.draw(gameBackground, 0, 0);
 		// Goes through all the rectangles pre-fed into the 
 		// rectangularGrid and draws them to the board.
 		while (iter.hasNext()) {
 			Rectangle tempBlock = iter.next();
 			i = count / GRID_SIZE;
 			j = count % GRID_SIZE;
-			// Checks if a given rectangle has to be highlighted indicating a move.
-			if (highlightPos.coordX == i && highlightPos.coordY == j) {
-				if (gameBoard.getRectangleWinner(i, j) == -1) {
-					batch.draw(
-							highlightedAtomImages[0][0],
-							tempBlock.x, tempBlock.y);
-				} else {
-					if (gameBoard.getNumAtomsInRectangle(i, j) > 4) {
-						batch.draw(
-								highlightedAtomImages[0][gameBoard.getRectangleWinner(i, j)], tempBlock.x,
-								tempBlock.y);
-					} else {
-						batch.draw(
-								highlightedAtomImages[gameBoard.getNumAtomsInRectangle(i, j)][gameBoard.getRectangleWinner(i, j)], tempBlock.x,
-								tempBlock.y);
-					}
-				}
-				count++;
-			} else {
-				if (gameBoard.getRectangleWinner(i, j) == -1) {
-					batch.draw(
-							atomImages[0][0],
-							tempBlock.x, tempBlock.y);
-				} else {
-					if (gameBoard.getNumAtomsInRectangle(i, j) > 4) {
-						batch.draw(
-								atomImages[0][gameBoard.getRectangleWinner(i, j)], tempBlock.x,
-								tempBlock.y);
-					} else {
-						batch.draw(
-								atomImages[gameBoard.getNumAtomsInRectangle(i, j)][gameBoard.getRectangleWinner(i, j)], tempBlock.x,
-								tempBlock.y);
-					}
-				}
-				count++;
-			}
-		}
-		// Draws the pause button to the right place on the screen.
-		batch.draw(pauseButtonImg, 0, (GRID_SIZE*HEIGHT_RECTANGLE));
-	}
-	
-	private void drawGameBoard2() {
-		Iterator<Rectangle> iter = rectangularGrid.iterator();
-		int i, j, count = 0;
-		shapeRenderer.setColor(Color.BLACK);
-		filledRect(0, 0, WIDTH_SCREEN, HEIGHT_SCREEN);
-		shapeRenderer.setColor(Color.RED);
-		// Goes through all the rectangles pre-fed into the 
-		// rectangularGrid and draws them to the board.
-		while (iter.hasNext()) {
-			Rectangle tempBlock = iter.next();
-			i = count / GRID_SIZE;
-			j = count % GRID_SIZE;
+			shapeRenderer.set(ShapeType.Line);
+			shapeRenderer.setColor(Color.RED);
 			shapeRenderer.line(tempBlock.x, tempBlock.y, tempBlock.x + WIDTH_RECTANGLE, tempBlock.y);
 			shapeRenderer.line(tempBlock.x, tempBlock.y, tempBlock.x, tempBlock.y + HEIGHT_RECTANGLE);
 			shapeRenderer.line(tempBlock.x, tempBlock.y + HEIGHT_RECTANGLE, tempBlock.x + WIDTH_RECTANGLE, tempBlock.y + HEIGHT_RECTANGLE);
@@ -545,14 +499,92 @@ public class MainGameScreenChar implements Screen {
 			shapeRenderer.line(tempBlock.x + WIDTH_RECTANGLE, tempBlock.y, tempBlock.x + WIDTH_RECTANGLE + 4, tempBlock.y + 4);
 			shapeRenderer.line(tempBlock.x + WIDTH_RECTANGLE, tempBlock.y + HEIGHT_RECTANGLE, tempBlock.x + WIDTH_RECTANGLE + 4, tempBlock.y + HEIGHT_RECTANGLE + 4);
 			// Checks if a given rectangle has to be highlighted indicating a move.
+			if (highlightPos.coordX == i && highlightPos.coordY == j) {
+				drawHighlight(tempBlock.x, tempBlock.y);
+				shapeRenderer.setColor(Color.RED);
+			}
+			if (gameBoard.getRectangleWinner(i, j) == -1) {
+				// Empty
+			} else {
+				if (gameBoard.getNumAtomsInRectangle(i, j) > 4) {
+					// Empty
+				} else {
+					drawBalls(tempBlock.x, tempBlock.y, gameBoard.getNumAtomsInRectangle(i, j), gameBoard.getRectangleWinner(i, j));
+				}
+			}
+			count++;
 		}
-		// Draws the pause button to the right place on the screen.
-		//batch.draw(pauseButtonImg, 0, (GRID_SIZE*HEIGHT_RECTANGLE));
 	}
 	
-	private void filledRect(int coordX, int coordY, int width, int height) {
-		for (int i = 0; i < height; i += 1) {
-			shapeRenderer.line(0, i, WIDTH_SCREEN, i);
+	private void drawHighlight (float x, float y) {
+		shapeRenderer.setColor(Color.YELLOW);
+		for (int counter = 1; counter <=3; counter += 1) {
+			shapeRenderer.line(x + counter, y + counter, x + WIDTH_RECTANGLE + counter, y + counter);
+			shapeRenderer.line(x + counter, y + counter, x + counter, y + HEIGHT_RECTANGLE + counter);
+			shapeRenderer.line(x + WIDTH_RECTANGLE + counter, y + counter, x + WIDTH_RECTANGLE + counter, y + HEIGHT_RECTANGLE + counter);
+			shapeRenderer.line(x + counter, y + HEIGHT_RECTANGLE + counter, x + WIDTH_RECTANGLE + counter, y + HEIGHT_RECTANGLE + counter);
+		}
+	}
+	
+	private void drawBalls (float x, float y, int numAtomsToDraw, int rectangleWinnerToDraw) {
+		shapeRenderer.set(ShapeType.Filled);
+		shapeRenderer.setColor(colors[rectangleWinnerToDraw]);
+		if (numAtomsToDraw == 1) {
+			shapeRenderer.circle(x + WIDTH_RECTANGLE/2, y + HEIGHT_RECTANGLE/2, 12);
+			shapeRenderer.setColor(Color.BLACK);
+			shapeRenderer.set(ShapeType.Line);
+			shapeRenderer.circle(x + WIDTH_RECTANGLE/2, y + HEIGHT_RECTANGLE/2, 13);
+		} else if (numAtomsToDraw == 2) {
+			shapeRenderer.circle(x + WIDTH_RECTANGLE/3, y + HEIGHT_RECTANGLE/2, 12);
+			shapeRenderer.setColor(Color.BLACK);
+			shapeRenderer.set(ShapeType.Line);
+			shapeRenderer.circle(x + WIDTH_RECTANGLE/3, y + HEIGHT_RECTANGLE/2, 13);
+			shapeRenderer.setColor(colors[rectangleWinnerToDraw]);
+			shapeRenderer.set(ShapeType.Filled);
+			shapeRenderer.circle(x + (2 * WIDTH_RECTANGLE)/3, y + HEIGHT_RECTANGLE/2, 12);
+			shapeRenderer.setColor(Color.BLACK);
+			shapeRenderer.set(ShapeType.Line);
+			shapeRenderer.circle(x + (2 * WIDTH_RECTANGLE)/3, y + HEIGHT_RECTANGLE/2, 13);
+		} else if (numAtomsToDraw == 3) {
+			shapeRenderer.circle(x + WIDTH_RECTANGLE/3, y + (2 * HEIGHT_RECTANGLE)/5, 12);
+			shapeRenderer.setColor(Color.BLACK);
+			shapeRenderer.set(ShapeType.Line);
+			shapeRenderer.circle(x + WIDTH_RECTANGLE/3, y + (2 * HEIGHT_RECTANGLE)/5, 13);
+			shapeRenderer.setColor(colors[rectangleWinnerToDraw]);
+			shapeRenderer.set(ShapeType.Filled);
+			shapeRenderer.circle(x + (2 * WIDTH_RECTANGLE)/3, y + (2 * HEIGHT_RECTANGLE)/5, 12);
+			shapeRenderer.setColor(Color.BLACK);
+			shapeRenderer.set(ShapeType.Line);
+			shapeRenderer.circle(x + (2 * WIDTH_RECTANGLE)/3, y + (2 * HEIGHT_RECTANGLE)/5, 13);
+			shapeRenderer.setColor(colors[rectangleWinnerToDraw]);
+			shapeRenderer.set(ShapeType.Filled);
+			shapeRenderer.circle(x + WIDTH_RECTANGLE/2, y + (3 * HEIGHT_RECTANGLE)/5, 12);
+			shapeRenderer.setColor(Color.BLACK);
+			shapeRenderer.set(ShapeType.Line);
+			shapeRenderer.circle(x + WIDTH_RECTANGLE/2, y + (3 * HEIGHT_RECTANGLE)/5, 13);
+		} else if (numAtomsToDraw == 4) {
+			shapeRenderer.circle(x + WIDTH_RECTANGLE/3, y + HEIGHT_RECTANGLE/2, 12);
+			shapeRenderer.setColor(Color.BLACK);
+			shapeRenderer.set(ShapeType.Line);
+			shapeRenderer.circle(x + WIDTH_RECTANGLE/3, y + HEIGHT_RECTANGLE/2, 13);
+			shapeRenderer.setColor(colors[rectangleWinnerToDraw]);
+			shapeRenderer.set(ShapeType.Filled);
+			shapeRenderer.circle(x + (2 * WIDTH_RECTANGLE)/3, y + HEIGHT_RECTANGLE/2, 12);
+			shapeRenderer.setColor(Color.BLACK);
+			shapeRenderer.set(ShapeType.Line);
+			shapeRenderer.circle(x + (2 * WIDTH_RECTANGLE)/3, y + HEIGHT_RECTANGLE/2, 13);
+			shapeRenderer.setColor(colors[rectangleWinnerToDraw]);
+			shapeRenderer.set(ShapeType.Filled);
+			shapeRenderer.circle(x + WIDTH_RECTANGLE/2, y + (2 * HEIGHT_RECTANGLE)/3, 12);
+			shapeRenderer.setColor(Color.BLACK);
+			shapeRenderer.set(ShapeType.Line);
+			shapeRenderer.circle(x + WIDTH_RECTANGLE/2, y + (2 * HEIGHT_RECTANGLE)/3, 13);
+			shapeRenderer.setColor(colors[rectangleWinnerToDraw]);
+			shapeRenderer.set(ShapeType.Filled);
+			shapeRenderer.circle(x + WIDTH_RECTANGLE/2, y + (1 * HEIGHT_RECTANGLE)/3, 12);
+			shapeRenderer.setColor(Color.BLACK);
+			shapeRenderer.set(ShapeType.Line);
+			shapeRenderer.circle(x + WIDTH_RECTANGLE/2, y + (1 * HEIGHT_RECTANGLE)/3, 13);
 		}
 	}
 	
