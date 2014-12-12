@@ -69,7 +69,7 @@ public class MainGameScreenChar implements Screen {
 	private Color[] colors;
 	// All debug printing should go under this flag.
 	final private boolean DEBUG = true;
-	final private boolean DEBUG_CPU = false;
+	final private boolean DEBUG_CPU = true;
 
 	// Constructor to initialize which player is CPU and which is human.
 	// Also sets difficulty levels for CPU players.
@@ -86,9 +86,10 @@ public class MainGameScreenChar implements Screen {
 		if (DEBUG_CPU) {
 			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 				isCPU[i] = true;
-				maxPlyLevels[i] = 6;
+				maxPlyLevels[i] = 2;
 			}
-			//maxPlyLevels[0] = 2;
+//			maxPlyLevels[0] = 2;
+			isCPU[0] = false;
 		}
 		else {
 			if (DEBUG)
