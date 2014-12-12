@@ -36,7 +36,7 @@ public class BoardNodeChar implements Comparable<BoardNodeChar> {
 	// Sets the score of the BoardNode for a given player
 	// by using the GameBoard's internal functions
 	public void setScore() {
-		score = board.score(player);
+		score = board.score(player, 1);
 	}
 
 	// This returns the level of depth at which this BoardNode

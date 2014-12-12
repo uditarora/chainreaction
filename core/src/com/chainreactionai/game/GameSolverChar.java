@@ -199,7 +199,7 @@ public class GameSolverChar {
 		GameBoardChar solutionGameBoard = oldBoardNode.board;
 		double maxScore = 0, currentScore = 0;
 		for (GameBoardChar board : getAllPossibleMoves(oldBoardNode.board, player)) {
-			currentScore = board.score(player);
+			currentScore = board.score(player, 1);
 			if (currentScore > maxScore) {
 				maxScore = currentScore;
 				solutionGameBoard = board;

@@ -395,19 +395,100 @@ public class GameBoardChar {
 
 	// This function returns the score for a given player
 	// in the board's current state.
-	public double score(int player) {
-		int runningNumBallsTotal = 0, runningNumBoxesTotal = 0;
-		double numBallsWeight = 0.5, numBoxesWeight = 0.5, totalScore;
-		for (int i = 0; i < gameGridSize; i += 1) {
-			for (int j = 0; j < gameGridSize; j += 1) {
-				if (getRectangleWinner(i, j) == player) {
-					runningNumBallsTotal += getNumAtomsInRectangle(i, j);
-					runningNumBoxesTotal += 1;
+	public double score(int player, int level) {
+		double totalScore = 0;
+		if (level == 0) {
+			int runningNumBallsTotal = 0, runningNumBoxesTotal = 0;
+			double numBallsWeight = 0.5, numBoxesWeight = 0.5;
+			for (int i = 0; i < gameGridSize; i += 1) {
+				for (int j = 0; j < gameGridSize; j += 1) {
+					if (getRectangleWinner(i, j) == player) {
+						runningNumBallsTotal += getNumAtomsInRectangle(i, j);
+						runningNumBoxesTotal += 1;
+					}
 				}
 			}
+			totalScore = (numBallsWeight * runningNumBallsTotal)
+					+ (numBoxesWeight * runningNumBoxesTotal);
 		}
-		totalScore = (numBallsWeight * runningNumBallsTotal)
-				+ (numBoxesWeight * runningNumBoxesTotal);
+		else if (level == 1) {
+			int runningNumBoxesTotal = 0, runningNumSplittableTotal = 0, runningNumMultipleTotal = 0, currNumAtoms = 0;
+			double numBoxesWeight = 0.3, numSplittableWeight = 0.3, numMultipleWeight = 0.4;
+			for (int i = 0; i < gameGridSize; i += 1) {
+				for (int j = 0; j < gameGridSize; j += 1) {
+					if (getRectangleWinner(i, j) == player) {
+						runningNumBoxesTotal += 1;
+						currNumAtoms = getNumAtomsInRectangle(i, j);
+						if (currNumAtoms > 1) {
+							runningNumMultipleTotal += 1;
+							if (isSplittableNode(i, j, player)) {
+								runningNumSplittableTotal += 1;
+							}
+						}
+						if ((i == 0 && j == 0)
+								|| (i == 0 && j == gameGridSize - 1)
+								|| (i == gameGridSize - 1 && j == 0)
+								|| (i == gameGridSize - 1 && j == gameGridSize - 1)) {
+							runningNumSplittableTotal += 1;
+						}
+					}
+				}
+			}
+			totalScore = (numBoxesWeight * runningNumBoxesTotal) + (numMultipleWeight * runningNumMultipleTotal) +
+					(numSplittableWeight * runningNumSplittableTotal);
+		}
+		else if (level == 2) {
+			int runningNumBoxesTotal = 0, runningNumSplittableTotal = 0, runningNumMultipleTotal = 0, currNumAtoms = 0;
+			double numBoxesWeight = 0.1, numSplittableWeight = 0.5, numMultipleWeight = 0.4;
+			for (int i = 0; i < gameGridSize; i += 1) {
+				for (int j = 0; j < gameGridSize; j += 1) {
+					if (getRectangleWinner(i, j) == player) {
+						runningNumBoxesTotal += 1;
+						currNumAtoms = getNumAtomsInRectangle(i, j);
+						if (currNumAtoms > 1) {
+							runningNumMultipleTotal += 1;
+							if (isSplittableNode(i, j, player)) {
+								runningNumSplittableTotal += 1;
+							}
+						}
+						if ((i == 0 && j == 0)
+								|| (i == 0 && j == gameGridSize - 1)
+								|| (i == gameGridSize - 1 && j == 0)
+								|| (i == gameGridSize - 1 && j == gameGridSize - 1)) {
+							runningNumSplittableTotal += 1;
+						}
+					}
+				}
+			}
+			totalScore = (numBoxesWeight * runningNumBoxesTotal) + (numMultipleWeight * runningNumMultipleTotal) +
+					(numSplittableWeight * runningNumSplittableTotal);
+		}
+		else if (level == 3) {
+			int runningNumBoxesTotal = 0, runningNumSplittableTotal = 0, runningNumMultipleTotal = 0, currNumAtoms = 0;
+			double numBoxesWeight = 0.5, numSplittableWeight = 0.2, numMultipleWeight = 0.3;
+			for (int i = 0; i < gameGridSize; i += 1) {
+				for (int j = 0; j < gameGridSize; j += 1) {
+					if (getRectangleWinner(i, j) == player) {
+						runningNumBoxesTotal += 1;
+						currNumAtoms = getNumAtomsInRectangle(i, j);
+						if (currNumAtoms > 1) {
+							runningNumMultipleTotal += 1;
+							if (isSplittableNode(i, j, player)) {
+								runningNumSplittableTotal += 1;
+							}
+						}
+						if ((i == 0 && j == 0)
+								|| (i == 0 && j == gameGridSize - 1)
+								|| (i == gameGridSize - 1 && j == 0)
+								|| (i == gameGridSize - 1 && j == gameGridSize - 1)) {
+							runningNumSplittableTotal += 1;
+						}
+					}
+				}
+			}
+			totalScore = (numBoxesWeight * runningNumBoxesTotal) + (numMultipleWeight * runningNumMultipleTotal) +
+					(numSplittableWeight * runningNumSplittableTotal);
+		}
 		return totalScore;
 	}
 
