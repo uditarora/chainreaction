@@ -22,8 +22,19 @@ public class SplashScreen implements Screen {
 	private Texture splashScreenBackground;
 	final private int WIDTH_SCREEN = 440;
 	final private int HEIGHT_SCREEN = 480;
+	final boolean MONTE_CARLO = true;
 
 	public SplashScreen(ChainReactionAIGame game) {
+		if (MONTE_CARLO) {
+			int numPlayers = 2;
+			int[] plyLevelList = new int[numPlayers]; int[] heuristicNumber = new int[numPlayers];
+			plyLevelList[0] = 4; plyLevelList[1] = 2;
+			heuristicNumber[0] = 12; heuristicNumber[1] = 1;
+			MonteCarlo monteCarlo = new MonteCarlo(numPlayers, plyLevelList, heuristicNumber);
+			
+			monteCarlo.runSimulations(10);
+			Gdx.app.exit();
+		}
 		myGame = game;
 		create();
 	}
