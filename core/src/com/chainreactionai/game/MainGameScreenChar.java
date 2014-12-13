@@ -54,7 +54,7 @@ public class MainGameScreenChar implements Screen {
 	private boolean clickOnEdge;
 	MyInputProcessor inputProcessor = new MyInputProcessor();
 	private boolean[] isCPU, lostPlayer;
-	private int[] maxPlyLevels;
+	private int[] maxPlyLevels, heuristicNumbers;
 	private boolean gameOver, moveCompleted;
 	private ChainReactionAIGame myGame;
 	private Stage stage = new Stage();
@@ -76,6 +76,7 @@ public class MainGameScreenChar implements Screen {
 	public MainGameScreenChar(ChainReactionAIGame game, ArrayList<Boolean> CPU, ArrayList<Integer> plyLevelList) {
 		myGame = game;
 		NUMBER_OF_PLAYERS = CPU.size();
+		heuristicNumbers = new int[NUMBER_OF_PLAYERS];
 		if (DEBUG_CPU)
 			NUMBER_OF_PLAYERS = 2;
 		isCPU = new boolean[NUMBER_OF_PLAYERS];
@@ -86,10 +87,10 @@ public class MainGameScreenChar implements Screen {
 		if (DEBUG_CPU) {
 			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 				isCPU[i] = true;
-				maxPlyLevels[i] = 2;
+				maxPlyLevels[i] = 4;
 			}
-//			maxPlyLevels[0] = 2;
-			isCPU[0] = false;
+			//maxPlyLevels[0] = 4;
+//			isCPU[0] = false;
 		}
 		else {
 			if (DEBUG)
@@ -144,7 +145,8 @@ public class MainGameScreenChar implements Screen {
 				maxPlyLevel = maxPlyLevels[i];
 			}
 		}
-		percentageMovesSearched = 1/(double)(maxPlyLevel);
+		//percentageMovesSearched = 1/(double)(maxPlyLevel);
+		percentageMovesSearched = 1;
 		incrementValForPercentageMovesSearched = 1/(double)(3*maxPlyLevel*maxPlyLevel);
 		resumeButton = new TextButton(new String("Resume"), skin);
 		newGameButton = new TextButton(new String("New Game"), skin);
@@ -180,6 +182,7 @@ public class MainGameScreenChar implements Screen {
 		// Load default values into arrays
 		setDimsForRectangles();
 		setNoPlayerHasLost();
+		setHeuristicNumbers();
 		gameOver = false;
 		moveCompleted = true;
 	}
@@ -205,6 +208,17 @@ public class MainGameScreenChar implements Screen {
 	private void setNoPlayerHasLost() {
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			lostPlayer[i] = false;
+		}
+	}
+	
+	private void setHeuristicNumbers() {
+		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
+			heuristicNumbers[i] = 2;
+		}
+		if (DEBUG_CPU) {
+			// Set heuristic numbers for DEBUG_CPU
+			heuristicNumbers[0] = 3;
+			heuristicNumbers[1] = 1;
 		}
 	}
 
@@ -258,7 +272,7 @@ public class MainGameScreenChar implements Screen {
 						Gdx.app.log("mainPlayerAndPercentageMoves","MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed + " and Time taken : " + ((newTime - prevTime)/1000));
 						handle.writeString("MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed + " and Time taken : " + ((newTime - prevTime)/1000) +"\r\n", true);
 						GameSolverChar solver = new GameSolverChar(gameBoard, currentPlayer,
-								NUMBER_OF_PLAYERS, lostPlayer, maxPlyLevels[currentPlayer], percentageMovesSearched);
+								NUMBER_OF_PLAYERS, lostPlayer, maxPlyLevels[currentPlayer], percentageMovesSearched, heuristicNumbers[currentPlayer]);
 						prevTime = System.currentTimeMillis();
 						if (DEBUG)
 							System.out.println("GameSolver initialized");

@@ -13,14 +13,15 @@ public class BoardNodeChar implements Comparable<BoardNodeChar> {
 
 	public GameBoardChar board;
 	private double score, totalScore;
-	public int level, player;
+	public int level, player, heuristicNumber;
 	public BoardNodeChar previous;
 
 	BoardNodeChar(GameBoardChar gameBoard, int level, int player,
-			BoardNodeChar previousBoard) {
+			BoardNodeChar previousBoard, int heuristicNumber) {
 		board = gameBoard;
 		this.level = level;
 		this.player = player;
+		this.heuristicNumber = heuristicNumber;
 		previous = previousBoard;
 	}
 
@@ -36,7 +37,7 @@ public class BoardNodeChar implements Comparable<BoardNodeChar> {
 	// Sets the score of the BoardNode for a given player
 	// by using the GameBoard's internal functions
 	public void setScore() {
-		score = board.score(player, 1);
+		score = board.score(player, heuristicNumber);
 	}
 
 	// This returns the level of depth at which this BoardNode
