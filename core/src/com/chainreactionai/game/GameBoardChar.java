@@ -413,7 +413,10 @@ public class GameBoardChar {
 		}
 		else if (level == 1) {
 			int runningNumBoxesTotal = 0, runningNumSplittableTotal = 0, runningNumMultipleTotal = 0, currNumAtoms = 0;
-			double numBoxesWeight = 0.3, numSplittableWeight = 0.3, numMultipleWeight = 0.4;
+			// First Iteration
+			//double numBoxesWeight = 0.3, numSplittableWeight = 0.3, numMultipleWeight = 0.4;
+			// Second Iteration
+			double numBoxesWeight = 0, numSplittableWeight = 0, numMultipleWeight = 1;
 			for (int i = 0; i < gameGridSize; i += 1) {
 				for (int j = 0; j < gameGridSize; j += 1) {
 					if (getRectangleWinner(i, j) == player) {
@@ -439,7 +442,10 @@ public class GameBoardChar {
 		}
 		else if (level == 2) {
 			int runningNumBoxesTotal = 0, runningNumSplittableTotal = 0, runningNumMultipleTotal = 0, currNumAtoms = 0;
-			double numBoxesWeight = 0.1, numSplittableWeight = 0.5, numMultipleWeight = 0.4;
+			// First Iteration
+			//double numBoxesWeight = 0.1, numSplittableWeight = 0.5, numMultipleWeight = 0.4;
+			//Second Iteration
+			double numBoxesWeight = 0, numSplittableWeight = 1, numMultipleWeight = 0;
 			for (int i = 0; i < gameGridSize; i += 1) {
 				for (int j = 0; j < gameGridSize; j += 1) {
 					if (getRectangleWinner(i, j) == player) {
@@ -465,7 +471,10 @@ public class GameBoardChar {
 		}
 		else if (level == 3) {
 			int runningNumBoxesTotal = 0, runningNumSplittableTotal = 0, runningNumMultipleTotal = 0, currNumAtoms = 0;
-			double numBoxesWeight = 0.5, numSplittableWeight = 0.2, numMultipleWeight = 0.3;
+			// First Iteration
+			//double numBoxesWeight = 0.5, numSplittableWeight = 0.2, numMultipleWeight = 0.3;
+			// Second Iteration
+			double numBoxesWeight = 1, numSplittableWeight = 0, numMultipleWeight = 0;
 			for (int i = 0; i < gameGridSize; i += 1) {
 				for (int j = 0; j < gameGridSize; j += 1) {
 					if (getRectangleWinner(i, j) == player) {

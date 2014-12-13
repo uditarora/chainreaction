@@ -15,7 +15,7 @@ import java.util.Stack;
 
 public class GameSolverChar {
 	private BoardNodeChar initialBoardNode;
-	private int mainPlayer, numPlayers;
+	private int mainPlayer, numPlayers, heuristicNumber;
 	private int MAX_PLY_LEVEL = 3;
 	private double percentageMovesSearched, takeThisMoveOrNot;
 	private Random rand;
@@ -36,7 +36,7 @@ public class GameSolverChar {
 	// Constructor to initialize the GameSolver with a BoardNode
 	// which has the current state as the state passed and the default maxPlyLevel.
 	public GameSolverChar(GameBoardChar gameBoard, int player, int numberPlayers, boolean [] lostPlayer) {
-		initialBoardNode = new BoardNodeChar(gameBoard, 0, player, null);
+		initialBoardNode = new BoardNodeChar(gameBoard, 0, player, null, 1);
 		initialBoardNode.setScore();
 		initialBoardNode.setSelfPropagatingScore(0);
 		mainPlayer = player;
@@ -45,14 +45,15 @@ public class GameSolverChar {
 	}
 	
 	//Constructor to initialize the GameSovler with a custom maxPlyLevel
-	public GameSolverChar(GameBoardChar gameBoard, int player, int numberPlayers, boolean [] lostPlayer, int maxPlyLevel, double percentageMovesSearched) {
-		initialBoardNode = new BoardNodeChar(gameBoard, 0, player, null);
+	public GameSolverChar(GameBoardChar gameBoard, int player, int numberPlayers, boolean [] lostPlayer, int maxPlyLevel, double percentageMovesSearched, int heuristicNumber) {
+		initialBoardNode = new BoardNodeChar(gameBoard, 0, player, null, heuristicNumber);
 		initialBoardNode.setScore();
 		initialBoardNode.setSelfPropagatingScore(0);
 		mainPlayer = player;
 		numPlayers = numberPlayers;
 		MAX_PLY_LEVEL = maxPlyLevel;
 		this.percentageMovesSearched = percentageMovesSearched;
+		this.heuristicNumber = heuristicNumber;
 		rand = new Random();
 	}
 
@@ -84,7 +85,7 @@ public class GameSolverChar {
 						mainPlayer)) {
 					double temp = currentBoardNode.getPropagatedScore();
 					tempBoardNode = new BoardNodeChar(b, currentLevel + 1,
-							mainPlayer, currentBoardNode);
+							mainPlayer, currentBoardNode, heuristicNumber);
 					tempBoardNode.setScore();
 					tempBoardNode.setSelfPropagatingScore(temp);
 					possibleBoardNodeQueue.add(tempBoardNode);
@@ -120,7 +121,7 @@ public class GameSolverChar {
 				if (DEBUG)
 					System.out.println("New node added with current level : " + (currentLevel + 1));
 				possibleBoardNodeQueue.add(new BoardNodeChar(tempBoardNode.board,
-						currentLevel + 1, nextPlayer, currentBoardNode));
+						currentLevel + 1, nextPlayer, currentBoardNode, heuristicNumber));
 				if ((currentLevel == MAX_PLY_LEVEL - 1)
 						&& (tempBoardNode.getPropagatedScore() > lastPlyMaxScore)) {
 					bestBoardNodesArr.clear();
@@ -206,7 +207,7 @@ public class GameSolverChar {
 			}
 		}
 		return new BoardNodeChar(solutionGameBoard, oldBoardNode.level + 1, player,
-				oldBoardNode);
+				oldBoardNode, heuristicNumber);
 	}
 
 	// Returns the BoardNode which was the starting point for this
