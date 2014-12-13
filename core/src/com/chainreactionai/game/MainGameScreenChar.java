@@ -91,12 +91,12 @@ public class MainGameScreenChar implements Screen {
 	public MainGameScreenChar(ChainReactionAIGame game, ArrayList<Boolean> CPU, ArrayList<Integer> plyLevelList) {
 		myGame = game;
 		NUMBER_OF_PLAYERS = CPU.size();
-		heuristicNumbers = new int[NUMBER_OF_PLAYERS];
 		if (DEBUG_CPU)
-			NUMBER_OF_PLAYERS = 2;
+			NUMBER_OF_PLAYERS = 4;
 		isCPU = new boolean[NUMBER_OF_PLAYERS];
 		lostPlayer = new boolean[NUMBER_OF_PLAYERS];
 		maxPlyLevels = new int[NUMBER_OF_PLAYERS];
+		heuristicNumbers = new int[NUMBER_OF_PLAYERS];
 		
 		//Simulating with only CPU Players for testing
 		if (DEBUG_CPU) {
@@ -105,7 +105,7 @@ public class MainGameScreenChar implements Screen {
 				maxPlyLevels[i] = 4;
 			}
 			//maxPlyLevels[0] = 4;
-//			isCPU[0] = false;
+			isCPU[0] = false;
 		}
 		else {
 			if (DEBUG)
@@ -260,48 +260,8 @@ public class MainGameScreenChar implements Screen {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		
-		// process user input
-		if (inputProcessor.isTouchedDown() && !gameOver) {
-			inputProcessor.unsetTouchDown();
-			// Log the clicks for Debugging
-			if(DEBUG) {
-				Gdx.app.log("Click found at", inputProcessor.getXCoord() + " " + inputProcessor.getYCoord());
-				Gdx.app.log("Click found at", normalizeClickCoord(inputProcessor.getXCoord(), ChainReactionAIGame.WIDTH, WIDTH_SCREEN) + " " + normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN));
-			}
-			if (gameState == 0) {
-				// Used to process the clicks
-				if (moveCompleted) {
-					if (lostPlayer[currentPlayer] == false) {
-						processUserInputForMove();
-					}
-				}
-				// Used to process pause button click
-				processPauseAction();
-			}
-		}
-		
 		// If game is not paused
 		if (gameState == 0) {
-			// Rendering here to have board updated
-			// after every player's move.
-			// Tell the camera to update its matrices.
-			cam.update();
-	
-			// Tell the SpriteBatch to render in the
-			// coordinate system specified by the camera.
-			batch = (SpriteBatch)stage.getBatch();
-			batch.setProjectionMatrix(cam.combined);
-			batch.begin();
-			batch.draw(pauseButtonImg, 0, (GRID_SIZE*HEIGHT_RECTANGLE + 10));
-			batch.end();
-			shapeRenderer.setProjectionMatrix(cam.combined);
-			shapeRenderer.begin(ShapeType.Line);
-			shapeRenderer.setAutoShapeType(true);
-			shapeRenderer.setColor(1, 1, 0, 1);
-			modelBatch.begin(cam);
-			drawGameBoard();
-	        modelBatch.end();
-	        shapeRenderer.end();
 			// Check if any player has lost the game and doesn't permit
 			// it to play any further.
 			if (numberOfMovesPlayed > NUMBER_OF_PLAYERS) {
@@ -381,6 +341,45 @@ public class MainGameScreenChar implements Screen {
 					System.out.println("Move time.");
 				}
 			}
+			// process user input
+			if (inputProcessor.isTouchedDown() && !gameOver) {
+				inputProcessor.unsetTouchDown();
+				// Log the clicks for Debugging
+				if(DEBUG) {
+					Gdx.app.log("Click found at", inputProcessor.getXCoord() + " " + inputProcessor.getYCoord());
+					Gdx.app.log("Click found at", normalizeClickCoord(inputProcessor.getXCoord(), ChainReactionAIGame.WIDTH, WIDTH_SCREEN) + " " + normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN));
+				}
+				if (gameState == 0) {
+					// Used to process the clicks
+					if (moveCompleted) {
+						if (lostPlayer[currentPlayer] == false) {
+							processUserInputForMove();
+						}
+					}
+					// Used to process pause button click
+					processPauseAction();
+				}
+			}
+			// Rendering here to have board updated
+			// after every player's move.
+			// Tell the camera to update its matrices.
+			cam.update();
+	
+			// Tell the SpriteBatch to render in the
+			// coordinate system specified by the camera.
+			batch = (SpriteBatch)stage.getBatch();
+			batch.setProjectionMatrix(cam.combined);
+			batch.begin();
+			batch.draw(pauseButtonImg, 0, (GRID_SIZE*HEIGHT_RECTANGLE + 10));
+			batch.end();
+			shapeRenderer.setProjectionMatrix(cam.combined);
+			shapeRenderer.begin(ShapeType.Line);
+			shapeRenderer.setAutoShapeType(true);
+			shapeRenderer.setColor(1, 1, 0, 1);
+			modelBatch.begin(cam);
+			drawGameBoard();
+	        modelBatch.end();
+	        shapeRenderer.end();
 		} else {
 			// If the game is paused, add the pause menu to the stage.
 			stage.addActor(table);
@@ -451,7 +450,7 @@ public class MainGameScreenChar implements Screen {
 			i = count / GRID_SIZE;
 			j = count % GRID_SIZE;
 			shapeRenderer.set(ShapeType.Line);
-			shapeRenderer.setColor(Color.RED);
+			shapeRenderer.setColor(colors[currentPlayer]);
 			shapeRenderer.line(tempBlock.x, tempBlock.y, tempBlock.x + WIDTH_RECTANGLE, tempBlock.y);
 			shapeRenderer.line(tempBlock.x, tempBlock.y, tempBlock.x, tempBlock.y + HEIGHT_RECTANGLE);
 			shapeRenderer.line(tempBlock.x, tempBlock.y + HEIGHT_RECTANGLE, tempBlock.x + WIDTH_RECTANGLE, tempBlock.y + HEIGHT_RECTANGLE);
