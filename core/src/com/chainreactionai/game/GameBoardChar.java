@@ -382,15 +382,21 @@ public class GameBoardChar {
 	// This function returns whether the given board is a
 	// winning board for the given player.
 	public boolean isWinningPosition(int player) {
+		int numWinning = 0;
 		for (int i = 0; i < gameGridSize; i += 1) {
 			for (int j = 0; j < gameGridSize; j += 1) {
 				if (getRectangleWinner(i, j) != player
 						&& getRectangleWinner(i, j) != -1) {
 					return false;
 				}
+				else if (getRectangleWinner(i, j) == player)
+					numWinning += 1;
 			}
 		}
-		return true;
+		if (numWinning > 0)
+			return true;
+		else
+			return false;
 	}
 
 	// This function returns the score for a given player
@@ -475,6 +481,35 @@ public class GameBoardChar {
 			//double numBoxesWeight = 0.5, numSplittableWeight = 0.2, numMultipleWeight = 0.3;
 			// Second Iteration
 			double numBoxesWeight = 1, numSplittableWeight = 0, numMultipleWeight = 0;
+			for (int i = 0; i < gameGridSize; i += 1) {
+				for (int j = 0; j < gameGridSize; j += 1) {
+					if (getRectangleWinner(i, j) == player) {
+						runningNumBoxesTotal += 1;
+						currNumAtoms = getNumAtomsInRectangle(i, j);
+						if (currNumAtoms > 1) {
+							runningNumMultipleTotal += 1;
+							if (isSplittableNode(i, j, player)) {
+								runningNumSplittableTotal += 1;
+							}
+						}
+						if ((i == 0 && j == 0)
+								|| (i == 0 && j == gameGridSize - 1)
+								|| (i == gameGridSize - 1 && j == 0)
+								|| (i == gameGridSize - 1 && j == gameGridSize - 1)) {
+							runningNumSplittableTotal += 1;
+						}
+					}
+				}
+			}
+			totalScore = (numBoxesWeight * runningNumBoxesTotal) + (numMultipleWeight * runningNumMultipleTotal) +
+					(numSplittableWeight * runningNumSplittableTotal);
+		}
+		else if (level == 12) {
+			int runningNumBoxesTotal = 0, runningNumSplittableTotal = 0, runningNumMultipleTotal = 0, currNumAtoms = 0;
+			// First Iteration
+			double numBoxesWeight = 0.3, numSplittableWeight = 0.3, numMultipleWeight = 0.4;
+			// Second Iteration
+//			double numBoxesWeight = 1, numSplittableWeight = 0, numMultipleWeight = 0;
 			for (int i = 0; i < gameGridSize; i += 1) {
 				for (int j = 0; j < gameGridSize; j += 1) {
 					if (getRectangleWinner(i, j) == player) {
