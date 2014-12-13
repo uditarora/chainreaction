@@ -11,10 +11,19 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
@@ -43,7 +52,7 @@ public class MainGameScreenChar implements Screen {
 	final private int WIDTH_PAUSE_BUTTON = 55;
 	final private int HEIGHT_PAUSE_MENU_BUTTONS = 60;
 	final private int WIDTH_PAUSE_MENU_BUTTONS = 150;
-	private OrthographicCamera camera;
+	final private int MAX_NUM_PLAYERS = 6;
 	private int NUMBER_OF_PLAYERS;
 	private Texture pauseButtonImg = new Texture("pauseButton.jpg");
 	private Array<Rectangle> rectangularGrid;
@@ -67,6 +76,12 @@ public class MainGameScreenChar implements Screen {
 	private FileHandle handle = Gdx.files.external("data/myfile.txt");
 	private ShapeRenderer shapeRenderer = new ShapeRenderer();
 	private Color[] colors;
+	// Trying 3D Graphics
+	public Model[] models;
+	public ModelInstance[] instances;
+	public ModelBatch modelBatch;
+	public PerspectiveCamera cam;
+	public Environment environment;
 	// All debug printing should go under this flag.
 	final private boolean DEBUG = true;
 	final private boolean DEBUG_CPU = true;
@@ -112,14 +127,6 @@ public class MainGameScreenChar implements Screen {
 
 	private void create() {
 		batch = new SpriteBatch();
-		// Show the world to be 440*480 no matter the
-		// size of the screen
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
-		viewport = new Viewport() {
-		};
-		viewport.setCamera(camera);
-		
 		// Initializing stuff.
 		rectangularGrid = new Array<Rectangle>();
 		gameBoard = new GameBoardChar(GRID_SIZE, NUMBER_OF_PLAYERS);
@@ -127,13 +134,13 @@ public class MainGameScreenChar implements Screen {
 		inputProcessor.unsetTouchDown();
 		numberOfMovesPlayed = currentPlayer = 0;
 		// Initialize colors
-		colors = new Color[6];
-		colors[0] = Color.BLUE;
-		colors[1] = Color.GREEN;
+		colors = new Color[MAX_NUM_PLAYERS];
+		colors[0] = Color.WHITE;
+		colors[1] = Color.BLUE;
 		colors[2] = Color.MAROON;
 		colors[3] = Color.ORANGE;
 		colors[4] = Color.PURPLE;
-		colors[5] = Color.WHITE;
+		colors[5] = Color.GREEN;
 		// Up-scale Factors are used to get proper sized buttons
 		// upscaled or downscaled according to the Screen Dimensions
 		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
@@ -185,6 +192,25 @@ public class MainGameScreenChar implements Screen {
 		setHeuristicNumbers();
 		gameOver = false;
 		moveCompleted = true;
+		
+		// Trying 3D graphics
+		cam = new PerspectiveCamera(45, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        cam.position.set(WIDTH_SCREEN/2, HEIGHT_SCREEN/2, (float)(1.26106*WIDTH_SCREEN*widthUpscaleFactor));
+        cam.lookAt(WIDTH_SCREEN/2, HEIGHT_SCREEN/2, 0);
+        cam.near = 1f;
+        cam.far = (float)(1.327 * WIDTH_SCREEN * widthUpscaleFactor);
+        cam.update();
+		ModelBuilder modelBuilder = new ModelBuilder();
+		models = new Model[MAX_NUM_PLAYERS];
+		instances = new ModelInstance[MAX_NUM_PLAYERS];
+		for (int i = 0; i < MAX_NUM_PLAYERS; i += 1) {
+			models[i] = modelBuilder.createSphere(20f, 20f, 20f, 20, 20, new Material(ColorAttribute.createDiffuse(colors[i])), Usage.Position | Usage.Normal | Usage.TextureCoordinates);
+			instances[i] = new ModelInstance(models[i]);
+		}
+		modelBatch = new ModelBatch();
+        environment = new Environment();
+        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
+        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 	}
 
 	// This function loads the dimensions for all the
@@ -229,8 +255,10 @@ public class MainGameScreenChar implements Screen {
 	
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//		Gdx.gl.glClearColor(0, 0, 0, 1);
+//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		
 		// process user input
 		if (inputProcessor.isTouchedDown() && !gameOver) {
@@ -254,6 +282,37 @@ public class MainGameScreenChar implements Screen {
 		
 		// If game is not paused
 		if (gameState == 0) {
+			// Rendering here to have board updated
+			// after every player's move.
+			// Tell the camera to update its matrices.
+			cam.update();
+	
+			// Tell the SpriteBatch to render in the
+			// coordinate system specified by the camera.
+			batch = (SpriteBatch)stage.getBatch();
+			batch.setProjectionMatrix(cam.combined);
+			batch.begin();
+			batch.draw(pauseButtonImg, 0, (GRID_SIZE*HEIGHT_RECTANGLE + 10));
+			batch.end();
+			shapeRenderer.setProjectionMatrix(cam.combined);
+			shapeRenderer.begin(ShapeType.Line);
+			shapeRenderer.setAutoShapeType(true);
+			shapeRenderer.setColor(1, 1, 0, 1);
+			modelBatch.begin(cam);
+			drawGameBoard();
+	        modelBatch.end();
+	        shapeRenderer.end();
+			// Check if any player has lost the game and doesn't permit
+			// it to play any further.
+			if (numberOfMovesPlayed > NUMBER_OF_PLAYERS) {
+				for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
+					if (!lostPlayer[i]) {
+						if (gameBoard.hasLost(i)) {
+							lostPlayer[i] = true;
+						}
+					}
+				}
+			}
 			// If the move is done after the animation
 			if (moveCompleted) {
 				// If the player has not lost the game yet
@@ -322,36 +381,6 @@ public class MainGameScreenChar implements Screen {
 					System.out.println("Move time.");
 				}
 			}
-	
-			// Rendering here to have board updated
-			// after every player's move.
-			// Tell the camera to update its matrices.
-			camera.update();
-	
-			// Tell the SpriteBatch to render in the
-			// coordinate system specified by the camera.
-			batch = (SpriteBatch)stage.getBatch();
-			batch.setProjectionMatrix(camera.combined);
-			batch.begin();
-			batch.draw(pauseButtonImg, 0, (GRID_SIZE*HEIGHT_RECTANGLE + 10));
-			batch.end();
-			shapeRenderer.setProjectionMatrix(camera.combined);
-			shapeRenderer.begin(ShapeType.Line);
-			shapeRenderer.setAutoShapeType(true);
-			shapeRenderer.setColor(1, 1, 0, 1);
-			drawGameBoard();
-			shapeRenderer.end();
-			// Check if any player has lost the game and doesn't permit
-			// it to play any further.
-			if (numberOfMovesPlayed > NUMBER_OF_PLAYERS) {
-				for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
-					if (!lostPlayer[i]) {
-						if (gameBoard.hasLost(i)) {
-							lostPlayer[i] = true;
-						}
-					}
-				}
-			}
 		} else {
 			// If the game is paused, add the pause menu to the stage.
 			stage.addActor(table);
@@ -389,6 +418,7 @@ public class MainGameScreenChar implements Screen {
 						currentPlayer);
 				highlightPos.coordX = clickCoordX;
 				highlightPos.coordY = clickCoordY;
+				System.out.println("Hightlight set " + clickCoordX + " " + clickCoordY);
 				moveCompleted = false;
 				numberOfMovesPlayed += 1;
 				percentageMovesSearched += incrementValForPercentageMovesSearched;
@@ -437,6 +467,7 @@ public class MainGameScreenChar implements Screen {
 			// Checks if a given rectangle has to be highlighted indicating a move.
 			if (highlightPos.coordX == i && highlightPos.coordY == j) {
 				drawHighlight(tempBlock.x, tempBlock.y);
+				System.out.println("Hightlight Time");
 				shapeRenderer.setColor(Color.RED);
 			}
 			if (gameBoard.getRectangleWinner(i, j) == -1) {
@@ -463,64 +494,30 @@ public class MainGameScreenChar implements Screen {
 	}
 	
 	private void drawBalls (float x, float y, int numAtomsToDraw, int rectangleWinnerToDraw) {
-		shapeRenderer.set(ShapeType.Filled);
-		shapeRenderer.setColor(colors[rectangleWinnerToDraw]);
 		if (numAtomsToDraw == 1) {
-			shapeRenderer.circle(x + WIDTH_RECTANGLE/2, y + HEIGHT_RECTANGLE/2, 12);
-			shapeRenderer.setColor(Color.BLACK);
-			shapeRenderer.set(ShapeType.Line);
-			shapeRenderer.circle(x + WIDTH_RECTANGLE/2, y + HEIGHT_RECTANGLE/2, 13);
+			instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + HEIGHT_RECTANGLE/2, 0);
+			modelBatch.render(instances[rectangleWinnerToDraw], environment);
 		} else if (numAtomsToDraw == 2) {
-			shapeRenderer.circle(x + WIDTH_RECTANGLE/3, y + HEIGHT_RECTANGLE/2, 12);
-			shapeRenderer.setColor(Color.BLACK);
-			shapeRenderer.set(ShapeType.Line);
-			shapeRenderer.circle(x + WIDTH_RECTANGLE/3, y + HEIGHT_RECTANGLE/2, 13);
-			shapeRenderer.setColor(colors[rectangleWinnerToDraw]);
-			shapeRenderer.set(ShapeType.Filled);
-			shapeRenderer.circle(x + (2 * WIDTH_RECTANGLE)/3, y + HEIGHT_RECTANGLE/2, 12);
-			shapeRenderer.setColor(Color.BLACK);
-			shapeRenderer.set(ShapeType.Line);
-			shapeRenderer.circle(x + (2 * WIDTH_RECTANGLE)/3, y + HEIGHT_RECTANGLE/2, 13);
+			instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/3, y + HEIGHT_RECTANGLE/2, 0);
+			modelBatch.render(instances[rectangleWinnerToDraw], environment);
+			instances[rectangleWinnerToDraw].transform.setTranslation(x + (2 * WIDTH_RECTANGLE)/3, y + HEIGHT_RECTANGLE/2, 0);
+			modelBatch.render(instances[rectangleWinnerToDraw], environment);
 		} else if (numAtomsToDraw == 3) {
-			shapeRenderer.circle(x + WIDTH_RECTANGLE/3, y + (2 * HEIGHT_RECTANGLE)/5, 12);
-			shapeRenderer.setColor(Color.BLACK);
-			shapeRenderer.set(ShapeType.Line);
-			shapeRenderer.circle(x + WIDTH_RECTANGLE/3, y + (2 * HEIGHT_RECTANGLE)/5, 13);
-			shapeRenderer.setColor(colors[rectangleWinnerToDraw]);
-			shapeRenderer.set(ShapeType.Filled);
-			shapeRenderer.circle(x + (2 * WIDTH_RECTANGLE)/3, y + (2 * HEIGHT_RECTANGLE)/5, 12);
-			shapeRenderer.setColor(Color.BLACK);
-			shapeRenderer.set(ShapeType.Line);
-			shapeRenderer.circle(x + (2 * WIDTH_RECTANGLE)/3, y + (2 * HEIGHT_RECTANGLE)/5, 13);
-			shapeRenderer.setColor(colors[rectangleWinnerToDraw]);
-			shapeRenderer.set(ShapeType.Filled);
-			shapeRenderer.circle(x + WIDTH_RECTANGLE/2, y + (3 * HEIGHT_RECTANGLE)/5, 12);
-			shapeRenderer.setColor(Color.BLACK);
-			shapeRenderer.set(ShapeType.Line);
-			shapeRenderer.circle(x + WIDTH_RECTANGLE/2, y + (3 * HEIGHT_RECTANGLE)/5, 13);
+			instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/3, y + (2 * HEIGHT_RECTANGLE)/5, 0);
+			modelBatch.render(instances[rectangleWinnerToDraw], environment);
+			instances[rectangleWinnerToDraw].transform.setTranslation(x + (2 * WIDTH_RECTANGLE)/3, y + (2 * HEIGHT_RECTANGLE)/5, 0);
+			modelBatch.render(instances[rectangleWinnerToDraw], environment);
+			instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + (3 * HEIGHT_RECTANGLE)/5, 0);
+			modelBatch.render(instances[rectangleWinnerToDraw], environment);
 		} else if (numAtomsToDraw == 4) {
-			shapeRenderer.circle(x + WIDTH_RECTANGLE/3, y + HEIGHT_RECTANGLE/2, 12);
-			shapeRenderer.setColor(Color.BLACK);
-			shapeRenderer.set(ShapeType.Line);
-			shapeRenderer.circle(x + WIDTH_RECTANGLE/3, y + HEIGHT_RECTANGLE/2, 13);
-			shapeRenderer.setColor(colors[rectangleWinnerToDraw]);
-			shapeRenderer.set(ShapeType.Filled);
-			shapeRenderer.circle(x + (2 * WIDTH_RECTANGLE)/3, y + HEIGHT_RECTANGLE/2, 12);
-			shapeRenderer.setColor(Color.BLACK);
-			shapeRenderer.set(ShapeType.Line);
-			shapeRenderer.circle(x + (2 * WIDTH_RECTANGLE)/3, y + HEIGHT_RECTANGLE/2, 13);
-			shapeRenderer.setColor(colors[rectangleWinnerToDraw]);
-			shapeRenderer.set(ShapeType.Filled);
-			shapeRenderer.circle(x + WIDTH_RECTANGLE/2, y + (2 * HEIGHT_RECTANGLE)/3, 12);
-			shapeRenderer.setColor(Color.BLACK);
-			shapeRenderer.set(ShapeType.Line);
-			shapeRenderer.circle(x + WIDTH_RECTANGLE/2, y + (2 * HEIGHT_RECTANGLE)/3, 13);
-			shapeRenderer.setColor(colors[rectangleWinnerToDraw]);
-			shapeRenderer.set(ShapeType.Filled);
-			shapeRenderer.circle(x + WIDTH_RECTANGLE/2, y + (1 * HEIGHT_RECTANGLE)/3, 12);
-			shapeRenderer.setColor(Color.BLACK);
-			shapeRenderer.set(ShapeType.Line);
-			shapeRenderer.circle(x + WIDTH_RECTANGLE/2, y + (1 * HEIGHT_RECTANGLE)/3, 13);
+			instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/3, y + HEIGHT_RECTANGLE/2, 0);
+			modelBatch.render(instances[rectangleWinnerToDraw], environment);
+			instances[rectangleWinnerToDraw].transform.setTranslation(x + (2 * WIDTH_RECTANGLE)/3, y + HEIGHT_RECTANGLE/2, 0);
+			modelBatch.render(instances[rectangleWinnerToDraw], environment);
+			instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + (2 * HEIGHT_RECTANGLE)/3, 0);
+			modelBatch.render(instances[rectangleWinnerToDraw], environment);
+			instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + (1 * HEIGHT_RECTANGLE)/3, 0);
+			modelBatch.render(instances[rectangleWinnerToDraw]);
 		}
 	}
 	
