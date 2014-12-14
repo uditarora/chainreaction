@@ -84,7 +84,7 @@ public class MainGameScreenChar implements Screen {
 	public Environment environment;
 	// All debug printing should go under this flag.
 	final private boolean DEBUG = true;
-	final private boolean DEBUG_CPU = true;
+	final private boolean DEBUG_CPU = false;
 
 	// Constructor to initialize which player is CPU and which is human.
 	// Also sets difficulty levels for CPU players.
@@ -394,18 +394,20 @@ public class MainGameScreenChar implements Screen {
 	private void processUserInputForMove() {
 		// Checking whether the click is on an edge or a box.
 		// If on edge, then reject the click.
-		if (normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN) < HEIGHT_SCREEN - WIDTH_SCREEN || normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN) > ((HEIGHT_SCREEN - WIDTH_SCREEN) + (GRID_SIZE*HEIGHT_RECTANGLE)))
+		float coordX = inputProcessor.getXCoord(), coordY = inputProcessor.getYCoord(), distOfPauseButtonFromTop, distOfGridFromBottom, distOfGridFromTop, heightOfGrid, modHeightUpscaleFactor, modWidthUpscaleFactor;
+		distOfPauseButtonFromTop = (ChainReactionAIGame.HEIGHT - (ChainReactionAIGame.WIDTH + HEIGHT_PAUSE_BUTTON))/2;
+		distOfGridFromBottom = distOfPauseButtonFromTop;
+		distOfGridFromTop = distOfPauseButtonFromTop + 27;
+		if (coordY < distOfGridFromTop || coordY > ChainReactionAIGame.HEIGHT - distOfGridFromBottom) {
 			return;
+		}
+		heightOfGrid = ChainReactionAIGame.HEIGHT - distOfGridFromBottom - distOfGridFromTop;
+		modHeightUpscaleFactor = heightOfGrid/GRID_SIZE;
 		clickOnEdge = false;
-		clickCoordX = (int) (normalizeClickCoord(inputProcessor.getXCoord(), ChainReactionAIGame.WIDTH, WIDTH_SCREEN) / WIDTH_RECTANGLE);
-		if (normalizeClickCoord(inputProcessor.getXCoord(), ChainReactionAIGame.WIDTH, WIDTH_SCREEN) % WIDTH_RECTANGLE == 0.0) {
-			clickOnEdge = true;
-		}
-		clickCoordY = (int) ((HEIGHT_SCREEN - normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN)) / HEIGHT_RECTANGLE);
-		if ((HEIGHT_SCREEN - normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN)) % HEIGHT_RECTANGLE == 0.0) {
-			clickOnEdge = true;
-		}
-
+		clickCoordX = (int)((coordX/widthUpscaleFactor)/(WIDTH_RECTANGLE + 1.5));
+		// Try to find clickOnEdge in X - coordinate
+		clickCoordY = (int) (((coordY - distOfGridFromTop))/modHeightUpscaleFactor);
+		clickCoordY = GRID_SIZE - clickCoordY - 1;
 		// If the click is within bounds of any one rectangle
 		if (!clickOnEdge) {
 			// Checking the move's validity and changing the board
@@ -429,10 +431,13 @@ public class MainGameScreenChar implements Screen {
 	// tries to pause the game.
 	private void processPauseAction() {
 		// Checks if the click is on the pause button, else returns
-		if (normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN) > HEIGHT_SCREEN - (GRID_SIZE * HEIGHT_RECTANGLE) || normalizeClickCoord(inputProcessor.getYCoord(), ChainReactionAIGame.HEIGHT, HEIGHT_SCREEN) < HEIGHT_SCREEN - (GRID_SIZE * HEIGHT_RECTANGLE) - HEIGHT_PAUSE_BUTTON) {
+		float coordX = inputProcessor.getXCoord(), coordY = inputProcessor.getYCoord(), distOfPauseButtonFromTop, distOfGridFromTop;
+		distOfPauseButtonFromTop = (ChainReactionAIGame.HEIGHT - (ChainReactionAIGame.WIDTH + HEIGHT_PAUSE_BUTTON))/2;
+		distOfGridFromTop = distOfPauseButtonFromTop + 27;
+		if (coordY > distOfGridFromTop || coordY < distOfPauseButtonFromTop) {
 			return;
 		}
-		if (normalizeClickCoord(inputProcessor.getXCoord(), ChainReactionAIGame.WIDTH, WIDTH_SCREEN) > WIDTH_PAUSE_BUTTON || normalizeClickCoord(inputProcessor.getXCoord(), ChainReactionAIGame.WIDTH, WIDTH_SCREEN) < 0) {
+		if (coordX > WIDTH_PAUSE_BUTTON * widthUpscaleFactor || coordX < 0) {
 			return;
 		}
 		pause();
