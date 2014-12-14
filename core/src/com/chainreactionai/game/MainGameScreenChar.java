@@ -395,9 +395,9 @@ public class MainGameScreenChar implements Screen {
 		// Checking whether the click is on an edge or a box.
 		// If on edge, then reject the click.
 		float coordX = inputProcessor.getXCoord(), coordY = inputProcessor.getYCoord(), distOfPauseButtonFromTop, distOfGridFromBottom, distOfGridFromTop, heightOfGrid, modHeightUpscaleFactor, modWidthUpscaleFactor;
-		distOfPauseButtonFromTop = (ChainReactionAIGame.HEIGHT - (ChainReactionAIGame.WIDTH + HEIGHT_PAUSE_BUTTON))/2;
+		distOfPauseButtonFromTop = (ChainReactionAIGame.HEIGHT - (ChainReactionAIGame.WIDTH + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor)))/2;
 		distOfGridFromBottom = distOfPauseButtonFromTop;
-		distOfGridFromTop = distOfPauseButtonFromTop + 27;
+		distOfGridFromTop = distOfPauseButtonFromTop + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor);
 		if (coordY < distOfGridFromTop || coordY > ChainReactionAIGame.HEIGHT - distOfGridFromBottom) {
 			return;
 		}
@@ -432,14 +432,15 @@ public class MainGameScreenChar implements Screen {
 	private void processPauseAction() {
 		// Checks if the click is on the pause button, else returns
 		float coordX = inputProcessor.getXCoord(), coordY = inputProcessor.getYCoord(), distOfPauseButtonFromTop, distOfGridFromTop;
-		distOfPauseButtonFromTop = (ChainReactionAIGame.HEIGHT - (ChainReactionAIGame.WIDTH + HEIGHT_PAUSE_BUTTON))/2;
-		distOfGridFromTop = distOfPauseButtonFromTop + 27;
+		distOfPauseButtonFromTop = (ChainReactionAIGame.HEIGHT - (ChainReactionAIGame.WIDTH + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor)))/2;
+		distOfGridFromTop = distOfPauseButtonFromTop + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor);
 		if (coordY > distOfGridFromTop || coordY < distOfPauseButtonFromTop) {
 			return;
 		}
 		if (coordX > WIDTH_PAUSE_BUTTON * widthUpscaleFactor || coordX < 0) {
 			return;
 		}
+		Gdx.app.log("Pause Button Debug", "coordX: " + coordX + " coordY: " + coordY + " coordX is smaller than: " + WIDTH_PAUSE_BUTTON * widthUpscaleFactor);
 		pause();
 	}
 	
