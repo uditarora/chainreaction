@@ -52,7 +52,7 @@ public class MainGameScreenChar implements Screen {
 	final private int HEIGHT_PAUSE_MENU_BUTTONS = 60;
 	final private int WIDTH_PAUSE_MENU_BUTTONS = 150;
 	final private int MAX_NUM_PLAYERS = 6;
-	final private int INVERSE_SPEED_OF_BALL_VIBRATION = 10;
+	final private int INVERSE_SPEED_OF_BALL_VIBRATION = 16;
 	private int NUMBER_OF_PLAYERS, breakingAway, splittableBreakingAway;
 	private Texture pauseButtonImg = new Texture("pauseButton.jpg");
 	private Array<Rectangle> rectangularGrid;
@@ -71,6 +71,7 @@ public class MainGameScreenChar implements Screen {
 	private Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"), new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
 	private TextButton resumeButton, exitButton, newGameButton;
 	private Position highlightPos = new Position(-1, -1);
+	private GameSolverChar solver;
 	private long prevTime, newTime;
 	private FileHandle handle = Gdx.files.external("data/myfile.txt");
 	private ShapeRenderer shapeRenderer = new ShapeRenderer();
@@ -260,8 +261,6 @@ public class MainGameScreenChar implements Screen {
 	
 	@Override
 	public void render(float delta) {
-//		Gdx.gl.glClearColor(0, 0, 0, 1);
-//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		
@@ -289,32 +288,41 @@ public class MainGameScreenChar implements Screen {
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-						if (DEBUG)
-							System.out.println("Reached CPU");
-						// Initializing the GameSolver
-						newTime = System.currentTimeMillis();
-						Gdx.app.log("mainPlayerAndPercentageMoves","MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed + " and Time taken : " + ((newTime - prevTime)/1000));
-						handle.writeString("MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed + " and Time taken : " + ((newTime - prevTime)/1000) +"\r\n", true);
-						GameSolverChar solver = new GameSolverChar(gameBoard, currentPlayer,
-								NUMBER_OF_PLAYERS, lostPlayer, maxPlyLevels[currentPlayer], percentageMovesSearched, heuristicNumbers[currentPlayer]);
-						prevTime = System.currentTimeMillis();
-						if (DEBUG)
-							System.out.println("GameSolver initialized");
-						// Get the position where we should place the new ball
-						// so that the GameSolver's best move is executed.
-						Position winningMove = solver.getBestGameBoard();
-						if(winningMove == null) {
-							System.out.println("Error Time.");
+						if (solver != null) {
+							if (solver.getIsThreadComplete()) {
+								// Get the position where we should place the new ball
+								// so that the GameSolver's best move is executed.
+								Position winningMove = solver.getAnswerPosition();
+								if(winningMove == null) {
+									System.out.println("Error Time.");
+								}
+								// Initialize the animation for changing the Board.
+								gameBoard.changeBoard2(winningMove.coordX, winningMove.coordY, currentPlayer);
+								// Store these coordinates so they can be shown as highlighted.
+								highlightPos.coordX = winningMove.coordX;
+								highlightPos.coordY = winningMove.coordY;
+								// Set the moveCompleted flag to be false, so as to start the animation.
+								moveCompleted = false;
+								numberOfMovesPlayed += 1;
+								percentageMovesSearched += incrementValForPercentageMovesSearched;
+								solver = null;
+							}
+						} else {
+							if (DEBUG)
+								System.out.println("Reached CPU");
+							// Initializing the GameSolver
+							newTime = System.currentTimeMillis();
+							Gdx.app.log("mainPlayerAndPercentageMoves","MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed + " and Time taken : " + ((newTime - prevTime)/1000));
+							handle.writeString("MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed + " and Time taken : " + ((newTime - prevTime)/1000) +"\r\n", true);
+							solver = new GameSolverChar(gameBoard, currentPlayer,
+									NUMBER_OF_PLAYERS, lostPlayer, maxPlyLevels[currentPlayer], percentageMovesSearched, heuristicNumbers[currentPlayer]);
+							prevTime = System.currentTimeMillis();
+							Thread t = new Thread(solver);
+					        t.start();
+							if (DEBUG)
+								System.out.println("GameSolver initialized");
 						}
-						// Initialize the animation for changing the Board.
-						gameBoard.changeBoard2(winningMove.coordX, winningMove.coordY, currentPlayer);
-						// Store these coordinates so they can be shown as highlighted.
-						highlightPos.coordX = winningMove.coordX;
-						highlightPos.coordY = winningMove.coordY;
-						// Set the moveCompleted flag to be false, so as to start the animation.
-						moveCompleted = false;
-						numberOfMovesPlayed += 1;
-						percentageMovesSearched += incrementValForPercentageMovesSearched;
+						
 					}
 				} else {
 					// Giving the chance to the next player to play.
@@ -399,7 +407,7 @@ public class MainGameScreenChar implements Screen {
 	private void processUserInputForMove() {
 		// Checking whether the click is on an edge or a box.
 		// If on edge, then reject the click.
-		float coordX = inputProcessor.getXCoord(), coordY = inputProcessor.getYCoord(), distOfPauseButtonFromTop, distOfGridFromBottom, distOfGridFromTop, heightOfGrid, modHeightUpscaleFactor, modWidthUpscaleFactor;
+		float coordX = inputProcessor.getXCoord(), coordY = inputProcessor.getYCoord(), distOfPauseButtonFromTop, distOfGridFromBottom, distOfGridFromTop, heightOfGrid, modHeightUpscaleFactor;
 		distOfPauseButtonFromTop = (ChainReactionAIGame.HEIGHT - (ChainReactionAIGame.WIDTH + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor)))/2;
 		distOfGridFromBottom = distOfPauseButtonFromTop;
 		distOfGridFromTop = distOfPauseButtonFromTop + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor);
