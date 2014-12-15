@@ -34,7 +34,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  * @author Kartik Parnami
@@ -53,7 +52,8 @@ public class MainGameScreenChar implements Screen {
 	final private int HEIGHT_PAUSE_MENU_BUTTONS = 60;
 	final private int WIDTH_PAUSE_MENU_BUTTONS = 150;
 	final private int MAX_NUM_PLAYERS = 6;
-	private int NUMBER_OF_PLAYERS;
+	final private int INVERSE_SPEED_OF_BALL_VIBRATION = 10;
+	private int NUMBER_OF_PLAYERS, breakingAway, splittableBreakingAway;
 	private Texture pauseButtonImg = new Texture("pauseButton.jpg");
 	private Array<Rectangle> rectangularGrid;
 	private GameBoardChar gameBoard;
@@ -68,7 +68,6 @@ public class MainGameScreenChar implements Screen {
 	private ChainReactionAIGame myGame;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private Viewport viewport;
 	private Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"), new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
 	private TextButton resumeButton, exitButton, newGameButton;
 	private Position highlightPos = new Position(-1, -1);
@@ -133,6 +132,7 @@ public class MainGameScreenChar implements Screen {
 		Gdx.input.setInputProcessor(inputProcessor);
 		inputProcessor.unsetTouchDown();
 		numberOfMovesPlayed = currentPlayer = 0;
+		breakingAway = 0;
 		// Initialize colors
 		colors = new Color[MAX_NUM_PLAYERS];
 		colors[0] = Color.WHITE;
@@ -152,8 +152,8 @@ public class MainGameScreenChar implements Screen {
 				maxPlyLevel = maxPlyLevels[i];
 			}
 		}
-		//percentageMovesSearched = 1/(double)(maxPlyLevel);
-		percentageMovesSearched = 1;
+		percentageMovesSearched = 1/(double)(maxPlyLevel);
+		//percentageMovesSearched = 1;
 		incrementValForPercentageMovesSearched = 1/(double)(3*maxPlyLevel*maxPlyLevel);
 		resumeButton = new TextButton(new String("Resume"), skin);
 		newGameButton = new TextButton(new String("New Game"), skin);
@@ -196,8 +196,7 @@ public class MainGameScreenChar implements Screen {
 		// Trying 3D graphics
 		cam = new PerspectiveCamera(30, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
-//		float camZ = ((float)1440*720/1184)*((float)Gdx.graphics.getHeight()/Gdx.graphics.getWidth());
-		float camZ = ((float)875)*((float)Gdx.graphics.getHeight()/Gdx.graphics.getWidth());
+		float camZ = ((float)1440*720/1240)*((float)Gdx.graphics.getHeight()/Gdx.graphics.getWidth());
 		Gdx.app.log("size", "CamZ: "+camZ);
 		cam.position.set(WIDTH_SCREEN/2, HEIGHT_SCREEN/2, camZ);
 		
@@ -210,7 +209,7 @@ public class MainGameScreenChar implements Screen {
 		models = new Model[MAX_NUM_PLAYERS];
 		instances = new ModelInstance[MAX_NUM_PLAYERS];
 		for (int i = 0; i < MAX_NUM_PLAYERS; i += 1) {
-			models[i] = modelBuilder.createSphere(20f, 20f, 20f, 20, 20, new Material(ColorAttribute.createDiffuse(colors[i])), Usage.Position | Usage.Normal | Usage.TextureCoordinates);
+			models[i] = modelBuilder.createSphere(20f, 20f, 20f, 30, 30, new Material(ColorAttribute.createDiffuse(colors[i])), Usage.Position | Usage.Normal | Usage.TextureCoordinates);
 			instances[i] = new ModelInstance(models[i]);
 		}
 		modelBatch = new ModelBatch();
@@ -487,11 +486,17 @@ public class MainGameScreenChar implements Screen {
 				if (gameBoard.getNumAtomsInRectangle(i, j) > 4) {
 					// Empty
 				} else {
-					drawBalls(tempBlock.x, tempBlock.y, gameBoard.getNumAtomsInRectangle(i, j), gameBoard.getRectangleWinner(i, j));
+					drawBalls(tempBlock.x, tempBlock.y, gameBoard.getNumAtomsInRectangle(i, j), gameBoard.getRectangleWinner(i, j), i ,j);
 				}
 			}
 			count++;
 		}
+		breakingAway += 1;
+		splittableBreakingAway += 2;
+		if (breakingAway >= 2 * INVERSE_SPEED_OF_BALL_VIBRATION)
+			breakingAway = 0;
+		if (splittableBreakingAway >= 2 * INVERSE_SPEED_OF_BALL_VIBRATION)
+			splittableBreakingAway = 0;
 	}
 	
 	private void drawHighlight (float x, float y) {
@@ -504,31 +509,89 @@ public class MainGameScreenChar implements Screen {
 		}
 	}
 	
-	private void drawBalls (float x, float y, int numAtomsToDraw, int rectangleWinnerToDraw) {
-		if (numAtomsToDraw == 1) {
-			instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + HEIGHT_RECTANGLE/2, 0);
-			modelBatch.render(instances[rectangleWinnerToDraw], environment);
-		} else if (numAtomsToDraw == 2) {
-			instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/3, y + HEIGHT_RECTANGLE/2, 0);
-			modelBatch.render(instances[rectangleWinnerToDraw], environment);
-			instances[rectangleWinnerToDraw].transform.setTranslation(x + (2 * WIDTH_RECTANGLE)/3, y + HEIGHT_RECTANGLE/2, 0);
-			modelBatch.render(instances[rectangleWinnerToDraw], environment);
-		} else if (numAtomsToDraw == 3) {
-			instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/3, y + (2 * HEIGHT_RECTANGLE)/5, 0);
-			modelBatch.render(instances[rectangleWinnerToDraw], environment);
-			instances[rectangleWinnerToDraw].transform.setTranslation(x + (2 * WIDTH_RECTANGLE)/3, y + (2 * HEIGHT_RECTANGLE)/5, 0);
-			modelBatch.render(instances[rectangleWinnerToDraw], environment);
-			instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + (3 * HEIGHT_RECTANGLE)/5, 0);
-			modelBatch.render(instances[rectangleWinnerToDraw], environment);
-		} else if (numAtomsToDraw == 4) {
-			instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/3, y + HEIGHT_RECTANGLE/2, 0);
-			modelBatch.render(instances[rectangleWinnerToDraw], environment);
-			instances[rectangleWinnerToDraw].transform.setTranslation(x + (2 * WIDTH_RECTANGLE)/3, y + HEIGHT_RECTANGLE/2, 0);
-			modelBatch.render(instances[rectangleWinnerToDraw], environment);
-			instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + (2 * HEIGHT_RECTANGLE)/3, 0);
-			modelBatch.render(instances[rectangleWinnerToDraw], environment);
-			instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + (1 * HEIGHT_RECTANGLE)/3, 0);
-			modelBatch.render(instances[rectangleWinnerToDraw]);
+	private void drawBalls (float x, float y, int numAtomsToDraw, int rectangleWinnerToDraw, int coordX, int coordY) {
+		if (gameBoard.isSplittableNode(coordX, coordY, rectangleWinnerToDraw)) {
+			if (numAtomsToDraw == 1) {
+				instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + HEIGHT_RECTANGLE/2, 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+			} else if (numAtomsToDraw == 2) {
+				if (splittableBreakingAway < INVERSE_SPEED_OF_BALL_VIBRATION)
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/3, y + HEIGHT_RECTANGLE/2, 0);
+				else
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + (float)(0.32 * WIDTH_RECTANGLE), y + HEIGHT_RECTANGLE/2, 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+				if (splittableBreakingAway < INVERSE_SPEED_OF_BALL_VIBRATION)
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + (2 * WIDTH_RECTANGLE)/3, y + HEIGHT_RECTANGLE/2, 0);
+				else
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + (float)(0.68 * WIDTH_RECTANGLE), y + HEIGHT_RECTANGLE/2, 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+			} else if (numAtomsToDraw == 3) {
+				if (splittableBreakingAway < INVERSE_SPEED_OF_BALL_VIBRATION)
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/3, y + (2 * HEIGHT_RECTANGLE)/5, 0);
+				else
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + (float)(0.32 * WIDTH_RECTANGLE), y + (float)(0.398 * HEIGHT_RECTANGLE), 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+				if (splittableBreakingAway < INVERSE_SPEED_OF_BALL_VIBRATION)
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + (2 * WIDTH_RECTANGLE)/3, y + (2 * HEIGHT_RECTANGLE)/5, 0);
+				else
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + (float)(0.68 * WIDTH_RECTANGLE), y + (float)(0.398 * HEIGHT_RECTANGLE), 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+				if (splittableBreakingAway < INVERSE_SPEED_OF_BALL_VIBRATION)
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + (3 * HEIGHT_RECTANGLE)/5, 0);
+				else
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + (float)(0.605 * HEIGHT_RECTANGLE), 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+			} else if (numAtomsToDraw == 4) {
+				instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/3, y + HEIGHT_RECTANGLE/2, 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+				instances[rectangleWinnerToDraw].transform.setTranslation(x + (2 * WIDTH_RECTANGLE)/3, y + HEIGHT_RECTANGLE/2, 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+				instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + (2 * HEIGHT_RECTANGLE)/3, 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+				instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + (1 * HEIGHT_RECTANGLE)/3, 0);
+				modelBatch.render(instances[rectangleWinnerToDraw]);
+			}
+		} else {
+			if (numAtomsToDraw == 1) {
+				instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + HEIGHT_RECTANGLE/2, 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+			} else if (numAtomsToDraw == 2) {
+				if (breakingAway < INVERSE_SPEED_OF_BALL_VIBRATION)
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/3, y + HEIGHT_RECTANGLE/2, 0);
+				else
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + (float)(0.325 * WIDTH_RECTANGLE), y + HEIGHT_RECTANGLE/2, 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+				if (breakingAway < INVERSE_SPEED_OF_BALL_VIBRATION)
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + (2 * WIDTH_RECTANGLE)/3, y + HEIGHT_RECTANGLE/2, 0);
+				else
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + (float)(0.675 * WIDTH_RECTANGLE), y + HEIGHT_RECTANGLE/2, 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+			} else if (numAtomsToDraw == 3) {
+				if (breakingAway < INVERSE_SPEED_OF_BALL_VIBRATION)
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/3, y + (2 * HEIGHT_RECTANGLE)/5, 0);
+				else
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + (float)(0.32 * WIDTH_RECTANGLE), y + (float)(0.393 * HEIGHT_RECTANGLE), 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+				if (breakingAway < INVERSE_SPEED_OF_BALL_VIBRATION)
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + (2 * WIDTH_RECTANGLE)/3, y + (2 * HEIGHT_RECTANGLE)/5, 0);
+				else
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + (float)(0.675 * WIDTH_RECTANGLE), y + (float)(0.393 * HEIGHT_RECTANGLE), 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+				if (breakingAway < INVERSE_SPEED_OF_BALL_VIBRATION)
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + (3 * HEIGHT_RECTANGLE)/5, 0);
+				else
+					instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + (float)(0.61 * HEIGHT_RECTANGLE), 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+			} else if (numAtomsToDraw == 4) {
+				instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/3, y + HEIGHT_RECTANGLE/2, 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+				instances[rectangleWinnerToDraw].transform.setTranslation(x + (2 * WIDTH_RECTANGLE)/3, y + HEIGHT_RECTANGLE/2, 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+				instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + (2 * HEIGHT_RECTANGLE)/3, 0);
+				modelBatch.render(instances[rectangleWinnerToDraw], environment);
+				instances[rectangleWinnerToDraw].transform.setTranslation(x + WIDTH_RECTANGLE/2, y + (1 * HEIGHT_RECTANGLE)/3, 0);
+				modelBatch.render(instances[rectangleWinnerToDraw]);
+			}
 		}
 	}
 	
