@@ -194,12 +194,18 @@ public class MainGameScreenChar implements Screen {
 		moveCompleted = true;
 		
 		// Trying 3D graphics
-		cam = new PerspectiveCamera(45, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        cam.position.set(WIDTH_SCREEN/2, HEIGHT_SCREEN/2, (float)(1.26106*WIDTH_SCREEN*widthUpscaleFactor));
-        cam.lookAt(WIDTH_SCREEN/2, HEIGHT_SCREEN/2, 0);
-        cam.near = 1f;
-        cam.far = (float)(1.327 * WIDTH_SCREEN * widthUpscaleFactor);
-        cam.update();
+		cam = new PerspectiveCamera(30, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
+//		float camZ = ((float)1440*720/1184)*((float)Gdx.graphics.getHeight()/Gdx.graphics.getWidth());
+		float camZ = ((float)875)*((float)Gdx.graphics.getHeight()/Gdx.graphics.getWidth());
+		Gdx.app.log("size", "CamZ: "+camZ);
+		cam.position.set(WIDTH_SCREEN/2, HEIGHT_SCREEN/2, camZ);
+		
+	    cam.lookAt(WIDTH_SCREEN/2, HEIGHT_SCREEN/2, 0);
+	    cam.near = 1f;
+	    cam.far = 3000f;
+	    cam.update();
+		
 		ModelBuilder modelBuilder = new ModelBuilder();
 		models = new Model[MAX_NUM_PLAYERS];
 		instances = new ModelInstance[MAX_NUM_PLAYERS];

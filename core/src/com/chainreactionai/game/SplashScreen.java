@@ -26,13 +26,15 @@ public class SplashScreen implements Screen {
 
 	public SplashScreen(ChainReactionAIGame game) {
 		if (MONTE_CARLO) {
-			int numPlayers = 2;
+			int numPlayers = 4;
 			int[] plyLevelList = new int[numPlayers]; int[] heuristicNumber = new int[numPlayers];
-			plyLevelList[0] = 4; plyLevelList[1] = 2;
-			heuristicNumber[0] = 12; heuristicNumber[1] = 1;
+			plyLevelList[0] = 1; plyLevelList[1] = 1;
+			plyLevelList[2] = 1; plyLevelList[3] = 2;
+			heuristicNumber[0] = 12; heuristicNumber[1] = 12;
+			heuristicNumber[2] = 12; heuristicNumber[3] = 12;
 			MonteCarlo monteCarlo = new MonteCarlo(numPlayers, plyLevelList, heuristicNumber);
 			
-			monteCarlo.runSimulations(10);
+			monteCarlo.runSimulations(100);
 			Gdx.app.exit();
 		}
 		myGame = game;
