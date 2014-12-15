@@ -13,12 +13,14 @@ import java.util.Stack;
  * 
  */
 
-public class GameSolverChar {
+public class GameSolverChar implements Runnable {
 	private BoardNodeChar initialBoardNode;
 	private int mainPlayer, numPlayers, heuristicNumber;
 	private int MAX_PLY_LEVEL = 3;
 	private double percentageMovesSearched, takeThisMoveOrNot;
 	private Random rand;
+	private Position answerPosition;
+	private boolean isThreadComplete;
 	final private boolean DEBUG = false;
 	
 	// Class to keep the click coordinates which were done
@@ -55,11 +57,12 @@ public class GameSolverChar {
 		this.percentageMovesSearched = percentageMovesSearched;
 		this.heuristicNumber = heuristicNumber;
 		rand = new Random();
+		isThreadComplete = false;
 	}
 
 	// AI solver - Returns the best move for the given player using minimax
 	// algorithm.
-	public Position getBestGameBoard() {
+	public void run() {
 		BoardNodeChar tempBoardNode, solutionBoardNode;
 		ArrayList<BoardNodeChar> bestBoardNodesArr = new ArrayList<BoardNodeChar>();
 		double lastPlyMaxScore = -99999999;
@@ -147,10 +150,10 @@ public class GameSolverChar {
 			if (DEBUG)
 				System.out.println("Iterating.");
 			if (gbc.board.isEqual(solutionBoardNode.board)) {
-				return gbc.position;
+				answerPosition = new Position(gbc.position.coordX, gbc.position.coordY);
+				isThreadComplete = true;
 			}
 		}
-		return null;
 	}
 
 	// Returns a list of all possible board positions from a
@@ -220,5 +223,13 @@ public class GameSolverChar {
 			tempBoardNode = tempBoardNode.previous;
 		}
 		return board;
+	}
+	
+	public boolean getIsThreadComplete () {
+		return isThreadComplete;
+	}
+	
+	public Position getAnswerPosition () {
+		return answerPosition;
 	}
 }
