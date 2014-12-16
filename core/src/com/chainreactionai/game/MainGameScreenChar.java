@@ -52,7 +52,7 @@ public class MainGameScreenChar implements Screen {
 	final private int HEIGHT_PAUSE_MENU_BUTTONS = 60;
 	final private int WIDTH_PAUSE_MENU_BUTTONS = 150;
 	final private int MAX_NUM_PLAYERS = 6;
-	final private int INVERSE_SPEED_OF_BALL_VIBRATION = 16;
+	private int INVERSE_SPEED_OF_BALL_VIBRATION = 28;
 	private int NUMBER_OF_PLAYERS, breakingAway, splittableBreakingAway;
 	private Texture pauseButtonImg = new Texture("pauseButton.jpg");
 	private Array<Rectangle> rectangularGrid;
@@ -84,7 +84,7 @@ public class MainGameScreenChar implements Screen {
 	public Environment environment;
 	// All debug printing should go under this flag.
 	final private boolean DEBUG = true;
-	final private boolean DEBUG_CPU = false;
+	final private boolean DEBUG_CPU = true;
 
 	// Constructor to initialize which player is CPU and which is human.
 	// Also sets difficulty levels for CPU players.
@@ -92,7 +92,7 @@ public class MainGameScreenChar implements Screen {
 		myGame = game;
 		NUMBER_OF_PLAYERS = CPU.size();
 		if (DEBUG_CPU)
-			NUMBER_OF_PLAYERS = 4;
+			NUMBER_OF_PLAYERS = 2;
 		isCPU = new boolean[NUMBER_OF_PLAYERS];
 		lostPlayer = new boolean[NUMBER_OF_PLAYERS];
 		maxPlyLevels = new int[NUMBER_OF_PLAYERS];
@@ -102,7 +102,7 @@ public class MainGameScreenChar implements Screen {
 		if (DEBUG_CPU) {
 			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 				isCPU[i] = true;
-				maxPlyLevels[i] = 4;
+				maxPlyLevels[i] = 6;
 			}
 			//maxPlyLevels[0] = 4;
 			isCPU[0] = false;
@@ -306,6 +306,7 @@ public class MainGameScreenChar implements Screen {
 								numberOfMovesPlayed += 1;
 								percentageMovesSearched += incrementValForPercentageMovesSearched;
 								solver = null;
+								INVERSE_SPEED_OF_BALL_VIBRATION *= 7;
 							}
 						} else {
 							if (DEBUG)
@@ -319,6 +320,7 @@ public class MainGameScreenChar implements Screen {
 							prevTime = System.currentTimeMillis();
 							Thread t = new Thread(solver);
 					        t.start();
+					        INVERSE_SPEED_OF_BALL_VIBRATION = INVERSE_SPEED_OF_BALL_VIBRATION/7;
 							if (DEBUG)
 								System.out.println("GameSolver initialized");
 						}
