@@ -76,7 +76,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
 		// Label for title.
 		title = new Label("Choose specifications for the players", skin);
-		title.setFontScale(heightUpscaleFactor);
+		title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		table.add(title).padTop(20).row();
 		// Creating the DropDown for whether the player should be 
 		// human or CPU.
@@ -105,17 +105,17 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		// Adding the dropdowns to the Table.
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			Label tempLabel = new Label("Player " + String.valueOf(i+1) + ":", skin);
-			tempLabel.setFontScale(heightUpscaleFactor);
+			tempLabel.setFontScale((1+(heightUpscaleFactor-1)/2));
 			table.add(tempLabel).padBottom(0).row();
-			table.add(userSelectBoxes.get(i)).size(WIDTH_DROP_DOWN_MENUS*widthUpscaleFactor, HEIGHT_DROP_DOWN_MENUS*heightUpscaleFactor).padBottom(0).row();
-			table.add(plySelectBoxes.get(i)).size(WIDTH_DROP_DOWN_MENUS*widthUpscaleFactor, HEIGHT_DROP_DOWN_MENUS*heightUpscaleFactor).padBottom(2).row();
+			table.add(userSelectBoxes.get(i)).size(WIDTH_DROP_DOWN_MENUS*(1+(widthUpscaleFactor-1)/2), HEIGHT_DROP_DOWN_MENUS*(1+(heightUpscaleFactor-1)/2)).padBottom(0).row();
+			table.add(plySelectBoxes.get(i)).size(WIDTH_DROP_DOWN_MENUS*(1+(widthUpscaleFactor-1)/2), HEIGHT_DROP_DOWN_MENUS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
 		}
 		// Creating and adding the submit button to the Table.
 		submitButton = new TextButton(new String("Submit"), skin);
 		submitButtonStyler = new TextButtonStyle(submitButton.getStyle());
-		submitButtonStyler.font.setScale(heightUpscaleFactor);
+		submitButtonStyler.font.setScale((1+(heightUpscaleFactor-1)/2));
 		submitButton.setStyle(submitButtonStyler);
-		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*widthUpscaleFactor, HEIGHT_SUBMIT_BUTTON*heightUpscaleFactor).padBottom(20).padTop(10).row();
+		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*(1+(widthUpscaleFactor-1)/2), HEIGHT_SUBMIT_BUTTON*(1+(heightUpscaleFactor-1)/2)).padBottom(20).padTop(10).row();
 		// Scroll pane consisting of the Table.
 		scroll = new ScrollPane(table);
 		// Container is the outside coverung which contains the

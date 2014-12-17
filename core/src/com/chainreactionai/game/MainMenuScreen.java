@@ -59,14 +59,14 @@ public class MainMenuScreen implements Screen {
 		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
 		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
 		// Adds the title and buttons to the Table.
-		title.setFontScale(heightUpscaleFactor);
+		title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		table.add(title).padBottom(40).row();
 		playButtonStyler = new TextButtonStyle(buttonPlay.getStyle());
-		playButtonStyler.font.setScale(heightUpscaleFactor, heightUpscaleFactor);
+		playButtonStyler.font.setScale((1+(heightUpscaleFactor-1)/2));
 		buttonPlay.setStyle(playButtonStyler);
-		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*heightUpscaleFactor).padBottom(20).row();
+		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_MAIN_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
 		buttonExit.setStyle(playButtonStyler);
-		table.add(buttonExit).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*heightUpscaleFactor).padBottom(20).row();
+		table.add(buttonExit).size(WIDTH_MAIN_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_MAIN_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
 		table.setFillParent(true);
 		// Adding the table to stage.
 		stage.addActor(table);
