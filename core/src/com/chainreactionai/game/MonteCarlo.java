@@ -16,7 +16,7 @@ public class MonteCarlo {
 	private int[] maxPlyLevels, heuristicNumbers, playerWins;
 	private boolean[] lostPlayer;
 	final private String OUT_FILE_PATH = "monteCarloResults.txt";
-	private GameSolverChar solver;
+//	final private boolean DEBUG = false;
 	private double percentageMovesSearched, incrementValForPercentageMovesSearched;
 	
 	//Initialize the class with the configuration
@@ -63,36 +63,31 @@ public class MonteCarlo {
 			while (!gameOver) {
 				// If the player has not lost the game yet
 				if (lostPlayer[currentPlayer] == false) {
-					if (solver == null) {
-						// Initializing the GameSolver
-						solver = new GameSolverChar(gameBoard, currentPlayer,
-								NUMBER_OF_PLAYERS, lostPlayer, maxPlyLevels[currentPlayer], percentageMovesSearched, heuristicNumbers[currentPlayer]);
-						Thread t = new Thread (solver);
-						t.start();
-					} else {
-						if (solver.getIsThreadComplete()) {
-							// Get the position where we should place the new atom
-							// so that the GameSolver's best move is executed.
-							Position winningMove = solver.getAnswerPosition();
-							if(winningMove == null) {
-								System.out.println("Error Time.");
-							}
-							// Change the Board
-							gameBoard.changeBoard(winningMove.coordX, winningMove.coordY, currentPlayer);
-		
-							numberOfMovesPlayed += 1;
-							if (gameBoard.isWinningPosition(currentPlayer)
-									&& numberOfMovesPlayed > 1) {
-								gameOver = true;
-								// Print the name of winning player for current simulation
-								System.out.println("Player " + (currentPlayer+1) + " won in "+ numberOfMovesPlayed + " moves.");
-								playerWins[currentPlayer] += 1;
-							}
-							percentageMovesSearched += incrementValForPercentageMovesSearched;
-							// Giving the chance to the next player to play.
-							currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
-						}
+					// Initializing the GameSolver
+					GameSolverChar solver = new GameSolverChar(gameBoard, currentPlayer,
+							NUMBER_OF_PLAYERS, lostPlayer, maxPlyLevels[currentPlayer], percentageMovesSearched, heuristicNumbers[currentPlayer]);
+	
+					// Get the position where we should place the new atom
+					// so that the GameSolver's best move is executed.
+					solver.run();
+					Position winningMove = solver.getAnswerPosition();
+					if(winningMove == null) {
+						System.out.println("Error Time.");
 					}
+					// Change the Board
+					gameBoard.changeBoard(winningMove.coordX, winningMove.coordY, currentPlayer);
+
+					numberOfMovesPlayed += 1;
+					if (gameBoard.isWinningPosition(currentPlayer)
+							&& numberOfMovesPlayed > 1) {
+						gameOver = true;
+						// Print the name of winning player for current simulation
+						System.out.println("Player " + (currentPlayer+1) + " won in "+ numberOfMovesPlayed + " moves.");
+						playerWins[currentPlayer] += 1;
+					}
+					percentageMovesSearched += incrementValForPercentageMovesSearched;
+					// Giving the chance to the next player to play.
+					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 				} else {
 					// Giving the chance to the next player to play.
 					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
