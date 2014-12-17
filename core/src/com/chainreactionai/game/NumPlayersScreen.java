@@ -67,7 +67,7 @@ public class NumPlayersScreen implements Screen {
 		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
 		// Initializing and adding the title to Table.
 		title = new Label("Choose number of players", skin);
-		title.setFontScale(heightUpscaleFactor, heightUpscaleFactor);
+		title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		table.add(title).padBottom(10).row();
 		// Initializing the Drop-Down menu
 		selectBox = new SelectBox<String>(skin);
@@ -78,18 +78,18 @@ public class NumPlayersScreen implements Screen {
 		}
 		selectBox.setItems(tempStringArr);
 		selectBoxStyler = new SelectBoxStyle(selectBox.getStyle());
-		selectBoxStyler.font.setScale(heightUpscaleFactor);
+		selectBoxStyler.font.setScale((1+(heightUpscaleFactor-1)/2));
 		selectBox.setStyle(selectBoxStyler);
 		selectBox.setHeight(50);
 		System.out.println("Height: " + selectBox.getHeight() + " max height: " + selectBox.getMaxHeight());
 		// Adding the DropDown to the Table.
-		table.add(selectBox).size(WIDTH_DROP_DOWN_MENUS*widthUpscaleFactor, HEIGHT_DROP_DOWN_MENUS*heightUpscaleFactor).padBottom(10).row();
+		table.add(selectBox).size(WIDTH_DROP_DOWN_MENUS*(1+(widthUpscaleFactor-1)/2), HEIGHT_DROP_DOWN_MENUS*(1+(heightUpscaleFactor-1)/2)).padBottom(10).row();
 		// Initializing and adding the Submit Button to Table.
 		submitButton = new TextButton(new String("Submit"), skin);
 		submitButtonStyler = new TextButtonStyle(submitButton.getStyle());
-		submitButtonStyler.font.setScale(heightUpscaleFactor, heightUpscaleFactor);
+		submitButtonStyler.font.setScale((1+(heightUpscaleFactor-1)/2));
 		submitButton.setStyle(submitButtonStyler);
-		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*widthUpscaleFactor, HEIGHT_SUBMIT_BUTTON*heightUpscaleFactor).padBottom(2).row();
+		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*(1+(widthUpscaleFactor-1)/2), HEIGHT_SUBMIT_BUTTON*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
 		table.setFillParent(true);
 		// Adding the table to the stage.
 		stage.addActor(table);

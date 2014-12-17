@@ -43,9 +43,9 @@ import com.badlogic.gdx.utils.Array;
 
 public class MainGameScreenChar implements Screen {
 	SpriteBatch batch;
-	final private int GRID_SIZE = 8;
-	final private float WIDTH_RECTANGLE = (float)(55);
-	final private float HEIGHT_RECTANGLE = (float)(55);
+	final private int GRID_SIZE = 7;
+	final private float WIDTH_RECTANGLE = (float)(440/GRID_SIZE);
+	final private float HEIGHT_RECTANGLE = (float)(440/GRID_SIZE);
 	final private int WIDTH_SCREEN = 452;
 	final private int HEIGHT_SCREEN = 480;
 	final private int HEIGHT_PAUSE_BUTTON = 27;
@@ -165,13 +165,13 @@ public class MainGameScreenChar implements Screen {
 		
 		// Populating the Pause menu with the buttons.
 		resumeButtonStyler = new TextButtonStyle(resumeButton.getStyle());
-		resumeButtonStyler.font.setScale((1+(heightUpscaleFactor-1)/2), (1+(heightUpscaleFactor-1)/2));
+		resumeButtonStyler.font.setScale((1+(heightUpscaleFactor-1)/2));
 		resumeButton.setStyle(resumeButtonStyler);
 		table.add(resumeButton).size(WIDTH_PAUSE_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_PAUSE_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
 		newGameButton.setStyle(resumeButtonStyler);
-		table.add(newGameButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*heightUpscaleFactor).padBottom(2).row();
+		table.add(newGameButton).size(WIDTH_PAUSE_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_PAUSE_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
 		exitButton.setStyle(resumeButtonStyler);
-		table.add(exitButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*heightUpscaleFactor).padBottom(2).row();
+		table.add(exitButton).size(WIDTH_PAUSE_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_PAUSE_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
 		table.setFillParent(true);
 		
 		//Attaching click handlers to the pause menu buttons.
