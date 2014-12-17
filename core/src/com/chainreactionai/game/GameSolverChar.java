@@ -141,9 +141,22 @@ public class GameSolverChar implements Runnable {
 		// Picks a random move out of the possible Best Moves and retraces
 		// it to the top to get the coordinates of the desired click.
 		numberOfBestBoardNodes = bestBoardNodesArr.size();
-		chosenBestBoardNodeIndex = rand.nextInt(numberOfBestBoardNodes);
-		solutionBoardNode = getPredecessorNode(bestBoardNodesArr
-				.get(chosenBestBoardNodeIndex));
+		if (numberOfBestBoardNodes > 0) {
+			chosenBestBoardNodeIndex = rand.nextInt(numberOfBestBoardNodes);
+			solutionBoardNode = getPredecessorNode(bestBoardNodesArr
+					.get(chosenBestBoardNodeIndex));
+		}
+		//generate random move if no solution is found
+		else {
+			int gridSize = initialBoardNode.board.getGameGridSize();
+			int randX = rand.nextInt(gridSize), randY = rand.nextInt(gridSize);
+			while (!initialBoardNode.board.isValidMove(randX, randY, mainPlayer)) {
+				randX = rand.nextInt(gridSize);
+				randY = rand.nextInt(gridSize);
+			}
+			initialBoardNode.board.changeBoard(randX, randY, mainPlayer);
+			solutionBoardNode = initialBoardNode;
+		}
 		if (DEBUG)
 			System.out.println("Solution boardNode selected");
 		for (GameBoardAndCoord gbc: getAllPossibleMovesWithCoords(initialBoardNode.board, mainPlayer)) {
@@ -152,6 +165,7 @@ public class GameSolverChar implements Runnable {
 			if (gbc.board.isEqual(solutionBoardNode.board)) {
 				answerPosition = new Position(gbc.position.coordX, gbc.position.coordY);
 				isThreadComplete = true;
+				break;
 			}
 		}
 	}
