@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 
@@ -48,6 +49,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	private Array< SelectBox<String> > plySelectBoxes, userSelectBoxes;
 	ArrayList<Boolean> isCPU = new ArrayList<Boolean>();
 	ArrayList<Integer> plyLevelList = new ArrayList<Integer>();
+	private TextButtonStyle submitButtonStyler;
 
 	// Constructor which initializes the number of players passed from
 	// NumPlayersScreen and the number if difficulty levels allowed.
@@ -74,6 +76,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
 		// Label for title.
 		title = new Label("Choose specifications for the players", skin);
+		title.setFontScale(heightUpscaleFactor);
 		table.add(title).padTop(20).row();
 		// Creating the DropDown for whether the player should be 
 		// human or CPU.
@@ -102,13 +105,17 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		// Adding the dropdowns to the Table.
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			Label tempLabel = new Label("Player " + String.valueOf(i+1) + ":", skin);
+			tempLabel.setFontScale(heightUpscaleFactor);
 			table.add(tempLabel).padBottom(0).row();
 			table.add(userSelectBoxes.get(i)).size(WIDTH_DROP_DOWN_MENUS*widthUpscaleFactor, HEIGHT_DROP_DOWN_MENUS*heightUpscaleFactor).padBottom(0).row();
 			table.add(plySelectBoxes.get(i)).size(WIDTH_DROP_DOWN_MENUS*widthUpscaleFactor, HEIGHT_DROP_DOWN_MENUS*heightUpscaleFactor).padBottom(2).row();
 		}
 		// Creating and adding the submit button to the Table.
 		submitButton = new TextButton(new String("Submit"), skin);
-		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*widthUpscaleFactor, HEIGHT_SUBMIT_BUTTON*heightUpscaleFactor).padBottom(20).row();
+		submitButtonStyler = new TextButtonStyle(submitButton.getStyle());
+		submitButtonStyler.font.setScale(heightUpscaleFactor);
+		submitButton.setStyle(submitButtonStyler);
+		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*widthUpscaleFactor, HEIGHT_SUBMIT_BUTTON*heightUpscaleFactor).padBottom(20).padTop(10).row();
 		// Scroll pane consisting of the Table.
 		scroll = new ScrollPane(table);
 		// Container is the outside coverung which contains the

@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
@@ -38,6 +39,7 @@ public class MainMenuScreen implements Screen {
 			skin),
 			buttonExit = new TextButton("Exit", skin);
 	private Label title = new Label("Chain Reaction", skin);
+	private TextButtonStyle playButtonStyler;
 
 	public MainMenuScreen(ChainReactionAIGame game) {
 		myGame = game;
@@ -57,8 +59,13 @@ public class MainMenuScreen implements Screen {
 		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
 		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
 		// Adds the title and buttons to the Table.
+		title.setFontScale(heightUpscaleFactor);
 		table.add(title).padBottom(40).row();
+		playButtonStyler = new TextButtonStyle(buttonPlay.getStyle());
+		playButtonStyler.font.setScale(heightUpscaleFactor, heightUpscaleFactor);
+		buttonPlay.setStyle(playButtonStyler);
 		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*heightUpscaleFactor).padBottom(20).row();
+		buttonExit.setStyle(playButtonStyler);
 		table.add(buttonExit).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*heightUpscaleFactor).padBottom(20).row();
 		table.setFillParent(true);
 		// Adding the table to stage.
