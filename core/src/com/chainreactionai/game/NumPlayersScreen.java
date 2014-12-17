@@ -13,9 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 
@@ -28,7 +30,7 @@ public class NumPlayersScreen implements Screen {
 	private OrthographicCamera camera;
 	private ChainReactionAIGame myGame;
 	final private int WIDTH_SCREEN = 440;
-	final private int HEIGHT_SCREEN = 650;
+	final private int HEIGHT_SCREEN = 480;
 	final private int HEIGHT_DROP_DOWN_MENUS = 35;
 	final private int WIDTH_DROP_DOWN_MENUS = 150;
 	final private int WIDTH_SUBMIT_BUTTON = 100;
@@ -42,6 +44,8 @@ public class NumPlayersScreen implements Screen {
 	private TextButton submitButton;
 	private Label title;
 	private SelectBox<String> selectBox;
+	private SelectBoxStyle selectBoxStyler;
+	private TextButtonStyle submitButtonStyler;
 
 	public NumPlayersScreen(ChainReactionAIGame game) {
 		myGame = game;
@@ -51,18 +55,19 @@ public class NumPlayersScreen implements Screen {
 	// Initialization function
 	private void create() {
 		batch = new SpriteBatch();
-		// Show the world to be 440*480 no matter the
-		// size of the screen
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
 		// The elements are displayed in the order you add them.
 		// The first appear on top, the last at the bottom.
 		// Up-scale Factors are used to get proper sized buttons
 		// upscaled or downscaled according to the Screen Dimensions
 		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
 		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
+		// Show the world to be 440*480 no matter the
+		// size of the screen
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
 		// Initializing and adding the title to Table.
 		title = new Label("Choose number of players", skin);
+		title.setFontScale(heightUpscaleFactor, heightUpscaleFactor);
 		table.add(title).padBottom(10).row();
 		// Initializing the Drop-Down menu
 		selectBox = new SelectBox<String>(skin);
@@ -72,10 +77,18 @@ public class NumPlayersScreen implements Screen {
 			tempStringArr.add(String.valueOf(i+1));
 		}
 		selectBox.setItems(tempStringArr);
+		selectBoxStyler = new SelectBoxStyle(selectBox.getStyle());
+		selectBoxStyler.font.setScale(heightUpscaleFactor);
+		selectBox.setStyle(selectBoxStyler);
+		selectBox.setHeight(50);
+		System.out.println("Height: " + selectBox.getHeight() + " max height: " + selectBox.getMaxHeight());
 		// Adding the DropDown to the Table.
 		table.add(selectBox).size(WIDTH_DROP_DOWN_MENUS*widthUpscaleFactor, HEIGHT_DROP_DOWN_MENUS*heightUpscaleFactor).padBottom(10).row();
 		// Initializing and adding the Submit Button to Table.
 		submitButton = new TextButton(new String("Submit"), skin);
+		submitButtonStyler = new TextButtonStyle(submitButton.getStyle());
+		submitButtonStyler.font.setScale(heightUpscaleFactor, heightUpscaleFactor);
+		submitButton.setStyle(submitButtonStyler);
 		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*widthUpscaleFactor, HEIGHT_SUBMIT_BUTTON*heightUpscaleFactor).padBottom(2).row();
 		table.setFillParent(true);
 		// Adding the table to the stage.
@@ -101,6 +114,7 @@ public class NumPlayersScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+		//viewport.update(width, height);
 	}
 
 	@Override

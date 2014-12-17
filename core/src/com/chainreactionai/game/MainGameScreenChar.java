@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 
@@ -76,6 +77,7 @@ public class MainGameScreenChar implements Screen {
 	private FileHandle handle = Gdx.files.external("data/myfile.txt");
 	private ShapeRenderer shapeRenderer = new ShapeRenderer();
 	private Color[] colors;
+	private TextButtonStyle resumeButtonStyler;
 	// Trying 3D Graphics
 	public Model[] models;
 	public ModelInstance[] instances;
@@ -162,8 +164,13 @@ public class MainGameScreenChar implements Screen {
 		handle.writeString("--------------------------------------------------------------------------\r\n", true);
 		
 		// Populating the Pause menu with the buttons.
-		table.add(resumeButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*heightUpscaleFactor).padBottom(2).row();
+		resumeButtonStyler = new TextButtonStyle(resumeButton.getStyle());
+		resumeButtonStyler.font.setScale((1+(heightUpscaleFactor-1)/2), (1+(heightUpscaleFactor-1)/2));
+		resumeButton.setStyle(resumeButtonStyler);
+		table.add(resumeButton).size(WIDTH_PAUSE_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_PAUSE_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
+		newGameButton.setStyle(resumeButtonStyler);
 		table.add(newGameButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*heightUpscaleFactor).padBottom(2).row();
+		exitButton.setStyle(resumeButtonStyler);
 		table.add(exitButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*heightUpscaleFactor).padBottom(2).row();
 		table.setFillParent(true);
 		
