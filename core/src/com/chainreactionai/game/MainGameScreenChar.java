@@ -104,7 +104,7 @@ public class MainGameScreenChar implements Screen {
 		if (DEBUG_CPU) {
 			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 				isCPU[i] = true;
-				maxPlyLevels[i] = 6;
+				maxPlyLevels[i] = 2;
 			}
 			//maxPlyLevels[0] = 4;
 			isCPU[0] = false;
@@ -257,7 +257,7 @@ public class MainGameScreenChar implements Screen {
 		if (DEBUG_CPU) {
 			// Set heuristic numbers for DEBUG_CPU
 			heuristicNumbers[0] = 3;
-			heuristicNumbers[1] = 1;
+			heuristicNumbers[1] = 12;
 		}
 	}
 

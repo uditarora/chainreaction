@@ -23,8 +23,10 @@ public class SplashScreen implements Screen {
 	final private int WIDTH_SCREEN = 440;
 	final private int HEIGHT_SCREEN = 480;
 	final boolean MONTE_CARLO = false;
+	private long prevTime, newTime;
 
 	public SplashScreen(ChainReactionAIGame game) {
+		prevTime = System.currentTimeMillis();
 		if (MONTE_CARLO) {
 			int numPlayers = 4;
 			int[] plyLevelList = new int[numPlayers]; int[] heuristicNumber = new int[numPlayers];
@@ -56,6 +58,7 @@ public class SplashScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		newTime = System.currentTimeMillis();
 		// Tell the camera to update its matrices.
 		camera.update();
 
@@ -67,7 +70,7 @@ public class SplashScreen implements Screen {
 		batch.end();
 
 		// When user clicks on the screen, go to the main menu screen
-		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+		if (newTime - prevTime > 500) {
 			myGame.setScreen(new MainMenuScreen(myGame));
 		}
 	}
