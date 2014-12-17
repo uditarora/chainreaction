@@ -12,7 +12,7 @@ import com.badlogic.gdx.Gdx;
  *
  */
 public class MonteCarlo {
-	final private int NUMBER_OF_PLAYERS;
+	final private int NUMBER_OF_PLAYERS, GRID_SIZE;
 	private int[] maxPlyLevels, heuristicNumbers, playerWins;
 	private boolean[] lostPlayer;
 	final private String OUT_FILE_PATH = "monteCarloResults.txt";
@@ -29,6 +29,7 @@ public class MonteCarlo {
 		for(int i = 0; i < numPlayers; i += 1) {
 			playerWins[i] = 0;
 		}
+		GRID_SIZE = 7;
 	}
 	
 	//Run given number of simulations and save the output to a file
@@ -45,7 +46,7 @@ public class MonteCarlo {
 		for(int simulation = 1; simulation <= numSimulations; simulation += 1) {
 			
 			System.out.println("Simulation " + simulation + ": ");
-			GameBoardChar gameBoard = new GameBoardChar(8, NUMBER_OF_PLAYERS);
+			GameBoardChar gameBoard = new GameBoardChar(GRID_SIZE, NUMBER_OF_PLAYERS);
 			for(int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 				lostPlayer[i] = false;
 			}
@@ -88,6 +89,15 @@ public class MonteCarlo {
 					percentageMovesSearched += incrementValForPercentageMovesSearched;
 					// Giving the chance to the next player to play.
 					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
+					if (numberOfMovesPlayed > NUMBER_OF_PLAYERS) {
+						for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
+							if (!lostPlayer[i]) {
+								if (gameBoard.hasLost(i)) {
+									lostPlayer[i] = true;
+								}
+							}
+						}
+					}
 				} else {
 					// Giving the chance to the next player to play.
 					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
