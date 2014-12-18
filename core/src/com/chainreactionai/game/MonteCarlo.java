@@ -3,9 +3,6 @@
  */
 package com.chainreactionai.game;
 
-import java.util.ArrayList;
-
-import com.badlogic.gdx.Gdx;
 
 /**
  * @author udit
@@ -15,8 +12,8 @@ public class MonteCarlo {
 	final private int NUMBER_OF_PLAYERS, GRID_SIZE;
 	private int[] maxPlyLevels, heuristicNumbers, playerWins;
 	private boolean[] lostPlayer;
-	final private String OUT_FILE_PATH = "monteCarloResults.txt";
-//	final private boolean DEBUG = false;
+	//final private String OUT_FILE_PATH = "monteCarloResults.txt";
+	//final private boolean DEBUG = false;
 	private double percentageMovesSearched, incrementValForPercentageMovesSearched;
 	
 	//Initialize the class with the configuration
