@@ -538,7 +538,7 @@ public class GameBoardChar {
 		else if (level == 20) {
 			int runningNumBoxesTotal = 0, runningNumSplittableTotal = 0, runningNumMultipleTotal = 0, currNumAtoms = 0;
 			// First Iteration
-			double numBoxesWeight = 0.12, numSplittableWeight = 0.44, numMultipleWeight = 0.44;
+			double numBoxesWeight = 0.1, numSplittableWeight = 0.40, numMultipleWeight = 0.6;
 			// Second Iteration
 //			double numBoxesWeight = 1, numSplittableWeight = 0, numMultipleWeight = 0;
 			for (int i = 0; i < gameGridSize; i += 1) {

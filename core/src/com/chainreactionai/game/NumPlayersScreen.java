@@ -38,7 +38,7 @@ public class NumPlayersScreen implements Screen {
 	private float heightUpscaleFactor, widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private int MAX_NUMBER_OF_PLAYERS = 6, NUMBER_OF_DIFFICULTY_LEVELS = 4;
+	private int MAX_NUMBER_OF_PLAYERS = 6, NUMBER_OF_DIFFICULTY_LEVELS = 10;
 	private Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"),
 			new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
 	private TextButton submitButton;
