@@ -63,6 +63,20 @@ public class GameSolverChar implements Runnable {
 	// AI solver - Returns the best move for the given player using minimax
 	// algorithm.
 	public void run() {
+		
+		// Generate purely random move if MAX_PLY_LEVEL is 0
+		if (MAX_PLY_LEVEL == 0) {
+			int gridSize = initialBoardNode.board.getGameGridSize();
+			int randX = rand.nextInt(gridSize), randY = rand.nextInt(gridSize);
+			while (!initialBoardNode.board.isValidMove(randX, randY, mainPlayer)) {
+				randX = rand.nextInt(gridSize);
+				randY = rand.nextInt(gridSize);
+			}
+			answerPosition = new Position(randX, randY);
+			isThreadComplete = true;
+			return;
+		}
+		
 		BoardNodeChar tempBoardNode, solutionBoardNode;
 		ArrayList<BoardNodeChar> bestBoardNodesArr = new ArrayList<BoardNodeChar>();
 		double lastPlyMaxScore = -99999999;
@@ -81,6 +95,15 @@ public class GameSolverChar implements Runnable {
 			if (currentLevel == MAX_PLY_LEVEL) {
 				break;
 			}
+			// If a winning move is found at the first level, play that move
+			if (currentLevel == 1) {
+				if (currentBoardNode.board.isWinningPosition(mainPlayer)) {
+					bestBoardNodesArr.clear();
+					bestBoardNodesArr.add(currentBoardNode);
+					break;
+				}
+			}
+			
 			if (currentLevel % 2 == 0) {
 				// This is where the user is playing his move
 				// ie. the max part of minimax algorithm
@@ -141,31 +164,33 @@ public class GameSolverChar implements Runnable {
 		// Picks a random move out of the possible Best Moves and retraces
 		// it to the top to get the coordinates of the desired click.
 		numberOfBestBoardNodes = bestBoardNodesArr.size();
-		if (numberOfBestBoardNodes > 0) {
-			chosenBestBoardNodeIndex = rand.nextInt(numberOfBestBoardNodes);
-			solutionBoardNode = getPredecessorNode(bestBoardNodesArr
-					.get(chosenBestBoardNodeIndex));
-		}
-		//generate random move if no solution is found
-		else {
+		
+		// Generate purely random move if no solution is found
+		if (numberOfBestBoardNodes == 0) {
 			int gridSize = initialBoardNode.board.getGameGridSize();
 			int randX = rand.nextInt(gridSize), randY = rand.nextInt(gridSize);
 			while (!initialBoardNode.board.isValidMove(randX, randY, mainPlayer)) {
 				randX = rand.nextInt(gridSize);
 				randY = rand.nextInt(gridSize);
 			}
-			initialBoardNode.board.changeBoard(randX, randY, mainPlayer);
-			solutionBoardNode = initialBoardNode;
+			answerPosition = new Position(randX, randY);
+			isThreadComplete = true;
 		}
-		if (DEBUG)
-			System.out.println("Solution boardNode selected");
-		for (GameBoardAndCoord gbc: getAllPossibleMovesWithCoords(initialBoardNode.board, mainPlayer)) {
+		else {
+			chosenBestBoardNodeIndex = rand.nextInt(numberOfBestBoardNodes);
+			solutionBoardNode = getPredecessorNode(bestBoardNodesArr
+					.get(chosenBestBoardNodeIndex));
+
 			if (DEBUG)
-				System.out.println("Iterating.");
-			if (gbc.board.isEqual(solutionBoardNode.board)) {
-				answerPosition = new Position(gbc.position.coordX, gbc.position.coordY);
-				isThreadComplete = true;
-				break;
+				System.out.println("Solution boardNode selected");
+			for (GameBoardAndCoord gbc: getAllPossibleMovesWithCoords(initialBoardNode.board, mainPlayer)) {
+				if (DEBUG)
+					System.out.println("Iterating.");
+				if (gbc.board.isEqual(solutionBoardNode.board)) {
+					answerPosition = new Position(gbc.position.coordX, gbc.position.coordY);
+					isThreadComplete = true;
+					break;
+				}
 			}
 		}
 	}
