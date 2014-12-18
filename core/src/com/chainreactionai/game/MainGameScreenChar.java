@@ -86,7 +86,7 @@ public class MainGameScreenChar implements Screen {
 	public Environment environment;
 	// All debug printing should go under this flag.
 	final private boolean DEBUG = true;
-	final private boolean DEBUG_CPU = true;
+	final private boolean DEBUG_CPU = false;
 
 	// Constructor to initialize which player is CPU and which is human.
 	// Also sets difficulty levels for CPU players.
