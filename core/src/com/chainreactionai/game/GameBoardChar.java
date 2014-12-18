@@ -662,8 +662,8 @@ public class GameBoardChar {
 	
 	// This function returns the possible branching for
 	// a player in the current board scope.
-	public int getBranchingFactor (int player) {
-		int branchingFactor = 0;
+	public double getBranchingFactor (int player) {
+		double branchingFactor = 0;
 		for (int i = 0; i < gameGridSize; i += 1) {
 			for (int j = 0; j < gameGridSize; j += 1) {
 				if (isValidMove(i, j, player)) {
@@ -671,6 +671,7 @@ public class GameBoardChar {
 				}
 			}
 		}
+		branchingFactor /= (gameGridSize*gameGridSize);
 		return branchingFactor;
 	}
 	

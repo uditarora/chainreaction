@@ -64,7 +64,7 @@ public class MainGameScreenChar implements Screen {
 	private boolean clickOnEdge;
 	MyInputProcessor inputProcessor = new MyInputProcessor();
 	private boolean[] isCPU, lostPlayer;
-	private int[] maxPlyLevels, heuristicNumbers;
+	private int[] difficultyLevels, heuristicNumbers;
 	private boolean gameOver, moveCompleted;
 	private ChainReactionAIGame myGame;
 	private Stage stage = new Stage();
@@ -97,17 +97,17 @@ public class MainGameScreenChar implements Screen {
 			NUMBER_OF_PLAYERS = 2;
 		isCPU = new boolean[NUMBER_OF_PLAYERS];
 		lostPlayer = new boolean[NUMBER_OF_PLAYERS];
-		maxPlyLevels = new int[NUMBER_OF_PLAYERS];
+		difficultyLevels = new int[NUMBER_OF_PLAYERS];
 		heuristicNumbers = new int[NUMBER_OF_PLAYERS];
 		
 		//Simulating with only CPU Players for testing
 		if (DEBUG_CPU) {
 			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 				isCPU[i] = true;
-				maxPlyLevels[i] = 2;
+				difficultyLevels[i] = 104;
 			}
-			//maxPlyLevels[0] = 4;
-			isCPU[0] = false;
+			//difficultyLevels[0] = 4;
+//			isCPU[0] = false;
 		}
 		else {
 			if (DEBUG)
@@ -116,8 +116,8 @@ public class MainGameScreenChar implements Screen {
 			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 				isCPU[i] = CPU.get(i);
 				if (isCPU[i]) {
-					maxPlyLevels[i] = plyLevelList.get(i);
-					System.out.println("isCPU[" + i + "] = " + isCPU[i] + " with Ply Level = " + maxPlyLevels[i]);
+					difficultyLevels[i] = plyLevelList.get(i);
+					System.out.println("isCPU[" + i + "] = " + isCPU[i] + " with Ply Level = " + difficultyLevels[i]);
 				} else {
 					System.out.println("isCPU[" + i + "] = " + isCPU[i]);
 				}
@@ -150,12 +150,17 @@ public class MainGameScreenChar implements Screen {
 		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
 		maxPlyLevel = 0;
 		prevTime = System.currentTimeMillis();
-		for (int i = 0; i < maxPlyLevels.length; i += 1) {
-			if (maxPlyLevels[i] > maxPlyLevel) {
-				maxPlyLevel = maxPlyLevels[i];
+		for (int i = 0; i < difficultyLevels.length; i += 1) {
+			if (getCurrentPlyLevel(difficultyLevels[i]) > maxPlyLevel) {
+				maxPlyLevel = getCurrentPlyLevel(difficultyLevels[i]);
 			}
 		}
-		percentageMovesSearched = 1/(double)(maxPlyLevel);
+		if (maxPlyLevel < 3)
+			percentageMovesSearched = 0.2 + 1/(double)(maxPlyLevel);
+		else if (maxPlyLevel < 5)
+			percentageMovesSearched = 0.1 + 1/(double)(maxPlyLevel);
+		else
+			percentageMovesSearched = 1/(double)(maxPlyLevel);
 		//percentageMovesSearched = 1;
 		incrementValForPercentageMovesSearched = 1/(double)(3*maxPlyLevel*maxPlyLevel);
 		resumeButton = new TextButton(new String("Resume"), skin);
@@ -323,7 +328,7 @@ public class MainGameScreenChar implements Screen {
 							Gdx.app.log("mainPlayerAndPercentageMoves","MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed + " and Time taken : " + ((newTime - prevTime)/1000));
 							handle.writeString("MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed + " and Time taken : " + ((newTime - prevTime)/1000) +"\r\n", true);
 							solver = new GameSolverChar(gameBoard, currentPlayer,
-									NUMBER_OF_PLAYERS, lostPlayer, maxPlyLevels[currentPlayer], percentageMovesSearched, heuristicNumbers[currentPlayer]);
+									NUMBER_OF_PLAYERS, lostPlayer, getCurrentPlyLevel(difficultyLevels[currentPlayer]), percentageMovesSearched, heuristicNumbers[currentPlayer]);
 							prevTime = System.currentTimeMillis();
 							Thread t = new Thread(solver);
 					        t.start();
@@ -621,6 +626,53 @@ public class MainGameScreenChar implements Screen {
 	// This function shifts the Screen to the NumPlayersScreen.
 	private void shiftToNewGameScreen() {
 		myGame.setScreen(new NumPlayersScreen(myGame));
+	}
+	
+	private int getCurrentPlyLevel(int difficultyLevel) {
+		if (difficultyLevel == 0 || difficultyLevel == 1)
+			return difficultyLevel;
+		double branchingFactor = gameBoard.getBranchingFactor(currentPlayer);
+		
+		if (difficultyLevel > 100)		// for DEBUG_CPU purposes
+			return (difficultyLevel - 100);
+		
+		switch(difficultyLevel) {
+		case 2:		// combination of 1ply and 3ply
+			if (branchingFactor < 0.5)
+				return 3;
+			else
+				return 1;
+		case 3:		// combination of 1ply and 2ply
+			if (branchingFactor < 0.5)
+				return 2;
+			else
+				return 1;
+		case 4:		// purely 3ply
+			return 3;
+		case 5:		// combination of 2 and 3 ply
+			if (branchingFactor < 0.2)
+				return 3;
+			else
+				return 2;
+		case 6:		// purely 2ply
+			return 2;
+		case 7:		// combination of 2 and 4 ply
+			if (branchingFactor < 0.4)
+				return 4;
+			else
+				return 2;
+		case 8:		// combination of 2 and 4 ply, with more chances for 4ply
+			if (branchingFactor < 0.8)
+				return 4;
+			else
+				return 2;
+		case 9:		// purely 4ply
+			return 4;
+			
+		default:
+			return difficultyLevel;				
+		}
+		
 	}
 	
 	@Override
