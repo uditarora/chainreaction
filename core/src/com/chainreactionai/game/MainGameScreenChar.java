@@ -90,7 +90,7 @@ public class MainGameScreenChar implements Screen {
 
 	// Constructor to initialize which player is CPU and which is human.
 	// Also sets difficulty levels for CPU players.
-	public MainGameScreenChar(ChainReactionAIGame game, ArrayList<Boolean> CPU, ArrayList<Integer> plyLevelList) {
+	public MainGameScreenChar(ChainReactionAIGame game, ArrayList<Boolean> CPU, ArrayList<Integer> difficultyLevelList) {
 		myGame = game;
 		NUMBER_OF_PLAYERS = CPU.size();
 		if (DEBUG_CPU)
@@ -116,8 +116,8 @@ public class MainGameScreenChar implements Screen {
 			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 				isCPU[i] = CPU.get(i);
 				if (isCPU[i]) {
-					difficultyLevels[i] = plyLevelList.get(i);
-					System.out.println("isCPU[" + i + "] = " + isCPU[i] + " with Ply Level = " + difficultyLevels[i]);
+					difficultyLevels[i] = difficultyLevelList.get(i);
+					System.out.println("isCPU[" + i + "] = " + isCPU[i] + " with difficulty Level = " + difficultyLevels[i]);
 				} else {
 					System.out.println("isCPU[" + i + "] = " + isCPU[i]);
 				}
@@ -155,7 +155,9 @@ public class MainGameScreenChar implements Screen {
 				maxPlyLevel = getCurrentPlyLevel(difficultyLevels[i]);
 			}
 		}
-		if (maxPlyLevel < 3)
+		if (difficultyLevels[currentPlayer] == 10)
+			percentageMovesSearched = 0.75;
+		else if (maxPlyLevel < 3)
 			percentageMovesSearched = 0.2 + 1/(double)(maxPlyLevel);
 		else if (maxPlyLevel < 5)
 			percentageMovesSearched = 0.1 + 1/(double)(maxPlyLevel);
@@ -257,12 +259,12 @@ public class MainGameScreenChar implements Screen {
 	
 	private void setHeuristicNumbers() {
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
-			heuristicNumbers[i] = 2;
+			heuristicNumbers[i] = 12;
 		}
 		if (DEBUG_CPU) {
 			// Set heuristic numbers for DEBUG_CPU
-			heuristicNumbers[0] = 3;
-			heuristicNumbers[1] = 12;
+//			heuristicNumbers[0] = 12;
+//			heuristicNumbers[1] = 12;
 		}
 	}
 
@@ -668,11 +670,12 @@ public class MainGameScreenChar implements Screen {
 				return 2;
 		case 9:		// purely 4ply
 			return 4;
+		case 10:
+			return 4;		// purely 4ply with full search
 			
 		default:
 			return difficultyLevel;				
 		}
-		
 	}
 	
 	@Override
