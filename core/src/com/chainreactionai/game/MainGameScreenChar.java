@@ -44,8 +44,8 @@ import com.badlogic.gdx.utils.Array;
 public class MainGameScreenChar implements Screen {
 	SpriteBatch batch;
 	final private int GRID_SIZE = 7;
-	final private float WIDTH_RECTANGLE = (float)(440/GRID_SIZE);
-	final private float HEIGHT_RECTANGLE = (float)(440/GRID_SIZE);
+	final private float WIDTH_RECTANGLE = ((float)(440)/GRID_SIZE);
+	final private float HEIGHT_RECTANGLE = ((float)(440)/GRID_SIZE);
 	final private int WIDTH_SCREEN = 452;
 	final private int HEIGHT_SCREEN = 480;
 	final private int HEIGHT_PAUSE_BUTTON = 27;
@@ -69,7 +69,7 @@ public class MainGameScreenChar implements Screen {
 	private ChainReactionAIGame myGame;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"), new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
+	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"), new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private TextButton resumeButton, exitButton, newGameButton;
 	private Position highlightPos = new Position(-1, -1);
 	private GameSolverChar solver;
@@ -276,7 +276,8 @@ public class MainGameScreenChar implements Screen {
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		Gdx.gl.glClearColor(((float)(15)/255), ((float)(15)/255), ((float)(15)/255), 1);
 		
 		// If game is not paused
 		if (gameState == 0) {

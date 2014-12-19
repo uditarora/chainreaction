@@ -33,8 +33,8 @@ public class MainMenuScreen implements Screen {
 	private float heightUpscaleFactor, widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"),
-			new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
+	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
+			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private TextButton buttonPlay = new TextButton("Play",
 			skin),
 			buttonExit = new TextButton("Exit", skin);
@@ -88,7 +88,7 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(((float)(15)/255), ((float)(15)/255), ((float)(15)/255), 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act();
 		stage.draw();
