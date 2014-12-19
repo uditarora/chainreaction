@@ -61,15 +61,16 @@ public class GameRulesScreen implements Screen {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
 		// Initializing and adding the rules to Table.
-		rules = new Label("There's only one rule - Eliminate your opponent's\n"
-				+ "balls! Players take turns to place their balls on a\n"
-				+ "square. If a square reaches critical mass, the balls\n"
-				+ "spread out to the surrounding squares. If a player\n"
-				+ "loses all their balls, they are out of the game!\n"
-				+ "A player can only place their balls on a blank\n"
-				+ "square or one occupied by balls of their own colour.", skin);
+		rules = new Label("There's only one rule - Eliminate your\n"
+				+ "opponent's balls! Players take turns to place\n"
+				+ "their balls on a square. If a square reaches\n"
+				+ "critical mass, the balls spread out to the\n"
+				+ "surrounding squares. If a player loses all\n"
+				+ "their balls, they are out of the game! A player\n"
+				+ "can only place their balls on a blank square\n"
+				+ "or one occupied by balls of their own colour.", skin);
 		rules.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
-		table.add(rules).padBottom(10).row();
+		table.add(rules).padLeft(10).padRight(10).padBottom(10).row();
 		// Adds the backButton to the Table.
 		backButton = new TextButton(new String("Back"), skin);
 		backButtonStyler = new TextButtonStyle(backButton.getStyle());
