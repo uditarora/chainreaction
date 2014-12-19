@@ -106,8 +106,6 @@ public class MainGameScreenChar implements Screen {
 				isCPU[i] = true;
 				difficultyLevels[i] = 104;
 			}
-			//difficultyLevels[0] = 4;
-//			isCPU[0] = false;
 		}
 		else {
 			if (DEBUG)

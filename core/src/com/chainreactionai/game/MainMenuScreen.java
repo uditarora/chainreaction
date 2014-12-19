@@ -3,6 +3,8 @@
  */
 package com.chainreactionai.game;
 
+import myGame.GameRulesScreen;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -26,7 +28,7 @@ public class MainMenuScreen implements Screen {
 	SpriteBatch batch;
 	private OrthographicCamera camera;
 	private ChainReactionAIGame myGame;
-	final private int WIDTH_SCREEN = 440;
+	final private int WIDTH_SCREEN = 452;
 	final private int HEIGHT_SCREEN = 480;
 	final private int HEIGHT_MAIN_MENU_BUTTONS = 60;
 	final private int WIDTH_MAIN_MENU_BUTTONS = 150;
@@ -36,8 +38,7 @@ public class MainMenuScreen implements Screen {
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private TextButton buttonPlay = new TextButton("Play",
-			skin),
-			buttonExit = new TextButton("Exit", skin);
+			skin), buttonExit = new TextButton("Exit", skin), buttonRules = new TextButton("Rules", skin);
 	private Label title = new Label("Chain Reaction", skin);
 	private TextButtonStyle playButtonStyler;
 
@@ -65,6 +66,8 @@ public class MainMenuScreen implements Screen {
 		playButtonStyler.font.setScale((1+(heightUpscaleFactor-1)/2));
 		buttonPlay.setStyle(playButtonStyler);
 		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_MAIN_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
+		buttonRules.setStyle(playButtonStyler);
+		table.add(buttonRules).size(WIDTH_MAIN_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_MAIN_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
 		buttonExit.setStyle(playButtonStyler);
 		table.add(buttonExit).size(WIDTH_MAIN_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_MAIN_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
 		table.setFillParent(true);
@@ -75,6 +78,12 @@ public class MainMenuScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				myGame.setScreen(new NumPlayersScreen(myGame));
+			}
+		});
+		buttonRules.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				myGame.setScreen(new GameRulesScreen(myGame));
 			}
 		});
 		buttonExit.addListener(new ClickListener() {
