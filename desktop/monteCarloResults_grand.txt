@@ -1,0 +1,692 @@
+Level 0 vs Level 0
+Number of Players: 2
+Player 1 - Difficulty Level: 0, HeuristicNumber: 12
+Player 2 - Difficulty Level: 0, HeuristicNumber: 12
+Player 1 won 94 times.
+Player 2 won 106 times.
+
+Level 0 vs Level 1
+Number of Players: 2
+Player 1 - Difficulty Level: 0, HeuristicNumber: 12
+Player 2 - Difficulty Level: 1, HeuristicNumber: 12
+Player 1 won 115 times.
+Player 2 won 85 times.
+
+Level 0 vs Level 2
+Number of Players: 2
+Player 1 - Difficulty Level: 0, HeuristicNumber: 12
+Player 2 - Difficulty Level: 2, HeuristicNumber: 12
+Player 1 won 121 times.
+Player 2 won 79 times.
+
+Level 0 vs Level 3
+Number of Players: 2
+Player 1 - Difficulty Level: 0, HeuristicNumber: 12
+Player 2 - Difficulty Level: 3, HeuristicNumber: 12
+Player 1 won 105 times.
+Player 2 won 95 times.
+
+Level 0 vs Level 4
+Number of Players: 2
+Player 1 - Difficulty Level: 0, HeuristicNumber: 12
+Player 2 - Difficulty Level: 4, HeuristicNumber: 12
+Player 1 won 0 times.
+Player 2 won 200 times.
+
+Level 0 vs Level 5
+Number of Players: 2
+Player 1 - Difficulty Level: 0, HeuristicNumber: 12
+Player 2 - Difficulty Level: 5, HeuristicNumber: 12
+Player 1 won 2 times.
+Player 2 won 198 times.
+
+Level 0 vs Level 6
+Number of Players: 2
+Player 1 - Difficulty Level: 0, HeuristicNumber: 12
+Player 2 - Difficulty Level: 6, HeuristicNumber: 12
+Player 1 won 0 times.
+Player 2 won 200 times.
+
+Level 0 vs Level 7
+Number of Players: 2
+Player 1 - Difficulty Level: 0, HeuristicNumber: 12
+Player 2 - Difficulty Level: 7, HeuristicNumber: 12
+Player 1 won 5 times.
+Player 2 won 195 times.
+
+Level 0 vs Level 8
+Number of Players: 2
+Player 1 - Difficulty Level: 0, HeuristicNumber: 12
+Player 2 - Difficulty Level: 8, HeuristicNumber: 12
+Player 1 won 1 times.
+Player 2 won 199 times.
+
+Level 1 vs Level 0
+Number of Players: 2
+Player 1 - Difficulty Level: 1, HeuristicNumber: 12
+Player 2 - Difficulty Level: 0, HeuristicNumber: 12
+Player 1 won 49 times.
+Player 2 won 51 times.
+
+Level 1 vs Level 1
+Number of Players: 2
+Player 1 - Difficulty Level: 1, HeuristicNumber: 12
+Player 2 - Difficulty Level: 1, HeuristicNumber: 12
+Player 1 won 50 times.
+Player 2 won 50 times.
+
+Level 1 vs Level 2
+Number of Players: 2
+Player 1 - Difficulty Level: 1, HeuristicNumber: 12
+Player 2 - Difficulty Level: 2, HeuristicNumber: 12
+Player 1 won 43 times.
+Player 2 won 57 times.
+
+Level 1 vs Level 3
+Number of Players: 2
+Player 1 - Difficulty Level: 1, HeuristicNumber: 12
+Player 2 - Difficulty Level: 3, HeuristicNumber: 12
+Player 1 won 33 times.
+Player 2 won 67 times.
+
+Level 1 vs Level 4
+Number of Players: 2
+Player 1 - Difficulty Level: 1, HeuristicNumber: 12
+Player 2 - Difficulty Level: 4, HeuristicNumber: 12
+Player 1 won 2 times.
+Player 2 won 98 times.
+
+Level 1 vs Level 5
+Number of Players: 2
+Player 1 - Difficulty Level: 1, HeuristicNumber: 12
+Player 2 - Difficulty Level: 5, HeuristicNumber: 12
+Player 1 won 11 times.
+Player 2 won 89 times.
+
+Level 1 vs Level 6
+Number of Players: 2
+Player 1 - Difficulty Level: 1, HeuristicNumber: 12
+Player 2 - Difficulty Level: 6, HeuristicNumber: 12
+Player 1 won 16 times.
+Player 2 won 84 times.
+
+Level 1 vs Level 7
+Number of Players: 2
+Player 1 - Difficulty Level: 1, HeuristicNumber: 12
+Player 2 - Difficulty Level: 7, HeuristicNumber: 12
+Player 1 won 13 times.
+Player 2 won 87 times.
+
+Level 1 vs Level 8
+Number of Players: 2
+Player 1 - Difficulty Level: 1, HeuristicNumber: 12
+Player 2 - Difficulty Level: 8, HeuristicNumber: 12
+Player 1 won 1 times.
+Player 2 won 99 times.
+
+Level 1 vs Level 9
+Number of Players: 2
+Player 1 - Difficulty Level: 1, HeuristicNumber: 12
+Player 2 - Difficulty Level: 9, HeuristicNumber: 12
+Player 1 won 0 times.
+Player 2 won 100 times.
+
+Level 2 vs Level 0
+Number of Players: 2
+Player 1 - Difficulty Level: 2, HeuristicNumber: 12
+Player 2 - Difficulty Level: 0, HeuristicNumber: 12
+Player 1 won 48 times.
+Player 2 won 52 times.
+
+Level 2 vs Level 1
+Number of Players: 2
+Player 1 - Difficulty Level: 2, HeuristicNumber: 12
+Player 2 - Difficulty Level: 1, HeuristicNumber: 12
+Player 1 won 53 times.
+Player 2 won 47 times.
+
+Level 2 vs Level 2
+Number of Players: 2
+Player 1 - Difficulty Level: 2, HeuristicNumber: 12
+Player 2 - Difficulty Level: 2, HeuristicNumber: 12
+Player 1 won 38 times.
+Player 2 won 62 times.
+
+Level 2 vs Level 3
+Number of Players: 2
+Player 1 - Difficulty Level: 2, HeuristicNumber: 12
+Player 2 - Difficulty Level: 3, HeuristicNumber: 12
+Player 1 won 29 times.
+Player 2 won 71 times.
+
+Level 2 vs Level 4
+Number of Players: 2
+Player 1 - Difficulty Level: 2, HeuristicNumber: 12
+Player 2 - Difficulty Level: 4, HeuristicNumber: 12
+Player 1 won 8 times.
+Player 2 won 92 times.
+
+Level 2 vs Level 5
+Number of Players: 2
+Player 1 - Difficulty Level: 2, HeuristicNumber: 12
+Player 2 - Difficulty Level: 5, HeuristicNumber: 12
+Player 1 won 22 times.
+Player 2 won 78 times.
+
+Level 2 vs Level 6
+Number of Players: 2
+Player 1 - Difficulty Level: 2, HeuristicNumber: 12
+Player 2 - Difficulty Level: 6, HeuristicNumber: 12
+Player 1 won 12 times.
+Player 2 won 88 times.
+
+Level 2 vs Level 7
+Number of Players: 2
+Player 1 - Difficulty Level: 2, HeuristicNumber: 12
+Player 2 - Difficulty Level: 7, HeuristicNumber: 12
+Player 1 won 16 times.
+Player 2 won 84 times.
+
+Level 2 vs Level 8
+Number of Players: 2
+Player 1 - Difficulty Level: 2, HeuristicNumber: 12
+Player 2 - Difficulty Level: 8, HeuristicNumber: 12
+Player 1 won 7 times.
+Player 2 won 93 times.
+
+Level 2 vs Level 9
+Number of Players: 2
+Player 1 - Difficulty Level: 2, HeuristicNumber: 12
+Player 2 - Difficulty Level: 9, HeuristicNumber: 12
+Player 1 won 1 times.
+Player 2 won 49 times.
+
+Level 3 vs Level 0
+Number of Players: 2
+Player 1 - Difficulty Level: 3, HeuristicNumber: 12
+Player 2 - Difficulty Level: 0, HeuristicNumber: 12
+Player 1 won 45 times.
+Player 2 won 55 times.
+
+Level 3 vs Level 1
+Number of Players: 2
+Player 1 - Difficulty Level: 3, HeuristicNumber: 12
+Player 2 - Difficulty Level: 1, HeuristicNumber: 12
+Player 1 won 68 times.
+Player 2 won 32 times.
+
+Level 3 vs Level 2
+Number of Players: 2
+Player 1 - Difficulty Level: 3, HeuristicNumber: 12
+Player 2 - Difficulty Level: 2, HeuristicNumber: 12
+Player 1 won 63 times.
+Player 2 won 37 times.
+
+Level 3 vs Level 3
+Number of Players: 2
+Player 1 - Difficulty Level: 3, HeuristicNumber: 12
+Player 2 - Difficulty Level: 3, HeuristicNumber: 12
+Player 1 won 52 times.
+Player 2 won 48 times.
+
+Level 3 vs Level 4
+Number of Players: 2
+Player 1 - Difficulty Level: 3, HeuristicNumber: 12
+Player 2 - Difficulty Level: 4, HeuristicNumber: 12
+Player 1 won 10 times.
+Player 2 won 90 times.
+
+Level 3 vs Level 5
+Number of Players: 2
+Player 1 - Difficulty Level: 3, HeuristicNumber: 12
+Player 2 - Difficulty Level: 5, HeuristicNumber: 12
+Player 1 won 25 times.
+Player 2 won 75 times.
+
+Level 3 vs Level 6
+Number of Players: 2
+Player 1 - Difficulty Level: 3, HeuristicNumber: 12
+Player 2 - Difficulty Level: 6, HeuristicNumber: 12
+Player 1 won 22 times.
+Player 2 won 78 times.
+
+Level 3 vs Level 7
+Number of Players: 2
+Player 1 - Difficulty Level: 3, HeuristicNumber: 12
+Player 2 - Difficulty Level: 7, HeuristicNumber: 12
+Player 1 won 16 times.
+Player 2 won 84 times.
+
+Level 3 vs Level 8
+Number of Players: 2
+Player 1 - Difficulty Level: 3, HeuristicNumber: 12
+Player 2 - Difficulty Level: 8, HeuristicNumber: 12
+Player 1 won 4 times.
+Player 2 won 46 times.
+
+Level 3 vs Level 9
+Number of Players: 2
+Player 1 - Difficulty Level: 3, HeuristicNumber: 12
+Player 2 - Difficulty Level: 9, HeuristicNumber: 12
+Player 1 won 4 times.
+Player 2 won 46 times.
+
+Level 4 vs Level 0
+Number of Players: 2
+Player 1 - Difficulty Level: 4, HeuristicNumber: 12
+Player 2 - Difficulty Level: 0, HeuristicNumber: 12
+Player 1 won 100 times.
+Player 2 won 0 times.
+
+Level 4 vs Level 1
+Number of Players: 2
+Player 1 - Difficulty Level: 4, HeuristicNumber: 12
+Player 2 - Difficulty Level: 1, HeuristicNumber: 12
+Player 1 won 97 times.
+Player 2 won 3 times.
+
+Level 4 vs Level 2
+Number of Players: 2
+Player 1 - Difficulty Level: 4, HeuristicNumber: 12
+Player 2 - Difficulty Level: 2, HeuristicNumber: 12
+Player 1 won 95 times.
+Player 2 won 5 times.
+
+Level 4 vs Level 3
+Number of Players: 2
+Player 1 - Difficulty Level: 4, HeuristicNumber: 12
+Player 2 - Difficulty Level: 3, HeuristicNumber: 12
+Player 1 won 94 times.
+Player 2 won 6 times.
+
+Level 4 vs Level 4
+Number of Players: 2
+Player 1 - Difficulty Level: 4, HeuristicNumber: 12
+Player 2 - Difficulty Level: 4, HeuristicNumber: 12
+Player 1 won 55 times.
+Player 2 won 45 times.
+
+Level 4 vs Level 5
+Number of Players: 2
+Player 1 - Difficulty Level: 4, HeuristicNumber: 12
+Player 2 - Difficulty Level: 5, HeuristicNumber: 12
+Player 1 won 55 times.
+Player 2 won 45 times.
+
+Level 4 vs Level 6
+Number of Players: 2
+Player 1 - Difficulty Level: 4, HeuristicNumber: 12
+Player 2 - Difficulty Level: 6, HeuristicNumber: 12
+Player 1 won 54 times.
+Player 2 won 46 times.
+
+Level 4 vs Level 7
+Number of Players: 2
+Player 1 - Difficulty Level: 4, HeuristicNumber: 12
+Player 2 - Difficulty Level: 7, HeuristicNumber: 12
+Player 1 won 20 times.
+Player 2 won 30 times.
+
+Level 4 vs Level 8
+Number of Players: 2
+Player 1 - Difficulty Level: 4, HeuristicNumber: 12
+Player 2 - Difficulty Level: 8, HeuristicNumber: 12
+Player 1 won 16 times.
+Player 2 won 34 times.
+
+Level 4 vs Level 9
+Number of Players: 2
+Player 1 - Difficulty Level: 4, HeuristicNumber: 12
+Player 2 - Difficulty Level: 9, HeuristicNumber: 12
+Player 1 won 21 times.
+Player 2 won 29 times.
+
+Level 5 vs Level 0
+Number of Players: 2
+Player 1 - Difficulty Level: 5, HeuristicNumber: 12
+Player 2 - Difficulty Level: 0, HeuristicNumber: 12
+Player 1 won 50 times.
+Player 2 won 0 times.
+
+Level 5 vs Level 1
+Number of Players: 2
+Player 1 - Difficulty Level: 5, HeuristicNumber: 12
+Player 2 - Difficulty Level: 1, HeuristicNumber: 12
+Player 1 won 87 times.
+Player 2 won 13 times.
+
+Level 5 vs Level 2
+Number of Players: 2
+Player 1 - Difficulty Level: 5, HeuristicNumber: 12
+Player 2 - Difficulty Level: 2, HeuristicNumber: 12
+Player 1 won 79 times.
+Player 2 won 21 times.
+
+Level 5 vs Level 3
+Number of Players: 2
+Player 1 - Difficulty Level: 5, HeuristicNumber: 12
+Player 2 - Difficulty Level: 3, HeuristicNumber: 12
+Player 1 won 82 times.
+Player 2 won 18 times.
+
+Level 5 vs Level 4
+Number of Players: 2
+Player 1 - Difficulty Level: 5, HeuristicNumber: 12
+Player 2 - Difficulty Level: 4, HeuristicNumber: 12
+Player 1 won 62 times.
+Player 2 won 38 times.
+
+Level 5 vs Level 5
+Number of Players: 2
+Player 1 - Difficulty Level: 5, HeuristicNumber: 12
+Player 2 - Difficulty Level: 5, HeuristicNumber: 12
+Player 1 won 49 times.
+Player 2 won 51 times.
+
+Level 5 vs Level 6
+Number of Players: 2
+Player 1 - Difficulty Level: 5, HeuristicNumber: 12
+Player 2 - Difficulty Level: 6, HeuristicNumber: 12
+Player 1 won 28 times.
+Player 2 won 22 times.
+
+Level 5 vs Level 7
+Number of Players: 2
+Player 1 - Difficulty Level: 5, HeuristicNumber: 12
+Player 2 - Difficulty Level: 7, HeuristicNumber: 12
+Player 1 won 27 times.
+Player 2 won 23 times.
+
+Level 5 vs Level 8
+Number of Players: 2
+Player 1 - Difficulty Level: 5, HeuristicNumber: 12
+Player 2 - Difficulty Level: 8, HeuristicNumber: 12
+Player 1 won 19 times.
+Player 2 won 31 times.
+
+Level 5 vs Level 9
+Number of Players: 2
+Player 1 - Difficulty Level: 5, HeuristicNumber: 12
+Player 2 - Difficulty Level: 9, HeuristicNumber: 12
+Player 1 won 20 times.
+Player 2 won 30 times.
+
+Level 6 vs Level 0
+Number of Players: 2
+Player 1 - Difficulty Level: 6, HeuristicNumber: 12
+Player 2 - Difficulty Level: 0, HeuristicNumber: 12
+Player 1 won 48 times.
+Player 2 won 2 times.
+
+Level 6 vs Level 1
+Number of Players: 2
+Player 1 - Difficulty Level: 6, HeuristicNumber: 12
+Player 2 - Difficulty Level: 1, HeuristicNumber: 12
+Player 1 won 37 times.
+Player 2 won 13 times.
+
+Level 6 vs Level 2
+Number of Players: 2
+Player 1 - Difficulty Level: 6, HeuristicNumber: 12
+Player 2 - Difficulty Level: 2, HeuristicNumber: 12
+Player 1 won 81 times.
+Player 2 won 19 times.
+
+Level 6 vs Level 3
+Number of Players: 2
+Player 1 - Difficulty Level: 6, HeuristicNumber: 12
+Player 2 - Difficulty Level: 3, HeuristicNumber: 12
+Player 1 won 81 times.
+Player 2 won 19 times.
+
+Level 6 vs Level 4
+Number of Players: 2
+Player 1 - Difficulty Level: 6, HeuristicNumber: 12
+Player 2 - Difficulty Level: 4, HeuristicNumber: 12
+Player 1 won 64 times.
+Player 2 won 36 times.
+
+Level 6 vs Level 5
+Number of Players: 2
+Player 1 - Difficulty Level: 6, HeuristicNumber: 12
+Player 2 - Difficulty Level: 5, HeuristicNumber: 12
+Player 1 won 22 times.
+Player 2 won 28 times.
+
+Level 6 vs Level 6
+Number of Players: 2
+Player 1 - Difficulty Level: 6, HeuristicNumber: 12
+Player 2 - Difficulty Level: 6, HeuristicNumber: 12
+Player 1 won 24 times.
+Player 2 won 26 times.
+
+Level 6 vs Level 7
+Number of Players: 2
+Player 1 - Difficulty Level: 6, HeuristicNumber: 12
+Player 2 - Difficulty Level: 7, HeuristicNumber: 12
+Player 1 won 25 times.
+Player 2 won 25 times.
+
+Level 6 vs Level 8
+Number of Players: 2
+Player 1 - Difficulty Level: 6, HeuristicNumber: 12
+Player 2 - Difficulty Level: 8, HeuristicNumber: 12
+Player 1 won 20 times.
+Player 2 won 30 times.
+
+Level 6 vs Level 9
+Number of Players: 2
+Player 1 - Difficulty Level: 6, HeuristicNumber: 12
+Player 2 - Difficulty Level: 9, HeuristicNumber: 12
+Player 1 won 18 times.
+Player 2 won 32 times.
+
+Level 7 vs Level 0
+Number of Players: 2
+Player 1 - Difficulty Level: 7, HeuristicNumber: 12
+Player 2 - Difficulty Level: 0, HeuristicNumber: 12
+Player 1 won 50 times.
+Player 2 won 0 times.
+
+Level 7 vs Level 1
+Number of Players: 2
+Player 1 - Difficulty Level: 7, HeuristicNumber: 12
+Player 2 - Difficulty Level: 1, HeuristicNumber: 12
+Player 1 won 44 times.
+Player 2 won 6 times.
+
+Level 7 vs Level 2
+Number of Players: 2
+Player 1 - Difficulty Level: 7, HeuristicNumber: 12
+Player 2 - Difficulty Level: 2, HeuristicNumber: 12
+Player 1 won 47 times.
+Player 2 won 3 times.
+
+Level 7 vs Level 3
+Number of Players: 2
+Player 1 - Difficulty Level: 7, HeuristicNumber: 12
+Player 2 - Difficulty Level: 3, HeuristicNumber: 12
+Player 1 won 87 times.
+Player 2 won 13 times.
+
+Level 7 vs Level 4
+Number of Players: 2
+Player 1 - Difficulty Level: 7, HeuristicNumber: 12
+Player 2 - Difficulty Level: 4, HeuristicNumber: 12
+Player 1 won 27 times.
+Player 2 won 23 times.
+
+Level 7 vs Level 5
+Number of Players: 2
+Player 1 - Difficulty Level: 7, HeuristicNumber: 12
+Player 2 - Difficulty Level: 5, HeuristicNumber: 12
+Player 1 won 26 times.
+Player 2 won 24 times.
+
+Level 7 vs Level 6
+Number of Players: 2
+Player 1 - Difficulty Level: 7, HeuristicNumber: 12
+Player 2 - Difficulty Level: 6, HeuristicNumber: 12
+Player 1 won 26 times.
+Player 2 won 24 times.
+
+Level 7 vs Level 7
+Number of Players: 2
+Player 1 - Difficulty Level: 7, HeuristicNumber: 12
+Player 2 - Difficulty Level: 7, HeuristicNumber: 12
+Player 1 won 28 times.
+Player 2 won 22 times.
+
+Level 7 vs Level 8
+Number of Players: 2
+Player 1 - Difficulty Level: 7, HeuristicNumber: 12
+Player 2 - Difficulty Level: 8, HeuristicNumber: 12
+Player 1 won 19 times.
+Player 2 won 31 times.
+
+Level 7 vs Level 9
+Number of Players: 2
+Player 1 - Difficulty Level: 7, HeuristicNumber: 12
+Player 2 - Difficulty Level: 9, HeuristicNumber: 12
+Player 1 won 24 times.
+Player 2 won 26 times.
+
+Level 8 vs Level 0
+Number of Players: 2
+Player 1 - Difficulty Level: 8, HeuristicNumber: 12
+Player 2 - Difficulty Level: 0, HeuristicNumber: 12
+Player 1 won 50 times.
+Player 2 won 0 times.
+
+Level 8 vs Level 1
+Number of Players: 2
+Player 1 - Difficulty Level: 8, HeuristicNumber: 12
+Player 2 - Difficulty Level: 1, HeuristicNumber: 12
+Player 1 won 50 times.
+Player 2 won 0 times.
+
+Level 8 vs Level 2
+Number of Players: 2
+Player 1 - Difficulty Level: 8, HeuristicNumber: 12
+Player 2 - Difficulty Level: 2, HeuristicNumber: 12
+Player 1 won 50 times.
+Player 2 won 0 times.
+
+Level 8 vs Level 3
+Number of Players: 2
+Player 1 - Difficulty Level: 8, HeuristicNumber: 12
+Player 2 - Difficulty Level: 3, HeuristicNumber: 12
+Player 1 won 46 times.
+Player 2 won 4 times.
+
+Level 8 vs Level 4
+Number of Players: 2
+Player 1 - Difficulty Level: 8, HeuristicNumber: 12
+Player 2 - Difficulty Level: 4, HeuristicNumber: 12
+Player 1 won 34 times.
+Player 2 won 16 times.
+
+Level 8 vs Level 5
+Number of Players: 2
+Player 1 - Difficulty Level: 8, HeuristicNumber: 12
+Player 2 - Difficulty Level: 5, HeuristicNumber: 12
+Player 1 won 31 times.
+Player 2 won 19 times.
+
+Level 8 vs Level 6
+Number of Players: 2
+Player 1 - Difficulty Level: 8, HeuristicNumber: 12
+Player 2 - Difficulty Level: 6, HeuristicNumber: 12
+Player 1 won 26 times.
+Player 2 won 24 times.
+
+Level 8 vs Level 7
+Number of Players: 2
+Player 1 - Difficulty Level: 8, HeuristicNumber: 12
+Player 2 - Difficulty Level: 7, HeuristicNumber: 12
+Player 1 won 27 times.
+Player 2 won 23 times.
+
+Level 8 vs Level 8
+Number of Players: 2
+Player 1 - Difficulty Level: 8, HeuristicNumber: 12
+Player 2 - Difficulty Level: 8, HeuristicNumber: 12
+Player 1 won 29 times.
+Player 2 won 21 times.
+
+Level 8 vs Level 9
+Number of Players: 2
+Player 1 - Difficulty Level: 8, HeuristicNumber: 12
+Player 2 - Difficulty Level: 9, HeuristicNumber: 12
+Player 1 won 28 times.
+Player 2 won 22 times.
+
+Level 9 vs Level 0
+Number of Players: 2
+Player 1 - Difficulty Level: 9, HeuristicNumber: 12
+Player 2 - Difficulty Level: 0, HeuristicNumber: 12
+Player 1 won 50 times.
+Player 2 won 0 times.
+
+Level 9 vs Level 1
+Number of Players: 2
+Player 1 - Difficulty Level: 9, HeuristicNumber: 12
+Player 2 - Difficulty Level: 1, HeuristicNumber: 12
+Player 1 won 49 times.
+Player 2 won 1 times.
+
+Level 9 vs Level 2
+Number of Players: 2
+Player 1 - Difficulty Level: 9, HeuristicNumber: 12
+Player 2 - Difficulty Level: 2, HeuristicNumber: 12
+Player 1 won 47 times.
+Player 2 won 3 times.
+
+Level 9 vs Level 3
+Number of Players: 2
+Player 1 - Difficulty Level: 9, HeuristicNumber: 12
+Player 2 - Difficulty Level: 3, HeuristicNumber: 12
+Player 1 won 47 times.
+Player 2 won 3 times.
+
+Level 9 vs Level 4
+Number of Players: 2
+Player 1 - Difficulty Level: 9, HeuristicNumber: 12
+Player 2 - Difficulty Level: 4, HeuristicNumber: 12
+Player 1 won 41 times.
+Player 2 won 9 times.
+
+Level 9 vs Level 5
+Number of Players: 2
+Player 1 - Difficulty Level: 9, HeuristicNumber: 12
+Player 2 - Difficulty Level: 5, HeuristicNumber: 12
+Player 1 won 30 times.
+Player 2 won 20 times.
+
+Level 9 vs Level 6
+Number of Players: 2
+Player 1 - Difficulty Level: 9, HeuristicNumber: 12
+Player 2 - Difficulty Level: 6, HeuristicNumber: 12
+Player 1 won 36 times.
+Player 2 won 14 times.
+
+Level 9 vs Level 7
+Number of Players: 2
+Player 1 - Difficulty Level: 9, HeuristicNumber: 12
+Player 2 - Difficulty Level: 7, HeuristicNumber: 12
+Player 1 won 32 times.
+Player 2 won 18 times.
+
+Level 9 vs Level 8
+Number of Players: 2
+Player 1 - Difficulty Level: 9, HeuristicNumber: 12
+Player 2 - Difficulty Level: 8, HeuristicNumber: 12
+Player 1 won 22 times.
+Player 2 won 28 times.
+
+Level 9 vs Level 9
+Number of Players: 2
+Player 1 - Difficulty Level: 9, HeuristicNumber: 12
+Player 2 - Difficulty Level: 9, HeuristicNumber: 12
+Player 1 won 29 times.
+Player 2 won 21 times.
