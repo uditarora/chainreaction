@@ -3,6 +3,9 @@
  */
 package com.chainreactionai.game;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -23,19 +26,39 @@ public class SplashScreen implements Screen {
 	final private int HEIGHT_SCREEN = 642;
 	final boolean MONTE_CARLO = false;
 	private long prevTime, newTime;
+	private PrintWriter out;
 
 	public SplashScreen(ChainReactionAIGame game) {
 		prevTime = System.currentTimeMillis();
 		if (MONTE_CARLO) {
-			int numPlayers = 4;
-			int[] plyLevelList = new int[numPlayers]; int[] heuristicNumber = new int[numPlayers];
-			plyLevelList[0] = 1; plyLevelList[1] = 1;
-			plyLevelList[2] = 1; plyLevelList[3] = 2;
+			try {
+				out = new PrintWriter("monteCarloResults1.txt");
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			int numPlayers = 2;
+			int[] difficultyLevelList = new int[numPlayers]; int[] heuristicNumber = new int[numPlayers];
+			difficultyLevelList[0] = 1; difficultyLevelList[1] = 4;
+//			difficultyLevelList[2] = 1; difficultyLevelList[3] = 2;
 			heuristicNumber[0] = 12; heuristicNumber[1] = 12;
-			heuristicNumber[2] = 12; heuristicNumber[3] = 12;
-			MonteCarlo monteCarlo = new MonteCarlo(numPlayers, plyLevelList, heuristicNumber);
-			
-			monteCarlo.runSimulations(100);
+//			heuristicNumber[2] = 12; heuristicNumber[3] = 12;
+			MonteCarlo monteCarlo;
+			for (int i = 0; i < 2; ++i)
+			{
+				for (int j = 0; j < 2; ++j)
+				{
+					difficultyLevelList[0] = i; difficultyLevelList[1] = j;
+//					System.out.println("\nLevel "+i+" vs Level "+j);
+					monteCarlo = new MonteCarlo(numPlayers, difficultyLevelList, heuristicNumber, true, out);
+					if (i+j > 10)
+						monteCarlo.runSimulations(100);
+					else
+						monteCarlo.runSimulations(200);
+				}
+			}
+//			monteCarlo = new MonteCarlo(numPlayers, difficultyLevelList, heuristicNumber, true);		
+//			monteCarlo.runSimulations(1000);
+			out.close();
 			Gdx.app.exit();
 		}
 		myGame = game;
