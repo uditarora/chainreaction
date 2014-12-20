@@ -5,6 +5,7 @@ package com.chainreactionai.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -46,9 +47,12 @@ public class NumPlayersScreen implements Screen {
 	private SelectBox<String> selectBox;
 	private SelectBoxStyle selectBoxStyler;
 	private TextButtonStyle submitButtonStyler;
+	MyInputProcessor inputProcessor;
 
 	public NumPlayersScreen(ChainReactionAIGame game) {
+		ChainReactionAIGame.currentScreen = 1;
 		myGame = game;
+		inputProcessor = new MyInputProcessor(myGame);
 		create();
 	}
 
@@ -101,6 +105,7 @@ public class NumPlayersScreen implements Screen {
 				myGame.setScreen(new ChooseOpponentsAndLevelsScreen(myGame, chosenNumOfPlayers, NUMBER_OF_DIFFICULTY_LEVELS));
 			}
 		});
+		Gdx.input.setInputProcessor(inputProcessor);
 		Gdx.input.setInputProcessor(stage);
 	}
 
@@ -110,6 +115,9 @@ public class NumPlayersScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act();
 		stage.draw();
+		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
+			myGame.setScreen(new MainMenuScreen(myGame));
+		}
 	}
 
 	@Override

@@ -5,6 +5,7 @@ package com.chainreactionai.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -86,6 +87,9 @@ public class GameEndScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act();
 		stage.draw();
+		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
+			myGame.setScreen(new MainMenuScreen(myGame));
+		}
 	}
 
 	@Override
