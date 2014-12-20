@@ -66,11 +66,12 @@ public class GameSolverChar implements Runnable {
 		
 		// Generate purely random move if MAX_PLY_LEVEL is 0
 		if (MAX_PLY_LEVEL == 0) {
-			int gridSize = initialBoardNode.board.getGameGridSize();
-			int randX = rand.nextInt(gridSize), randY = rand.nextInt(gridSize);
+			int gridSizeX = initialBoardNode.board.getGameGridSizeX();
+			int gridSizeY = initialBoardNode.board.getGameGridSizeY();
+			int randX = rand.nextInt(gridSizeX), randY = rand.nextInt(gridSizeY);
 			while (!initialBoardNode.board.isValidMove(randX, randY, mainPlayer)) {
-				randX = rand.nextInt(gridSize);
-				randY = rand.nextInt(gridSize);
+				randX = rand.nextInt(gridSizeX);
+				randY = rand.nextInt(gridSizeY);
 			}
 			answerPosition = new Position(randX, randY);
 			isThreadComplete = true;
@@ -167,11 +168,12 @@ public class GameSolverChar implements Runnable {
 		
 		// Generate purely random move if no solution is found
 		if (numberOfBestBoardNodes == 0) {
-			int gridSize = initialBoardNode.board.getGameGridSize();
-			int randX = rand.nextInt(gridSize), randY = rand.nextInt(gridSize);
+			int gridSizeX = initialBoardNode.board.getGameGridSizeX();
+			int gridSizeY = initialBoardNode.board.getGameGridSizeY();
+			int randX = rand.nextInt(gridSizeX), randY = rand.nextInt(gridSizeY);
 			while (!initialBoardNode.board.isValidMove(randX, randY, mainPlayer)) {
-				randX = rand.nextInt(gridSize);
-				randY = rand.nextInt(gridSize);
+				randX = rand.nextInt(gridSizeX);
+				randY = rand.nextInt(gridSizeY);
 			}
 			answerPosition = new Position(randX, randY);
 			isThreadComplete = true;
@@ -200,8 +202,8 @@ public class GameSolverChar implements Runnable {
 	private Iterable<GameBoardChar> getAllPossibleMoves(GameBoardChar board, int player) {
 		Stack<GameBoardChar> possibleMoves = new Stack<GameBoardChar>();
 		GameBoardChar tempGameBoard;
-		for (int i = 0; i < board.getGameGridSize(); ++i) {
-			for (int j = 0; j < board.getGameGridSize(); ++j) {
+		for (int i = 0; i < board.getGameGridSizeX(); ++i) {
+			for (int j = 0; j < board.getGameGridSizeY(); ++j) {
 				if (board.isValidMove(i, j, player)) {
 					takeThisMoveOrNot = rand.nextDouble();
 					if (board.isNodeFilled(player, i, j)) {
@@ -224,8 +226,8 @@ public class GameSolverChar implements Runnable {
 	private Iterable<GameBoardAndCoord> getAllPossibleMovesWithCoords(GameBoardChar board, int player) {
 		Stack<GameBoardAndCoord> possibleMoves = new Stack<GameBoardAndCoord>();
 		GameBoardAndCoord tempGameBoardAndCoord;
-		for (int i = 0; i < board.getGameGridSize(); ++i) {
-			for (int j = 0; j < board.getGameGridSize(); ++j) {
+		for (int i = 0; i < board.getGameGridSizeX(); ++i) {
+			for (int j = 0; j < board.getGameGridSizeY(); ++j) {
 				if (board.isValidMove(i, j, player)) {
 					tempGameBoardAndCoord = new GameBoardAndCoord(new GameBoardChar(board), i, j);
 					tempGameBoardAndCoord.board.changeBoard(i, j, player);

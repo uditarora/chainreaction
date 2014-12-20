@@ -15,7 +15,7 @@ public class GameBoardChar {
 	private boolean gameOver;
 	public char[][] rectangleWinner;
 	public char[][] numAtomsInRectangle;
-	private int gameGridSize, numPlayers, currentLevel;
+	private int gameGridSizeX, gameGridSizeY, numPlayers, currentLevel;
 	private Position initialPosition;
 	private PositionLevelForBFS initialPositionLevel, currentPositionLevel;
 	private LinkedList<PositionLevelForBFS> positionsLevelForBFSQueue;
@@ -36,24 +36,26 @@ public class GameBoardChar {
 	// Constructor to initialize the grid size, number of players
 	// and setting the default values for rectangle winners and
 	// number of atoms in each rectangle.
-	GameBoardChar(int gridSize, int gameNumPlayers) {
+	GameBoardChar(int gridSizeX, int gridSizeY, int gameNumPlayers) {
 		numPlayers = gameNumPlayers;
-		gameGridSize = gridSize;
-		rectangleWinner = new char[gameGridSize][gameGridSize];
-		numAtomsInRectangle = new char[gameGridSize][gameGridSize];
+		gameGridSizeX = gridSizeX;
+		gameGridSizeY = gridSizeY;
+		rectangleWinner = new char[gameGridSizeX][gameGridSizeY];
+		numAtomsInRectangle = new char[gameGridSizeX][gameGridSizeY];
 		setDefaultRectangleWinners();
 		setDefaultNumAtomsInRectangle();
 	}
 
 	// Another constructor which returns a clone of the passed GameBoard.
 	public GameBoardChar(GameBoardChar board) {
-		this.gameGridSize = board.gameGridSize;
+		this.gameGridSizeX = board.gameGridSizeX;
+		this.gameGridSizeY = board.gameGridSizeY;
 		this.numPlayers = board.numPlayers;
-		this.numAtomsInRectangle = new char[this.gameGridSize][this.gameGridSize];
-		this.rectangleWinner = new char[this.gameGridSize][this.gameGridSize];
+		this.numAtomsInRectangle = new char[this.gameGridSizeX][this.gameGridSizeY];
+		this.rectangleWinner = new char[this.gameGridSizeX][this.gameGridSizeY];
 
-		for (int i = 0; i < this.gameGridSize; ++i) {
-			for (int j = 0; j < this.gameGridSize; ++j) {
+		for (int i = 0; i < this.gameGridSizeX; ++i) {
+			for (int j = 0; j < this.gameGridSizeY; ++j) {
 				this.numAtomsInRectangle[i][j] = board.numAtomsInRectangle[i][j];
 				this.rectangleWinner[i][j] = board.rectangleWinner[i][j];
 			}
@@ -62,8 +64,8 @@ public class GameBoardChar {
 	
 	//
 	public void cloneBoard(GameBoardChar board) {
-		for (int i = 0; i < this.gameGridSize; ++i) {
-			for (int j = 0; j < this.gameGridSize; ++j) {
+		for (int i = 0; i < this.gameGridSizeX; ++i) {
+			for (int j = 0; j < this.gameGridSizeY; ++j) {
 				this.numAtomsInRectangle[i][j] = board.numAtomsInRectangle[i][j];
 				this.rectangleWinner[i][j] = board.rectangleWinner[i][j];
 			}
@@ -73,8 +75,8 @@ public class GameBoardChar {
 	// This function sets the default winners of the
 	// rectangles ie. player -1 (no winner)
 	private void setDefaultRectangleWinners() {
-		for (int i = 0; i < gameGridSize; i += 1) {
-			for (int j = 0; j < gameGridSize; j += 1) {
+		for (int i = 0; i < gameGridSizeX; i += 1) {
+			for (int j = 0; j < gameGridSizeY; j += 1) {
 				rectangleWinner[i][j] = '/';
 			}
 		}
@@ -83,8 +85,8 @@ public class GameBoardChar {
 	// This function sets the default number of atoms
 	// in the rectangles ie. 0
 	private void setDefaultNumAtomsInRectangle() {
-		for (int i = 0; i < gameGridSize; i += 1) {
-			for (int j = 0; j < gameGridSize; j += 1) {
+		for (int i = 0; i < gameGridSizeX; i += 1) {
+			for (int j = 0; j < gameGridSizeY; j += 1) {
 				numAtomsInRectangle[i][j] = '0';
 			}
 		}
@@ -133,19 +135,19 @@ public class GameBoardChar {
 		setNumAtomsInRectangle(coordX, coordY, getNumAtomsInRectangle(coordX, coordY) + 1);
 		// If the clicked box is corner-most
 		if ((coordX == 0 && coordY == 0)
-				|| (coordX == 0 && coordY == gameGridSize - 1)
-				|| (coordX == gameGridSize - 1 && coordY == 0)
-				|| (coordX == gameGridSize - 1 && coordY == gameGridSize - 1)) {
+				|| (coordX == 0 && coordY == gameGridSizeY - 1)
+				|| (coordX == gameGridSizeX - 1 && coordY == 0)
+				|| (coordX == gameGridSizeX - 1 && coordY == gameGridSizeY - 1)) {
 			if (getNumAtomsInRectangle(coordX, coordY) == 2) {
 				setNumAtomsInRectangle(coordX, coordY, 0);
 				setRectangleWinner(coordX, coordY, -1);
 				if (coordX == 0 && coordY == 0) {
 					changeBoard(coordX + 1, coordY, player);
 					changeBoard(coordX, coordY + 1, player);
-				} else if (coordX == 0 && coordY == gameGridSize - 1) {
+				} else if (coordX == 0 && coordY == gameGridSizeY - 1) {
 					changeBoard(coordX + 1, coordY, player);
 					changeBoard(coordX, coordY - 1, player);
-				} else if (coordX == gameGridSize - 1 && coordY == 0) {
+				} else if (coordX == gameGridSizeX - 1 && coordY == 0) {
 					changeBoard(coordX - 1, coordY, player);
 					changeBoard(coordX, coordY + 1, player);
 				} else {
@@ -154,8 +156,8 @@ public class GameBoardChar {
 				}
 
 			}
-		} else if (coordX == 0 || coordY == 0 || coordX == gameGridSize - 1
-				|| coordY == gameGridSize - 1) {
+		} else if (coordX == 0 || coordY == 0 || coordX == gameGridSizeX - 1
+				|| coordY == gameGridSizeY - 1) {
 			if (getNumAtomsInRectangle(coordX, coordY) == 3) {
 				setNumAtomsInRectangle(coordX, coordY, 0);
 				setRectangleWinner(coordX, coordY, -1);
@@ -167,7 +169,7 @@ public class GameBoardChar {
 					changeBoard(coordX - 1, coordY, player);
 					changeBoard(coordX + 1, coordY, player);
 					changeBoard(coordX, coordY + 1, player);
-				} else if (coordX == gameGridSize - 1) {
+				} else if (coordX == gameGridSizeX - 1) {
 					changeBoard(coordX, coordY + 1, player);
 					changeBoard(coordX, coordY - 1, player);
 					changeBoard(coordX - 1, coordY, player);
@@ -211,9 +213,9 @@ public class GameBoardChar {
 				currentPositionLevel = positionsLevelForBFSQueue.poll();
 				// If the clicked box is corner-most
 				if ((currentPositionLevel.position.coordX == 0 && currentPositionLevel.position.coordY == 0)
-						|| (currentPositionLevel.position.coordX == 0 && currentPositionLevel.position.coordY == gameGridSize - 1)
-						|| (currentPositionLevel.position.coordX == gameGridSize - 1 && currentPositionLevel.position.coordY == 0)
-						|| (currentPositionLevel.position.coordX == gameGridSize - 1 && currentPositionLevel.position.coordY == gameGridSize - 1)) {
+						|| (currentPositionLevel.position.coordX == 0 && currentPositionLevel.position.coordY == gameGridSizeY - 1)
+						|| (currentPositionLevel.position.coordX == gameGridSizeX - 1 && currentPositionLevel.position.coordY == 0)
+						|| (currentPositionLevel.position.coordX == gameGridSizeX - 1 && currentPositionLevel.position.coordY == gameGridSizeY - 1)) {
 					if (getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY) >= 2) {
 						setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY, (getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY) - 2));
 						if (getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY) == 0) {
@@ -232,7 +234,7 @@ public class GameBoardChar {
 							setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1) + 1);
 							setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1, player);
 						} else if (currentPositionLevel.position.coordX == 0
-								&& currentPositionLevel.position.coordY == gameGridSize - 1) {
+								&& currentPositionLevel.position.coordY == gameGridSizeY - 1) {
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX + 1,
 									currentPositionLevel.position.coordY), currentPositionLevel.level+1));
@@ -243,7 +245,7 @@ public class GameBoardChar {
 									currentPositionLevel.position.coordY - 1), currentPositionLevel.level+1));
 							setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1) + 1);
 							setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY - 1, player);
-						} else if (currentPositionLevel.position.coordX == gameGridSize - 1
+						} else if (currentPositionLevel.position.coordX == gameGridSizeX - 1
 								&& currentPositionLevel.position.coordY == 0) {
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX - 1,
@@ -270,8 +272,8 @@ public class GameBoardChar {
 					}
 				} else if (currentPositionLevel.position.coordX == 0
 						|| currentPositionLevel.position.coordY == 0
-						|| currentPositionLevel.position.coordX == gameGridSize - 1
-						|| currentPositionLevel.position.coordY == gameGridSize - 1) {
+						|| currentPositionLevel.position.coordX == gameGridSizeX - 1
+						|| currentPositionLevel.position.coordY == gameGridSizeY - 1) {
 					if (getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY) >= 3) {
 						setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY) - 3);
 						if (getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY) == 0) {
@@ -309,7 +311,7 @@ public class GameBoardChar {
 									currentPositionLevel.position.coordY + 1), currentPositionLevel.level+1));
 							setNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1, getNumAtomsInRectangle(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1) + 1);
 							setRectangleWinner(currentPositionLevel.position.coordX, currentPositionLevel.position.coordY + 1, player);
-						} else if (currentPositionLevel.position.coordX == gameGridSize - 1) {
+						} else if (currentPositionLevel.position.coordX == gameGridSizeX - 1) {
 							positionsLevelForBFSQueue.add(new PositionLevelForBFS(new Position(
 									currentPositionLevel.position.coordX,
 									currentPositionLevel.position.coordY + 1), currentPositionLevel.level+1));
@@ -383,8 +385,8 @@ public class GameBoardChar {
 	// winning board for the given player.
 	public boolean isWinningPosition(int player) {
 		int numWinning = 0;
-		for (int i = 0; i < gameGridSize; i += 1) {
-			for (int j = 0; j < gameGridSize; j += 1) {
+		for (int i = 0; i < gameGridSizeX; i += 1) {
+			for (int j = 0; j < gameGridSizeY; j += 1) {
 				if (getRectangleWinner(i, j) != player
 						&& getRectangleWinner(i, j) != -1) {
 					return false;
@@ -406,8 +408,8 @@ public class GameBoardChar {
 		if (level == 0) {
 			int runningNumBallsTotal = 0, runningNumBoxesTotal = 0;
 			double numBallsWeight = 0.5, numBoxesWeight = 0.5;
-			for (int i = 0; i < gameGridSize; i += 1) {
-				for (int j = 0; j < gameGridSize; j += 1) {
+			for (int i = 0; i < gameGridSizeX; i += 1) {
+				for (int j = 0; j < gameGridSizeY; j += 1) {
 					if (getRectangleWinner(i, j) == player) {
 						runningNumBallsTotal += getNumAtomsInRectangle(i, j);
 						runningNumBoxesTotal += 1;
@@ -423,8 +425,8 @@ public class GameBoardChar {
 			//double numBoxesWeight = 0.3, numSplittableWeight = 0.3, numMultipleWeight = 0.4;
 			// Second Iteration
 			double numBoxesWeight = 0, numSplittableWeight = 0, numMultipleWeight = 1;
-			for (int i = 0; i < gameGridSize; i += 1) {
-				for (int j = 0; j < gameGridSize; j += 1) {
+			for (int i = 0; i < gameGridSizeX; i += 1) {
+				for (int j = 0; j < gameGridSizeY; j += 1) {
 					if (getRectangleWinner(i, j) == player) {
 						runningNumBoxesTotal += 1;
 						currNumAtoms = getNumAtomsInRectangle(i, j);
@@ -435,9 +437,9 @@ public class GameBoardChar {
 							}
 						}
 						if ((i == 0 && j == 0)
-								|| (i == 0 && j == gameGridSize - 1)
-								|| (i == gameGridSize - 1 && j == 0)
-								|| (i == gameGridSize - 1 && j == gameGridSize - 1)) {
+								|| (i == 0 && j == gameGridSizeY - 1)
+								|| (i == gameGridSizeX - 1 && j == 0)
+								|| (i == gameGridSizeX - 1 && j == gameGridSizeY - 1)) {
 							runningNumSplittableTotal += 1;
 						}
 					}
@@ -452,8 +454,8 @@ public class GameBoardChar {
 			//double numBoxesWeight = 0.1, numSplittableWeight = 0.5, numMultipleWeight = 0.4;
 			//Second Iteration
 			double numBoxesWeight = 0, numSplittableWeight = 1, numMultipleWeight = 0;
-			for (int i = 0; i < gameGridSize; i += 1) {
-				for (int j = 0; j < gameGridSize; j += 1) {
+			for (int i = 0; i < gameGridSizeX; i += 1) {
+				for (int j = 0; j < gameGridSizeY; j += 1) {
 					if (getRectangleWinner(i, j) == player) {
 						runningNumBoxesTotal += 1;
 						currNumAtoms = getNumAtomsInRectangle(i, j);
@@ -464,9 +466,9 @@ public class GameBoardChar {
 							}
 						}
 						if ((i == 0 && j == 0)
-								|| (i == 0 && j == gameGridSize - 1)
-								|| (i == gameGridSize - 1 && j == 0)
-								|| (i == gameGridSize - 1 && j == gameGridSize - 1)) {
+								|| (i == 0 && j == gameGridSizeY - 1)
+								|| (i == gameGridSizeX - 1 && j == 0)
+								|| (i == gameGridSizeX - 1 && j == gameGridSizeY - 1)) {
 							runningNumSplittableTotal += 1;
 						}
 					}
@@ -481,8 +483,8 @@ public class GameBoardChar {
 			//double numBoxesWeight = 0.5, numSplittableWeight = 0.2, numMultipleWeight = 0.3;
 			// Second Iteration
 			double numBoxesWeight = 1, numSplittableWeight = 0, numMultipleWeight = 0;
-			for (int i = 0; i < gameGridSize; i += 1) {
-				for (int j = 0; j < gameGridSize; j += 1) {
+			for (int i = 0; i < gameGridSizeX; i += 1) {
+				for (int j = 0; j < gameGridSizeY; j += 1) {
 					if (getRectangleWinner(i, j) == player) {
 						runningNumBoxesTotal += 1;
 						currNumAtoms = getNumAtomsInRectangle(i, j);
@@ -493,9 +495,9 @@ public class GameBoardChar {
 							}
 						}
 						if ((i == 0 && j == 0)
-								|| (i == 0 && j == gameGridSize - 1)
-								|| (i == gameGridSize - 1 && j == 0)
-								|| (i == gameGridSize - 1 && j == gameGridSize - 1)) {
+								|| (i == 0 && j == gameGridSizeY - 1)
+								|| (i == gameGridSizeX - 1 && j == 0)
+								|| (i == gameGridSizeX - 1 && j == gameGridSizeY - 1)) {
 							runningNumSplittableTotal += 1;
 						}
 					}
@@ -510,8 +512,8 @@ public class GameBoardChar {
 			double numBoxesWeight = 0.1, numSplittableWeight = 0.45, numMultipleWeight = 0.45;
 			// Second Iteration
 //			double numBoxesWeight = 1, numSplittableWeight = 0, numMultipleWeight = 0;
-			for (int i = 0; i < gameGridSize; i += 1) {
-				for (int j = 0; j < gameGridSize; j += 1) {
+			for (int i = 0; i < gameGridSizeX; i += 1) {
+				for (int j = 0; j < gameGridSizeY; j += 1) {
 					if (getRectangleWinner(i, j) == player) {
 						runningNumBoxesTotal += 1;
 						currNumAtoms = getNumAtomsInRectangle(i, j);
@@ -523,9 +525,9 @@ public class GameBoardChar {
 							}
 						}
 						if ((i == 0 && j == 0)
-								|| (i == 0 && j == gameGridSize - 1)
-								|| (i == gameGridSize - 1 && j == 0)
-								|| (i == gameGridSize - 1 && j == gameGridSize - 1)) {
+								|| (i == 0 && j == gameGridSizeY - 1)
+								|| (i == gameGridSizeX - 1 && j == 0)
+								|| (i == gameGridSizeX - 1 && j == gameGridSizeY - 1)) {
 							runningNumSplittableTotal += 1;
 							runningNumMultipleTotal -= 1;
 						}
@@ -541,8 +543,8 @@ public class GameBoardChar {
 			double numBoxesWeight = 0.1, numSplittableWeight = 0.40, numMultipleWeight = 0.6;
 			// Second Iteration
 //			double numBoxesWeight = 1, numSplittableWeight = 0, numMultipleWeight = 0;
-			for (int i = 0; i < gameGridSize; i += 1) {
-				for (int j = 0; j < gameGridSize; j += 1) {
+			for (int i = 0; i < gameGridSizeX; i += 1) {
+				for (int j = 0; j < gameGridSizeY; j += 1) {
 					if (getRectangleWinner(i, j) == player) {
 						runningNumBoxesTotal += 1;
 						currNumAtoms = getNumAtomsInRectangle(i, j);
@@ -554,9 +556,9 @@ public class GameBoardChar {
 							}
 						}
 						if ((i == 0 && j == 0)
-								|| (i == 0 && j == gameGridSize - 1)
-								|| (i == gameGridSize - 1 && j == 0)
-								|| (i == gameGridSize - 1 && j == gameGridSize - 1)) {
+								|| (i == 0 && j == gameGridSizeY - 1)
+								|| (i == gameGridSizeX - 1 && j == 0)
+								|| (i == gameGridSizeX - 1 && j == gameGridSizeY - 1)) {
 							runningNumSplittableTotal += 1;
 							runningNumMultipleTotal -= 1;
 						}
@@ -569,15 +571,18 @@ public class GameBoardChar {
 		return totalScore;
 	}
 
-	// Getter function for returning the Game Grid Dimensions
-	public int getGameGridSize() {
-		return gameGridSize;
+	// Getter functions for returning the Game Grid Dimensions
+	public int getGameGridSizeX() {
+		return gameGridSizeX;
+	}
+	public int getGameGridSizeY() {
+		return gameGridSizeY;
 	}
 	
 	// Checks whether a given player has lost the game or not.
 	public boolean hasLost(int player) {
-		for (int i = 0; i < gameGridSize; i += 1) {
-			for (int j = 0; j < gameGridSize; j += 1) {
+		for (int i = 0; i < gameGridSizeX; i += 1) {
+			for (int j = 0; j < gameGridSizeY; j += 1) {
 				if (getRectangleWinner(i, j) == player && getNumAtomsInRectangle(i, j) > 0) {
 					return false;
 				}
@@ -594,16 +599,16 @@ public class GameBoardChar {
 	// Prints the GameBoard's state for Debugging purposes.
 	public void printBoard() {
 		System.out.println("Rectangle Winners:");
-		for (int i = 0; i < gameGridSize; i += 1) {
-			for (int j = 0; j < gameGridSize; j += 1) {
+		for (int i = 0; i < gameGridSizeX; i += 1) {
+			for (int j = 0; j < gameGridSizeY; j += 1) {
 				System.out.print(getRectangleWinner(i, j));
 				System.out.print(" ");
 			}
 			System.out.println();
 		}
 		System.out.println("Num Atoms:");
-		for (int i = 0; i < gameGridSize; i += 1) {
-			for (int j = 0; j < gameGridSize; j += 1) {
+		for (int i = 0; i < gameGridSizeX; i += 1) {
+			for (int j = 0; j < gameGridSizeY; j += 1) {
 				System.out.print(getNumAtomsInRectangle(i, j));
 				System.out.print(" ");
 			}
@@ -613,8 +618,8 @@ public class GameBoardChar {
 	
 	// Checks if two GameBoards are equal or not.
 	public boolean isEqual(GameBoardChar gb) {
-		for (int i = 0; i < gameGridSize; i += 1) {
-			for (int j = 0; j < gameGridSize; j += 1) {
+		for (int i = 0; i < gameGridSizeX; i += 1) {
+			for (int j = 0; j < gameGridSizeY; j += 1) {
 				if (getNumAtomsInRectangle(i, j) != gb.getNumAtomsInRectangle(i, j)) {
 					return false;
 				}
@@ -638,14 +643,14 @@ public class GameBoardChar {
 	public boolean isSplittableNode (int coordX, int coordY, int player) {
 		if (getRectangleWinner(coordX, coordY) == player && getNumAtomsInRectangle(coordX, coordY) > 0) {
 			if ((coordX == 0 && coordY == 0)
-					|| (coordX == 0 && coordY == gameGridSize - 1)
-					|| (coordX == gameGridSize - 1 && coordY == 0)
-					|| (coordX == gameGridSize - 1 && coordY == gameGridSize - 1)) {
+					|| (coordX == 0 && coordY == gameGridSizeY - 1)
+					|| (coordX == gameGridSizeX - 1 && coordY == 0)
+					|| (coordX == gameGridSizeX - 1 && coordY == gameGridSizeY - 1)) {
 				if (getNumAtomsInRectangle(coordX, coordY) == 1) {
 					return true;
 				}
-			} else if (coordX == 0 || coordY == 0 || coordX == gameGridSize - 1
-					|| coordY == gameGridSize - 1) {
+			} else if (coordX == 0 || coordY == 0 || coordX == gameGridSizeX - 1
+					|| coordY == gameGridSizeY - 1) {
 				if (getNumAtomsInRectangle(coordX, coordY) == 2) {
 					return true;
 				}
@@ -664,14 +669,14 @@ public class GameBoardChar {
 	// a player in the current board scope.
 	public double getBranchingFactor (int player) {
 		double branchingFactor = 0;
-		for (int i = 0; i < gameGridSize; i += 1) {
-			for (int j = 0; j < gameGridSize; j += 1) {
+		for (int i = 0; i < gameGridSizeX; i += 1) {
+			for (int j = 0; j < gameGridSizeY; j += 1) {
 				if (isValidMove(i, j, player)) {
 					branchingFactor += 1;
 				}
 			}
 		}
-		branchingFactor /= (gameGridSize*gameGridSize);
+		branchingFactor /= (gameGridSizeX*gameGridSizeY);
 		return branchingFactor;
 	}
 	
