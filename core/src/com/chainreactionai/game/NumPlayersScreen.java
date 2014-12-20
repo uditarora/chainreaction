@@ -30,8 +30,8 @@ public class NumPlayersScreen implements Screen {
 	SpriteBatch batch;
 	private OrthographicCamera camera;
 	private ChainReactionAIGame myGame;
-	final private int WIDTH_SCREEN = 440;
-	final private int HEIGHT_SCREEN = 480;
+	final private int WIDTH_SCREEN = 448;
+	final private int HEIGHT_SCREEN = 642;
 	final private int HEIGHT_DROP_DOWN_MENUS = 35;
 	final private int WIDTH_DROP_DOWN_MENUS = 150;
 	final private int WIDTH_SUBMIT_BUTTON = 100;
