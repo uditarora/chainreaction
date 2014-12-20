@@ -8,6 +8,7 @@ public class ChainReactionAIGame extends Game {
 	// WIDTH and HEIGHT if the device on which we are playing.
 	public static int WIDTH;
 	public static int HEIGHT;
+	public static int currentScreen;
 	final private boolean DEBUG = true;
 
 	@Override

@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -61,8 +62,8 @@ public class MainGameScreenChar implements Screen {
 	private int clickCoordX, clickCoordY, currentPlayer, numberOfMovesPlayed, gameState, maxPlyLevel;
 	private float heightUpscaleFactor, widthUpscaleFactor;
 	private double percentageMovesSearched, incrementValForPercentageMovesSearched;
-	private boolean clickOnEdge;
-	MyInputProcessor inputProcessor = new MyInputProcessor();
+	private boolean clickOnEdge, isBackButtonPressed;
+	MyInputProcessor inputProcessor;
 	private boolean[] isCPU, lostPlayer;
 	private int[] difficultyLevels, heuristicNumbers;
 	private boolean gameOver, moveCompleted;
@@ -130,10 +131,12 @@ public class MainGameScreenChar implements Screen {
 		// Initializing stuff.
 		rectangularGrid = new Array<Rectangle>();
 		gameBoard = new GameBoardChar(GRID_SIZE, NUMBER_OF_PLAYERS);
+		inputProcessor = new MyInputProcessor(myGame);
 		Gdx.input.setInputProcessor(inputProcessor);
 		inputProcessor.unsetTouchDown();
 		numberOfMovesPlayed = currentPlayer = 0;
 		breakingAway = 0;
+		isBackButtonPressed = false;
 		// Initialize colors
 		colors = new Color[MAX_NUM_PLAYERS];
 		colors[0] = Color.WHITE;
@@ -414,6 +417,24 @@ public class MainGameScreenChar implements Screen {
 			stage.act();
 			stage.draw();
 			Gdx.input.setInputProcessor(stage);
+		}
+		if (Gdx.input.isKeyJustPressed(Keys.BACK) && !isBackButtonPressed) {
+			isBackButtonPressed = true;
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if (isBackButtonPressed) {
+			System.out.println("BackButton");
+			if (gameState == 1) {
+				resume();
+			} else {
+				pause();
+			}
+			isBackButtonPressed = false;
 		}
 	}
 

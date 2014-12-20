@@ -3,10 +3,9 @@
  */
 package com.chainreactionai.game;
 
-import myGame.GameRulesScreen;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -41,8 +40,9 @@ public class MainMenuScreen implements Screen {
 			skin), buttonExit = new TextButton("Exit", skin), buttonRules = new TextButton("Rules", skin);
 	private Label title = new Label("Chain Reaction", skin);
 	private TextButtonStyle playButtonStyler;
-
+	
 	public MainMenuScreen(ChainReactionAIGame game) {
+		ChainReactionAIGame.currentScreen = 0;
 		myGame = game;
 		create();
 	}
@@ -92,6 +92,7 @@ public class MainMenuScreen implements Screen {
 				Gdx.app.exit();
 			}
 		});
+		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(stage);
 	}
 
@@ -101,6 +102,9 @@ public class MainMenuScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act();
 		stage.draw();
+		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
+			Gdx.app.exit();
+		}
 	}
 
 	@Override
