@@ -44,7 +44,6 @@ import com.badlogic.gdx.utils.Array;
 
 public class MainGameScreenChar implements Screen {
 	SpriteBatch batch;
-	final private int GRID_SIZE = 7;
 	final private int GRID_SIZE_X = 6;
 	final private int GRID_SIZE_Y = 8;
 	final private int HEIGHT_PAUSE_BUTTON = 27;
@@ -55,7 +54,7 @@ public class MainGameScreenChar implements Screen {
 	final private int WIDTH_SCREEN = 448;
 	final private float WIDTH_RECTANGLE = ((float)(WIDTH_SCREEN - THREE_D_EFFECT_DISTANCE_FOR_GRID)/GRID_SIZE_X);
 	final private float HEIGHT_RECTANGLE = WIDTH_RECTANGLE;
-	final private int HEIGHT_SCREEN = (int)((GRID_SIZE_Y * HEIGHT_RECTANGLE) + THREE_D_EFFECT_DISTANCE_FOR_GRID + PAD_BOTTOM_PAUSE_BUTTON + HEIGHT_PAUSE_BUTTON + PAD_TOP_PAUSE_BUTTON);
+	final private int HEIGHT_SCREEN = (int)((GRID_SIZE_Y * HEIGHT_RECTANGLE) + THREE_D_EFFECT_DISTANCE_FOR_GRID + PAD_BOTTOM_PAUSE_BUTTON + HEIGHT_PAUSE_BUTTON + PAD_TOP_PAUSE_BUTTON) + 1;
 	final private int HEIGHT_PAUSE_MENU_BUTTONS = 60;
 	final private int WIDTH_PAUSE_MENU_BUTTONS = 150;
 	final private int MAX_NUM_PLAYERS = 6;
@@ -105,6 +104,7 @@ public class MainGameScreenChar implements Screen {
 		lostPlayer = new boolean[NUMBER_OF_PLAYERS];
 		difficultyLevels = new int[NUMBER_OF_PLAYERS];
 		heuristicNumbers = new int[NUMBER_OF_PLAYERS];
+		System.out.println("WIDTH: " + WIDTH_SCREEN + " HEIGHT: " + HEIGHT_SCREEN);
 		
 		//Simulating with only CPU Players for testing
 		if (DEBUG_CPU) {
@@ -222,7 +222,7 @@ public class MainGameScreenChar implements Screen {
 		
 	    cam.lookAt(WIDTH_SCREEN/2, HEIGHT_SCREEN/2, 0);
 	    cam.near = 1f;
-	    cam.far = 3000f;
+	    cam.far = 4000f;
 	    cam.update();
 		
 		ModelBuilder modelBuilder = new ModelBuilder();
@@ -244,8 +244,8 @@ public class MainGameScreenChar implements Screen {
 		for (int i = 0; i < GRID_SIZE_X; i += 1) {
 			for (int j = 0; j < GRID_SIZE_Y; j += 1) {
 				Rectangle tempBlock = new Rectangle();
-				tempBlock.x = (float) (i * WIDTH_RECTANGLE) + 4;
-				tempBlock.y = (float) (j * HEIGHT_RECTANGLE) + 4;
+				tempBlock.x = (float) (i * WIDTH_RECTANGLE);
+				tempBlock.y = (float) (j * HEIGHT_RECTANGLE);
 				tempBlock.height = (float) (HEIGHT_RECTANGLE);
 				tempBlock.width = (float) (WIDTH_RECTANGLE);
 				System.out.println(tempBlock.x + " " + tempBlock.y);
@@ -446,9 +446,10 @@ public class MainGameScreenChar implements Screen {
 		// Checking whether the click is on an edge or a box.
 		// If on edge, then reject the click.
 		float coordX = inputProcessor.getXCoord(), coordY = inputProcessor.getYCoord(), distOfPauseButtonFromTop, distOfGridFromBottom, distOfGridFromTop, heightOfGrid, modHeightUpscaleFactor;
-		distOfPauseButtonFromTop = (ChainReactionAIGame.HEIGHT - (ChainReactionAIGame.WIDTH + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor) + (PAD_BOTTOM_PAUSE_BUTTON * heightUpscaleFactor)))/2;
+		distOfPauseButtonFromTop = (ChainReactionAIGame.HEIGHT - (((ChainReactionAIGame.WIDTH - (THREE_D_EFFECT_DISTANCE_FOR_GRID * widthUpscaleFactor)) * 8/6) + (THREE_D_EFFECT_DISTANCE_FOR_GRID * heightUpscaleFactor) + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor) + (PAD_BOTTOM_PAUSE_BUTTON * heightUpscaleFactor)))/2;
 		distOfGridFromBottom = distOfPauseButtonFromTop;
 		distOfGridFromTop = distOfPauseButtonFromTop + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor) + (PAD_BOTTOM_PAUSE_BUTTON * heightUpscaleFactor);
+		System.out.println("distOfPauseButtonFromTop: " + distOfPauseButtonFromTop + " distOfGridFromBottom: " + distOfGridFromBottom);
 		if (coordY < distOfGridFromTop || coordY > ChainReactionAIGame.HEIGHT - distOfGridFromBottom) {
 			return;
 		}
@@ -459,6 +460,9 @@ public class MainGameScreenChar implements Screen {
 		// Try to find clickOnEdge in X - coordinate
 		clickCoordY = (int) (((coordY - distOfGridFromTop))/modHeightUpscaleFactor);
 		clickCoordY = GRID_SIZE_Y - clickCoordY - 1;
+		System.out.println("distOfPauseButtonFromTop: " + distOfPauseButtonFromTop + " distOfGridFromBottom: " + distOfGridFromBottom);
+		System.out.println("distOfGridFromTop: " + distOfGridFromTop + " heightOfGrid: " + heightOfGrid);
+		System.out.println("clickCoordX: " + clickCoordX + " clickCoordY: " + clickCoordY);
 		// If the click is within bounds of any one rectangle
 		if (!clickOnEdge) {
 			// Checking the move's validity and changing the board
@@ -483,7 +487,7 @@ public class MainGameScreenChar implements Screen {
 	private void processPauseAction() {
 		// Checks if the click is on the pause button, else returns
 		float coordX = inputProcessor.getXCoord(), coordY = inputProcessor.getYCoord(), distOfPauseButtonFromTop, distOfGridFromTop;
-		distOfPauseButtonFromTop = (ChainReactionAIGame.HEIGHT - (ChainReactionAIGame.WIDTH + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor) + (PAD_BOTTOM_PAUSE_BUTTON * heightUpscaleFactor)))/2;
+		distOfPauseButtonFromTop = (ChainReactionAIGame.HEIGHT - (((ChainReactionAIGame.WIDTH - (THREE_D_EFFECT_DISTANCE_FOR_GRID * widthUpscaleFactor)) * 8/6) + (THREE_D_EFFECT_DISTANCE_FOR_GRID * heightUpscaleFactor) + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor) + (PAD_BOTTOM_PAUSE_BUTTON * heightUpscaleFactor)))/2;
 		distOfGridFromTop = distOfPauseButtonFromTop + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor) + (PAD_BOTTOM_PAUSE_BUTTON * heightUpscaleFactor);
 		if (coordY > distOfGridFromTop || coordY < distOfPauseButtonFromTop) {
 			return;

@@ -27,8 +27,8 @@ public class MainMenuScreen implements Screen {
 	SpriteBatch batch;
 	private OrthographicCamera camera;
 	private ChainReactionAIGame myGame;
-	final private int WIDTH_SCREEN = 452;
-	final private int HEIGHT_SCREEN = 480;
+	final private int WIDTH_SCREEN = 448;
+	final private int HEIGHT_SCREEN = 642;
 	final private int HEIGHT_MAIN_MENU_BUTTONS = 60;
 	final private int WIDTH_MAIN_MENU_BUTTONS = 150;
 	private float heightUpscaleFactor, widthUpscaleFactor;

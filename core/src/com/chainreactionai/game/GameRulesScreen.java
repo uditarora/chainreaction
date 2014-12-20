@@ -27,8 +27,8 @@ public class GameRulesScreen implements Screen {
 	SpriteBatch batch;
 	private OrthographicCamera camera;
 	private ChainReactionAIGame myGame;
-	final private int WIDTH_SCREEN = 440;
-	final private int HEIGHT_SCREEN = 480;
+	final private int WIDTH_SCREEN = 448;
+	final private int HEIGHT_SCREEN = 642;
 	final private int HEIGHT_RULES_SCREEN_BUTTONS = 60;
 	final private int WIDTH_RULES_SCREEN_BUTTONS = 150;
 	private Stage stage = new Stage();
