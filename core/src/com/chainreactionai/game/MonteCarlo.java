@@ -9,7 +9,7 @@ package com.chainreactionai.game;
  *
  */
 public class MonteCarlo {
-	final private int NUMBER_OF_PLAYERS, GRID_SIZE;
+	final private int NUMBER_OF_PLAYERS, GRID_SIZE_X, GRID_SIZE_Y;
 	private int[] maxPlyLevels, heuristicNumbers, playerWins;
 	private boolean[] lostPlayer;
 	//final private String OUT_FILE_PATH = "monteCarloResults.txt";
@@ -26,10 +26,11 @@ public class MonteCarlo {
 		for(int i = 0; i < numPlayers; i += 1) {
 			playerWins[i] = 0;
 		}
-		GRID_SIZE = 7;
+		GRID_SIZE_X = 6;
+		GRID_SIZE_Y = 8;
 	}
 	
-	//Run given number of simulations and save the output to a file
+	// Run given number of simulations and {save the output to a file} (TODO)
 	public void runSimulations(int numSimulations) {
 		boolean gameOver = false;
 		int numberOfMovesPlayed = 0;
@@ -43,7 +44,7 @@ public class MonteCarlo {
 		for(int simulation = 1; simulation <= numSimulations; simulation += 1) {
 			
 			System.out.println("Simulation " + simulation + ": ");
-			GameBoardChar gameBoard = new GameBoardChar(GRID_SIZE, NUMBER_OF_PLAYERS);
+			GameBoardChar gameBoard = new GameBoardChar(GRID_SIZE_X, GRID_SIZE_Y, NUMBER_OF_PLAYERS);
 			for(int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 				lostPlayer[i] = false;
 			}
