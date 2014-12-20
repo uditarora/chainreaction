@@ -229,7 +229,7 @@ public class MainGameScreenChar implements Screen {
 		models = new Model[MAX_NUM_PLAYERS];
 		instances = new ModelInstance[MAX_NUM_PLAYERS];
 		for (int i = 0; i < MAX_NUM_PLAYERS; i += 1) {
-			models[i] = modelBuilder.createSphere(20f, 20f, 20f, 30, 30, new Material(ColorAttribute.createDiffuse(colors[i])), Usage.Position | Usage.Normal | Usage.TextureCoordinates);
+			models[i] = modelBuilder.createSphere(25f, 25f, 25f, 30, 30, new Material(ColorAttribute.createDiffuse(colors[i])), Usage.Position | Usage.Normal | Usage.TextureCoordinates);
 			instances[i] = new ModelInstance(models[i]);
 		}
 		modelBatch = new ModelBatch();
