@@ -88,7 +88,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			userSelectBoxes.add(new SelectBox<String>(skin));
 			userSelectBoxes.get(i).setItems(tempStringArr);
-			userSelectBoxes.get(i).setMaxListCount(2);
+			userSelectBoxes.get(i).setMaxListCount(4);
 		}
 		tempStringArr.clear();
 		// Creating the DropDown for what should be the 
@@ -107,8 +107,8 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			Label tempLabel = new Label("Player " + String.valueOf(i+1) + ":", skin);
 			tempLabel.setFontScale((1+(heightUpscaleFactor-1)/2));
-			table.add(tempLabel).padBottom(0).row();
-			table.add(userSelectBoxes.get(i)).size(WIDTH_DROP_DOWN_MENUS*(1+(widthUpscaleFactor-1)/2), HEIGHT_DROP_DOWN_MENUS*(1+(heightUpscaleFactor-1)/2)).padBottom(0).row();
+			table.add(tempLabel).padBottom(2).row();
+			table.add(userSelectBoxes.get(i)).size(WIDTH_DROP_DOWN_MENUS*(1+(widthUpscaleFactor-1)/2), HEIGHT_DROP_DOWN_MENUS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
 			table.add(plySelectBoxes.get(i)).size(WIDTH_DROP_DOWN_MENUS*(1+(widthUpscaleFactor-1)/2), HEIGHT_DROP_DOWN_MENUS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
 		}
 		// Creating and adding the submit button to the Table.

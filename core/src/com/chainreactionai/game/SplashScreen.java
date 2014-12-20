@@ -69,7 +69,7 @@ public class SplashScreen implements Screen {
 		batch.end();
 
 		// When user clicks on the screen, go to the main menu screen
-		if (newTime - prevTime > 500) {
+		if (newTime - prevTime > 1000) {
 			myGame.setScreen(new MainMenuScreen(myGame));
 		}
 	}
