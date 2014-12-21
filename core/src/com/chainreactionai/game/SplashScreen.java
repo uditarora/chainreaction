@@ -23,7 +23,7 @@ public class SplashScreen implements Screen {
 	private ChainReactionAIGame myGame;
 	private Texture splashScreenBackground;
 	final private int WIDTH_SCREEN = 448;
-	final private int HEIGHT_SCREEN = 642;
+	final private int HEIGHT_SCREEN = 645;
 	final boolean MONTE_CARLO = false;
 	private long prevTime, newTime;
 	private PrintWriter out;

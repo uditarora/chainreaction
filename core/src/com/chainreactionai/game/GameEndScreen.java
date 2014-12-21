@@ -26,8 +26,8 @@ public class GameEndScreen implements Screen {
 	SpriteBatch batch;
 	private OrthographicCamera camera;
 	private ChainReactionAIGame myGame;
-	final private int WIDTH_SCREEN = 440;
-	final private int HEIGHT_SCREEN = 650;
+	final private int WIDTH_SCREEN = 448;
+	final private int HEIGHT_SCREEN = 645;
 	private Stage stage = new Stage();
 	private Table table = new Table();
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
