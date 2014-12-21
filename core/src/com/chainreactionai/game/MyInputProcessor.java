@@ -13,11 +13,6 @@ public class MyInputProcessor implements InputProcessor {
 
 	private float clickCoordX, clickCoordY;
 	private boolean isTouchDown;
-	private ChainReactionAIGame myGame;
-	
-	public MyInputProcessor(ChainReactionAIGame game) {
-		myGame = game;
-	}
 	
 	@Override
 	public boolean keyDown(int keycode) {

@@ -139,7 +139,7 @@ public class MainGameScreenChar implements Screen {
 		rectangularGrid = new Array<Rectangle>();
 		innerRectangularGrid = new Array<Rectangle>();
 		gameBoard = new GameBoardChar(GRID_SIZE_X, GRID_SIZE_Y, NUMBER_OF_PLAYERS);
-		inputProcessor = new MyInputProcessor(myGame);
+		inputProcessor = new MyInputProcessor();
 		Gdx.input.setInputProcessor(inputProcessor);
 		inputProcessor.unsetTouchDown();
 		numberOfMovesPlayed = currentPlayer = 0;

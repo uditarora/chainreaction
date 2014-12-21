@@ -13,9 +13,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -111,24 +108,6 @@ public class GameRulesScreen implements Screen {
 		currentImage = 0;
 		// loadImages();
 		Gdx.input.setInputProcessor(stage);
-	}
-	
-	private void loadImages () {
-		images[0] = new Texture("0.png");
-		images[1] = new Texture("1.png");
-		images[2] = new Texture("2.png");
-		images[3] = new Texture("3.png");
-		images[4] = new Texture("4.png");
-		images[5] = new Texture("5.png");
-		images[6] = new Texture("6.png");
-		images[7] = new Texture("7.png");
-		images[8] = new Texture("8.png");
-		images[9] = new Texture("9.png");
-		images[10] = new Texture("10.png");
-		images[11] = new Texture("11.png");
-		images[12] = new Texture("12.png");
-		images[13] = new Texture("13.png");
-		images[14] = new Texture("14.png");
 	}
 	
 	@Override
