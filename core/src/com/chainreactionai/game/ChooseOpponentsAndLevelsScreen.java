@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -51,6 +52,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	ArrayList<Boolean> isCPU = new ArrayList<Boolean>();
 	ArrayList<Integer> plyLevelList = new ArrayList<Integer>();
 	private TextButtonStyle submitButtonStyler;
+	private SelectBoxStyle selectBoxStyle;
 
 	// Constructor which initializes the number of players passed from
 	// NumPlayersScreen and the number if difficulty levels allowed.
@@ -81,14 +83,21 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		table.add(title).padTop(20).row();
 		// Creating the DropDown for whether the player should be 
 		// human or CPU.
+		SelectBox<String> temp = new SelectBox<String> (skin);
+		selectBoxStyle = new SelectBoxStyle(temp.getStyle());
+		selectBoxStyle.font.setScale((1+(heightUpscaleFactor-1)/2));
+		temp.setStyle(selectBoxStyle);
 		Array<String> tempStringArr = new Array<String>();
 		tempStringArr.add("Human");
 		tempStringArr.add("CPU");
 		userSelectBoxes = new Array< SelectBox<String> >();
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			userSelectBoxes.add(new SelectBox<String>(skin));
+			selectBoxStyle = new SelectBoxStyle(userSelectBoxes.get(i).getStyle());
+			selectBoxStyle.font.setScale((1+(heightUpscaleFactor-1)/2));
+			userSelectBoxes.get(i).setStyle(selectBoxStyle);
 			userSelectBoxes.get(i).setItems(tempStringArr);
-			userSelectBoxes.get(i).setMaxListCount(4);
+			userSelectBoxes.get(i).setMaxListCount(2);
 		}
 		tempStringArr.clear();
 		// Creating the DropDown for what should be the 
@@ -99,8 +108,11 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		}
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			plySelectBoxes.add(new SelectBox<String>(skin));
+			selectBoxStyle = new SelectBoxStyle(plySelectBoxes.get(i).getStyle());
+			selectBoxStyle.font.setScale((1+(heightUpscaleFactor-1)/2));
+			plySelectBoxes.get(i).setStyle(selectBoxStyle);
 			plySelectBoxes.get(i).setItems(tempStringArr);
-			userSelectBoxes.get(i).setMaxListCount(NUMBER_OF_DIFFICULTY_LEVELS);
+			plySelectBoxes.get(i).setMaxListCount(NUMBER_OF_DIFFICULTY_LEVELS);
 		}
 		tempStringArr.clear();
 		// Adding the dropdowns to the Table.
