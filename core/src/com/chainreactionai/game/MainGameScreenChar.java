@@ -50,18 +50,20 @@ public class MainGameScreenChar implements Screen {
 	final private int WIDTH_PAUSE_BUTTON = 55;
 	final private int PAD_BOTTOM_PAUSE_BUTTON = 10;
 	final private int PAD_TOP_PAUSE_BUTTON = 10;
-	final private int THREE_D_EFFECT_DISTANCE_FOR_GRID = 8;
+	final private int THREE_D_EFFECT_DISTANCE_FOR_GRID = 24;
 	final private int WIDTH_SCREEN = 448;
-	final private float WIDTH_RECTANGLE = ((float)(WIDTH_SCREEN - THREE_D_EFFECT_DISTANCE_FOR_GRID)/GRID_SIZE_X);
+	final private float WIDTH_RECTANGLE = ((float)(WIDTH_SCREEN)/GRID_SIZE_X);
 	final private float HEIGHT_RECTANGLE = WIDTH_RECTANGLE;
-	final private int HEIGHT_SCREEN = (int)((GRID_SIZE_Y * HEIGHT_RECTANGLE) + THREE_D_EFFECT_DISTANCE_FOR_GRID + PAD_BOTTOM_PAUSE_BUTTON + HEIGHT_PAUSE_BUTTON + PAD_TOP_PAUSE_BUTTON) + 1;
+	final private float WIDTH_INNER_RECTANGLE = WIDTH_RECTANGLE - (((float)(THREE_D_EFFECT_DISTANCE_FOR_GRID))/GRID_SIZE_X);
+	final private float HEIGHT_INNER_RECTANGLE = ((float)((HEIGHT_RECTANGLE * GRID_SIZE_Y) - THREE_D_EFFECT_DISTANCE_FOR_GRID))/GRID_SIZE_Y;
+	final private int HEIGHT_SCREEN = (int)((GRID_SIZE_Y * HEIGHT_RECTANGLE) + PAD_BOTTOM_PAUSE_BUTTON + HEIGHT_PAUSE_BUTTON + PAD_TOP_PAUSE_BUTTON) + 1;
 	final private int HEIGHT_PAUSE_MENU_BUTTONS = 60;
 	final private int WIDTH_PAUSE_MENU_BUTTONS = 150;
 	final private int MAX_NUM_PLAYERS = 6;
 	private int INVERSE_SPEED_OF_BALL_VIBRATION = 28;
 	private int NUMBER_OF_PLAYERS, breakingAway, splittableBreakingAway;
 	private Texture pauseButtonImg = new Texture("pauseButton.jpg");
-	private Array<Rectangle> rectangularGrid;
+	private Array<Rectangle> rectangularGrid, innerRectangularGrid;
 	private GameBoardChar gameBoard;
 	private int clickCoordX, clickCoordY, currentPlayer, numberOfMovesPlayed, gameState, maxPlyLevel;
 	private float heightUpscaleFactor, widthUpscaleFactor;
@@ -135,6 +137,7 @@ public class MainGameScreenChar implements Screen {
 		batch = new SpriteBatch();
 		// Initializing stuff.
 		rectangularGrid = new Array<Rectangle>();
+		innerRectangularGrid = new Array<Rectangle>();
 		gameBoard = new GameBoardChar(GRID_SIZE_X, GRID_SIZE_Y, NUMBER_OF_PLAYERS);
 		inputProcessor = new MyInputProcessor(myGame);
 		Gdx.input.setInputProcessor(inputProcessor);
@@ -248,8 +251,15 @@ public class MainGameScreenChar implements Screen {
 				tempBlock.y = (float) (j * HEIGHT_RECTANGLE);
 				tempBlock.height = (float) (HEIGHT_RECTANGLE);
 				tempBlock.width = (float) (WIDTH_RECTANGLE);
-				System.out.println(tempBlock.x + " " + tempBlock.y);
+				System.out.println("Outer: " + tempBlock.x + " " + tempBlock.y);
 				rectangularGrid.add(tempBlock);
+				tempBlock = new Rectangle();
+				tempBlock.x = (float) (i * WIDTH_INNER_RECTANGLE) + ((float)(THREE_D_EFFECT_DISTANCE_FOR_GRID))/2;
+				tempBlock.y = (float) (j * HEIGHT_INNER_RECTANGLE) + ((float)(THREE_D_EFFECT_DISTANCE_FOR_GRID))/2;
+				tempBlock.height = (float) (HEIGHT_INNER_RECTANGLE);
+				tempBlock.width = (float) (WIDTH_INNER_RECTANGLE);
+				System.out.println("Inner : " + tempBlock.x + " " + tempBlock.y);
+				innerRectangularGrid.add(tempBlock);
 			}
 		}
 	}
@@ -403,7 +413,7 @@ public class MainGameScreenChar implements Screen {
 			batch = (SpriteBatch)stage.getBatch();
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
-			batch.draw(pauseButtonImg, 0, ((GRID_SIZE_Y * HEIGHT_RECTANGLE) + THREE_D_EFFECT_DISTANCE_FOR_GRID + PAD_BOTTOM_PAUSE_BUTTON));
+			batch.draw(pauseButtonImg, 0, ((GRID_SIZE_Y * HEIGHT_RECTANGLE) + PAD_BOTTOM_PAUSE_BUTTON));
 			batch.end();
 			shapeRenderer.setProjectionMatrix(cam.combined);
 			shapeRenderer.begin(ShapeType.Line);
@@ -445,8 +455,8 @@ public class MainGameScreenChar implements Screen {
 	private void processUserInputForMove() {
 		// Checking whether the click is on an edge or a box.
 		// If on edge, then reject the click.
-		float coordX = inputProcessor.getXCoord(), coordY = inputProcessor.getYCoord(), distOfPauseButtonFromTop, distOfGridFromBottom, distOfGridFromTop, heightOfGrid, modHeightUpscaleFactor;
-		distOfPauseButtonFromTop = (ChainReactionAIGame.HEIGHT - (((ChainReactionAIGame.WIDTH - (THREE_D_EFFECT_DISTANCE_FOR_GRID * widthUpscaleFactor)) * 8/6) + (THREE_D_EFFECT_DISTANCE_FOR_GRID * heightUpscaleFactor) + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor) + (PAD_BOTTOM_PAUSE_BUTTON * heightUpscaleFactor)))/2;
+		float coordX = inputProcessor.getXCoord(), coordY = inputProcessor.getYCoord(), distOfPauseButtonFromTop, distOfGridFromBottom, distOfGridFromTop, heightOfGrid;
+		distOfPauseButtonFromTop = (ChainReactionAIGame.HEIGHT - (((float)(ChainReactionAIGame.WIDTH * 8))/6 + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor) + (PAD_BOTTOM_PAUSE_BUTTON * heightUpscaleFactor)))/2;
 		distOfGridFromBottom = distOfPauseButtonFromTop;
 		distOfGridFromTop = distOfPauseButtonFromTop + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor) + (PAD_BOTTOM_PAUSE_BUTTON * heightUpscaleFactor);
 		System.out.println("distOfPauseButtonFromTop: " + distOfPauseButtonFromTop + " distOfGridFromBottom: " + distOfGridFromBottom);
@@ -454,11 +464,10 @@ public class MainGameScreenChar implements Screen {
 			return;
 		}
 		heightOfGrid = ChainReactionAIGame.HEIGHT - distOfGridFromBottom - distOfGridFromTop;
-		modHeightUpscaleFactor = heightOfGrid/GRID_SIZE_Y;
 		clickOnEdge = false;
-		clickCoordX = (int)((coordX/widthUpscaleFactor)/(WIDTH_RECTANGLE + 1.33));
+		clickCoordX = (int)((coordX/widthUpscaleFactor)/WIDTH_RECTANGLE);
 		// Try to find clickOnEdge in X - coordinate
-		clickCoordY = (int) (((coordY - distOfGridFromTop))/modHeightUpscaleFactor);
+		clickCoordY = (int)(((coordY - distOfGridFromTop)/widthUpscaleFactor)/HEIGHT_RECTANGLE);
 		clickCoordY = GRID_SIZE_Y - clickCoordY - 1;
 		System.out.println("distOfPauseButtonFromTop: " + distOfPauseButtonFromTop + " distOfGridFromBottom: " + distOfGridFromBottom);
 		System.out.println("distOfGridFromTop: " + distOfGridFromTop + " heightOfGrid: " + heightOfGrid);
@@ -487,7 +496,7 @@ public class MainGameScreenChar implements Screen {
 	private void processPauseAction() {
 		// Checks if the click is on the pause button, else returns
 		float coordX = inputProcessor.getXCoord(), coordY = inputProcessor.getYCoord(), distOfPauseButtonFromTop, distOfGridFromTop;
-		distOfPauseButtonFromTop = (ChainReactionAIGame.HEIGHT - (((ChainReactionAIGame.WIDTH - (THREE_D_EFFECT_DISTANCE_FOR_GRID * widthUpscaleFactor)) * 8/6) + (THREE_D_EFFECT_DISTANCE_FOR_GRID * heightUpscaleFactor) + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor) + (PAD_BOTTOM_PAUSE_BUTTON * heightUpscaleFactor)))/2;
+		distOfPauseButtonFromTop = (ChainReactionAIGame.HEIGHT - (((float)(ChainReactionAIGame.WIDTH * 8))/6 + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor) + (PAD_BOTTOM_PAUSE_BUTTON * heightUpscaleFactor)))/2;
 		distOfGridFromTop = distOfPauseButtonFromTop + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor) + (PAD_BOTTOM_PAUSE_BUTTON * heightUpscaleFactor);
 		if (coordY > distOfGridFromTop || coordY < distOfPauseButtonFromTop) {
 			return;
@@ -503,11 +512,13 @@ public class MainGameScreenChar implements Screen {
 	// arrays.
 	private void drawGameBoard() {
 		Iterator<Rectangle> iter = rectangularGrid.iterator();
+		Iterator<Rectangle> innerIter = innerRectangularGrid.iterator();
 		int i, j, count = 0;
 		// Goes through all the rectangles pre-fed into the 
 		// rectangularGrid and draws them to the board.
 		while (iter.hasNext()) {
 			Rectangle tempBlock = iter.next();
+			Rectangle tempBlock2 = innerIter.next();
 			i = count / GRID_SIZE_Y;
 			j = count % GRID_SIZE_Y;
 			shapeRenderer.set(ShapeType.Line);
@@ -516,17 +527,17 @@ public class MainGameScreenChar implements Screen {
 			shapeRenderer.line(tempBlock.x, tempBlock.y, tempBlock.x, tempBlock.y + HEIGHT_RECTANGLE);
 			shapeRenderer.line(tempBlock.x, tempBlock.y + HEIGHT_RECTANGLE, tempBlock.x + WIDTH_RECTANGLE, tempBlock.y + HEIGHT_RECTANGLE);
 			shapeRenderer.line(tempBlock.x + WIDTH_RECTANGLE, tempBlock.y, tempBlock.x + WIDTH_RECTANGLE, tempBlock.y + HEIGHT_RECTANGLE);
-			shapeRenderer.line(tempBlock.x + THREE_D_EFFECT_DISTANCE_FOR_GRID, tempBlock.y + THREE_D_EFFECT_DISTANCE_FOR_GRID, tempBlock.x + WIDTH_RECTANGLE + THREE_D_EFFECT_DISTANCE_FOR_GRID, tempBlock.y + THREE_D_EFFECT_DISTANCE_FOR_GRID);
-			shapeRenderer.line(tempBlock.x + THREE_D_EFFECT_DISTANCE_FOR_GRID, tempBlock.y + THREE_D_EFFECT_DISTANCE_FOR_GRID, tempBlock.x + THREE_D_EFFECT_DISTANCE_FOR_GRID, tempBlock.y + HEIGHT_RECTANGLE + THREE_D_EFFECT_DISTANCE_FOR_GRID);
-			shapeRenderer.line(tempBlock.x + THREE_D_EFFECT_DISTANCE_FOR_GRID, tempBlock.y + HEIGHT_RECTANGLE + THREE_D_EFFECT_DISTANCE_FOR_GRID, tempBlock.x + WIDTH_RECTANGLE + THREE_D_EFFECT_DISTANCE_FOR_GRID, tempBlock.y + HEIGHT_RECTANGLE + THREE_D_EFFECT_DISTANCE_FOR_GRID);
-			shapeRenderer.line(tempBlock.x + WIDTH_RECTANGLE + THREE_D_EFFECT_DISTANCE_FOR_GRID, tempBlock.y + THREE_D_EFFECT_DISTANCE_FOR_GRID, tempBlock.x + WIDTH_RECTANGLE + THREE_D_EFFECT_DISTANCE_FOR_GRID, tempBlock.y + HEIGHT_RECTANGLE + THREE_D_EFFECT_DISTANCE_FOR_GRID);
-			shapeRenderer.line(tempBlock.x, tempBlock.y, tempBlock.x + THREE_D_EFFECT_DISTANCE_FOR_GRID, tempBlock.y + THREE_D_EFFECT_DISTANCE_FOR_GRID);
-			shapeRenderer.line(tempBlock.x, tempBlock.y + HEIGHT_RECTANGLE, tempBlock.x + THREE_D_EFFECT_DISTANCE_FOR_GRID, tempBlock.y + HEIGHT_RECTANGLE + THREE_D_EFFECT_DISTANCE_FOR_GRID);
-			shapeRenderer.line(tempBlock.x + WIDTH_RECTANGLE, tempBlock.y, tempBlock.x + WIDTH_RECTANGLE + THREE_D_EFFECT_DISTANCE_FOR_GRID, tempBlock.y + THREE_D_EFFECT_DISTANCE_FOR_GRID);
-			shapeRenderer.line(tempBlock.x + WIDTH_RECTANGLE, tempBlock.y + HEIGHT_RECTANGLE, tempBlock.x + WIDTH_RECTANGLE + THREE_D_EFFECT_DISTANCE_FOR_GRID, tempBlock.y + HEIGHT_RECTANGLE + THREE_D_EFFECT_DISTANCE_FOR_GRID);
+			shapeRenderer.line(tempBlock2.x, tempBlock2.y, tempBlock2.x + WIDTH_INNER_RECTANGLE, tempBlock2.y);
+			shapeRenderer.line(tempBlock2.x, tempBlock2.y, tempBlock2.x, tempBlock2.y + HEIGHT_INNER_RECTANGLE);
+			shapeRenderer.line(tempBlock2.x, tempBlock2.y + HEIGHT_INNER_RECTANGLE, tempBlock2.x + WIDTH_INNER_RECTANGLE, tempBlock2.y + HEIGHT_INNER_RECTANGLE);
+			shapeRenderer.line(tempBlock2.x + WIDTH_INNER_RECTANGLE, tempBlock2.y, tempBlock2.x + WIDTH_INNER_RECTANGLE, tempBlock2.y + HEIGHT_INNER_RECTANGLE);
+			shapeRenderer.line(tempBlock.x, tempBlock.y, tempBlock2.x, tempBlock2.y);
+			shapeRenderer.line(tempBlock.x + WIDTH_RECTANGLE, tempBlock.y, tempBlock2.x + WIDTH_INNER_RECTANGLE, tempBlock2.y);
+			shapeRenderer.line(tempBlock.x, tempBlock.y + HEIGHT_RECTANGLE, tempBlock2.x, tempBlock2.y + HEIGHT_INNER_RECTANGLE);
+			shapeRenderer.line(tempBlock.x + WIDTH_RECTANGLE, tempBlock.y + HEIGHT_RECTANGLE, tempBlock2.x + WIDTH_INNER_RECTANGLE, tempBlock2.y + HEIGHT_INNER_RECTANGLE);
 			// Checks if a given rectangle has to be highlighted indicating a move.
 			if (highlightPos.coordX == i && highlightPos.coordY == j) {
-				drawHighlight(tempBlock.x, tempBlock.y);
+				drawHighlight(tempBlock2.x, tempBlock2.y);
 				System.out.println("Hightlight Time");
 				shapeRenderer.setColor(Color.RED);
 			}
@@ -551,11 +562,8 @@ public class MainGameScreenChar implements Screen {
 	
 	private void drawHighlight (float x, float y) {
 		shapeRenderer.setColor(Color.YELLOW);
-		for (int counter = 1; counter <= (THREE_D_EFFECT_DISTANCE_FOR_GRID - 1); counter += 1) {
-			shapeRenderer.line(x + counter, y + counter, x + WIDTH_RECTANGLE + counter, y + counter);
-			shapeRenderer.line(x + counter, y + counter, x + counter, y + HEIGHT_RECTANGLE + counter);
-			shapeRenderer.line(x + WIDTH_RECTANGLE + counter, y + counter, x + WIDTH_RECTANGLE + counter, y + HEIGHT_RECTANGLE + counter);
-			shapeRenderer.line(x + counter, y + HEIGHT_RECTANGLE + counter, x + WIDTH_RECTANGLE + counter, y + HEIGHT_RECTANGLE + counter);
+		for (int counter = 1; counter <= (WIDTH_INNER_RECTANGLE - 1); counter += 1) {
+			shapeRenderer.line(x + counter, y, x + counter, y + HEIGHT_INNER_RECTANGLE);
 		}
 	}
 	

@@ -33,7 +33,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	private OrthographicCamera camera;
 	private ChainReactionAIGame myGame;
 	final private int WIDTH_SCREEN = 448;
-	final private int HEIGHT_SCREEN = 642;
+	final private int HEIGHT_SCREEN = 645;
 	final private int HEIGHT_DROP_DOWN_MENUS = 30;
 	final private int WIDTH_DROP_DOWN_MENUS = 150;
 	final private int WIDTH_SUBMIT_BUTTON = 100;
