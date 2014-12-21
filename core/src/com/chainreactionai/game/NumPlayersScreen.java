@@ -47,12 +47,10 @@ public class NumPlayersScreen implements Screen {
 	private SelectBox<String> selectBox;
 	private SelectBoxStyle selectBoxStyler;
 	private TextButtonStyle submitButtonStyler;
-	MyInputProcessor inputProcessor;
 
 	public NumPlayersScreen(ChainReactionAIGame game) {
 		ChainReactionAIGame.currentScreen = 1;
 		myGame = game;
-		inputProcessor = new MyInputProcessor(myGame);
 		create();
 	}
 
@@ -105,7 +103,6 @@ public class NumPlayersScreen implements Screen {
 				myGame.setScreen(new ChooseOpponentsAndLevelsScreen(myGame, chosenNumOfPlayers, NUMBER_OF_DIFFICULTY_LEVELS));
 			}
 		});
-		Gdx.input.setInputProcessor(inputProcessor);
 		Gdx.input.setInputProcessor(stage);
 	}
 
