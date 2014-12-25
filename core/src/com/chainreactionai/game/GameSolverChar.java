@@ -144,6 +144,10 @@ public class GameSolverChar implements Runnable {
 					tempBoardNode.setScore();
 					tempBoardNode.setOpponentPropagatingScore(temp);
 				}
+				// Check if the main player has lost. If yes, decrease the score by 100000.
+				if (tempBoardNode.board.hasLost(mainPlayer)) {
+					tempBoardNode.setOpponentPropagatingScore(-100000);
+				}
 				int nextPlayer = currentPlayer;
 				if (DEBUG)
 					System.out.println("New node added with current level : " + (currentLevel + 1));
@@ -244,6 +248,11 @@ public class GameSolverChar implements Runnable {
 		GameBoardChar solutionGameBoard = oldBoardNode.board;
 		double maxScore = 0, currentScore = 0;
 		for (GameBoardChar board : getAllPossibleMoves(oldBoardNode.board, player)) {
+			// If a winning position is found, assume that the opponent will play that move only.
+			if (board.isWinningPosition(player)) {
+				solutionGameBoard = board;
+				break;
+			}
 			currentScore = board.score(player, 1);
 			if (currentScore > maxScore) {
 				maxScore = currentScore;
