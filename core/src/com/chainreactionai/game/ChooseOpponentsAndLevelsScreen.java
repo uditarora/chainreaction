@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -125,6 +126,13 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 			plySliders.add(new Slider(1, NUMBER_OF_DIFFICULTY_LEVELS, 1, false, skin));
 			plyLabels.add(new Label(String.valueOf((int)plySliders.get(i).getValue()), skin));
 		}
+		// To allow the sliders to be dragged properly
+		InputListener stopTouchDown = new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				event.stop();
+			    return false;
+			}
+		};
 		
 		// Adding the dropdowns to the Table.
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
@@ -134,6 +142,9 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 //			table.add(tempLabel).padBottom(2).row();
 			table.add(tempLabel);
 //			table.add(plySelectBoxes.get(i)).size(WIDTH_DROP_DOWN_MENUS*(1+(widthUpscaleFactor-1)/2), HEIGHT_DROP_DOWN_MENUS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
+			
+			// To allow the sliders to be dragged properly
+			plySliders.get(i).addListener(stopTouchDown);
 			table.add(plySliders.get(i)).size(WIDTH_DROP_DOWN_MENUS*widthUpscaleFactor);
 			// Add the labels containing the currently selected plyLevel
 			tempLabel = plyLabels.get(i);
@@ -185,9 +196,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
-			if (plySliders.get(i).isDragging()) {
-				plyLabels.get(i).setText(String.valueOf((int)plySliders.get(i).getValue()));
-			}
+			plyLabels.get(i).setText(String.valueOf((int)plySliders.get(i).getValue()));
 		}
 		
 		stage.act();
