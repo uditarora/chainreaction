@@ -78,7 +78,6 @@ public class GameStatsScreen implements Screen {
 			keyLost = "lostLevel"+i;
 			numLost = stats.getInteger(keyLost, 0);
 			numWon = stats.getInteger(keyWon, 0);
-			System.out.println("Level "+i+"- Won: "+numWon+", Lost: "+numLost);
 			stat = new Label("Level "+i+"- Won: "+numWon+", Lost: "+numLost, skin);
 			stat.setFontScale((float)heightUpscaleFactor);
 			table.add(stat).padLeft(10).padRight(10).padBottom(10).row();
