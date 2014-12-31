@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
@@ -94,6 +95,7 @@ public class MainGameScreenChar implements Screen {
 	// All debug printing should go under this flag.
 	final private boolean DEBUG = true;
 	final private boolean DEBUG_CPU = false;
+	private Preferences stats; 
 
 	// Constructor to initialize which player is CPU and which is human.
 	// Also sets difficulty levels for CPU players.
@@ -106,14 +108,16 @@ public class MainGameScreenChar implements Screen {
 		lostPlayer = new boolean[NUMBER_OF_PLAYERS];
 		difficultyLevels = new int[NUMBER_OF_PLAYERS];
 		heuristicNumbers = new int[NUMBER_OF_PLAYERS];
-		System.out.println("WIDTH: " + WIDTH_SCREEN + " HEIGHT: " + HEIGHT_SCREEN);
+		if (DEBUG)
+			System.out.println("WIDTH: " + WIDTH_SCREEN + " HEIGHT: " + HEIGHT_SCREEN);
 		
 		//Simulating with only CPU Players for testing
 		if (DEBUG_CPU) {
 			for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 				isCPU[i] = true;
-				difficultyLevels[i] = 104;
+				difficultyLevels[i] = 102;
 			}
+			isCPU[1] = false;
 		}
 		else {
 			if (DEBUG)
@@ -123,13 +127,29 @@ public class MainGameScreenChar implements Screen {
 				isCPU[i] = CPU.get(i);
 				if (isCPU[i]) {
 					difficultyLevels[i] = difficultyLevelList.get(i);
-					System.out.println("isCPU[" + i + "] = " + isCPU[i] + " with difficulty Level = " + difficultyLevels[i]);
+					if (DEBUG)
+						System.out.println("isCPU[" + i + "] = " + isCPU[i] + " with difficulty Level = " + difficultyLevels[i]);
 				} else {
-					System.out.println("isCPU[" + i + "] = " + isCPU[i]);
+					if (DEBUG)
+						System.out.println("isCPU[" + i + "] = " + isCPU[i]);
 				}
 			}
 		}
 		setGameState(0);
+		stats = Gdx.app.getPreferences("chainReactionStatistics");
+		
+		// Testing statistics
+		if (DEBUG) {
+			String keyWon, keyLost; int numWon, numLost;
+			for (int i = 1; i < 11; ++i)
+			{
+				keyWon = "wonLevel"+i;
+				keyLost = "lostLevel"+i;
+				numLost = stats.getInteger(keyLost, 0);
+				numWon = stats.getInteger(keyWon, 0);
+				System.out.println("Level "+i+"- Won: "+numWon+", Lost: "+numLost);
+			}
+		}
 		create();
 	}
 
@@ -220,7 +240,8 @@ public class MainGameScreenChar implements Screen {
 		cam = new PerspectiveCamera(30, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		float camZ = ((float)1440*720/1240)*((float)Gdx.graphics.getHeight()/Gdx.graphics.getWidth());
-		Gdx.app.log("size", "CamZ: "+camZ);
+		if (DEBUG)
+			Gdx.app.log("size", "CamZ: "+camZ);
 		cam.position.set(WIDTH_SCREEN/2, HEIGHT_SCREEN/2, camZ);
 		
 	    cam.lookAt(WIDTH_SCREEN/2, HEIGHT_SCREEN/2, 0);
@@ -251,14 +272,16 @@ public class MainGameScreenChar implements Screen {
 				tempBlock.y = (float) (j * HEIGHT_RECTANGLE);
 				tempBlock.height = (float) (HEIGHT_RECTANGLE);
 				tempBlock.width = (float) (WIDTH_RECTANGLE);
-				System.out.println("Outer: " + tempBlock.x + " " + tempBlock.y);
+				if (DEBUG)
+					System.out.println("Outer: " + tempBlock.x + " " + tempBlock.y);
 				rectangularGrid.add(tempBlock);
 				tempBlock = new Rectangle();
 				tempBlock.x = (float) (i * WIDTH_INNER_RECTANGLE) + ((float)(THREE_D_EFFECT_DISTANCE_FOR_GRID))/2;
 				tempBlock.y = (float) (j * HEIGHT_INNER_RECTANGLE) + ((float)(THREE_D_EFFECT_DISTANCE_FOR_GRID))/2;
 				tempBlock.height = (float) (HEIGHT_INNER_RECTANGLE);
 				tempBlock.width = (float) (WIDTH_INNER_RECTANGLE);
-				System.out.println("Inner : " + tempBlock.x + " " + tempBlock.y);
+				if (DEBUG)
+					System.out.println("Inner : " + tempBlock.x + " " + tempBlock.y);
 				innerRectangularGrid.add(tempBlock);
 			}
 		}
@@ -322,7 +345,8 @@ public class MainGameScreenChar implements Screen {
 								// so that the GameSolver's best move is executed.
 								Position winningMove = solver.getAnswerPosition();
 								if(winningMove == null) {
-									System.out.println("Error Time.");
+									if (DEBUG)
+										System.out.println("Error Time.");
 								}
 								// Initialize the animation for changing the Board.
 								gameBoard.changeBoard2(winningMove.coordX, winningMove.coordY, currentPlayer);
@@ -341,7 +365,8 @@ public class MainGameScreenChar implements Screen {
 								System.out.println("Reached CPU");
 							// Initializing the GameSolver
 							newTime = System.currentTimeMillis();
-							Gdx.app.log("mainPlayerAndPercentageMoves","MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed + " and Time taken : " + ((newTime - prevTime)/1000));
+							if (DEBUG)
+								Gdx.app.log("mainPlayerAndPercentageMoves","MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed + " and Time taken : " + ((newTime - prevTime)/1000));
 							handle.writeString("MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed + " and Time taken : " + ((newTime - prevTime)/1000) +"\r\n", true);
 							solver = new GameSolverChar(gameBoard, currentPlayer,
 									NUMBER_OF_PLAYERS, lostPlayer, getCurrentPlyLevel(difficultyLevels[currentPlayer]), percentageMovesSearched, heuristicNumbers[currentPlayer]);
@@ -376,12 +401,36 @@ public class MainGameScreenChar implements Screen {
 					if (gameBoard.isWinningPosition(currentPlayer)
 							&& numberOfMovesPlayed > 1) {
 						gameOver = true;
-						System.out.println("Player " + currentPlayer
+						if (DEBUG)
+							System.out.println("Player " + currentPlayer
 								+ " has won the game!");
+						
+						// Update statistics
+						if (NUMBER_OF_PLAYERS == 2 && (isCPU[0] == true || isCPU[1] == true) && !(isCPU[0] && isCPU[1])) {
+							String key;
+							if (isCPU[0]) {
+								if (currentPlayer == 0)
+									key = "lostLevel";
+								else
+									key = "wonLevel";
+								key += difficultyLevels[0];
+							}
+							else {
+								if (currentPlayer == 1)
+									key = "lostLevel";
+								else
+									key = "wonLevel";
+								key += difficultyLevels[1];
+							}
+							stats.putInteger(key, stats.getInteger(key, 0)+1);
+							stats.flush();
+						}
+						
 						myGame.setScreen(new GameEndScreen(myGame, currentPlayer, numberOfMovesPlayed));
 					}
 					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
-					System.out.println("Move time.");
+					if (DEBUG)
+						System.out.println("Move time.");
 				}
 			}
 			// process user input
@@ -435,12 +484,12 @@ public class MainGameScreenChar implements Screen {
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		if (isBackButtonPressed) {
-			System.out.println("BackButton");
+			if (DEBUG)
+				System.out.println("BackButton");
 			if (gameState == 1) {
 				resume();
 			} else {
@@ -459,7 +508,8 @@ public class MainGameScreenChar implements Screen {
 		distOfPauseButtonFromTop = (ChainReactionAIGame.HEIGHT - (((float)(ChainReactionAIGame.WIDTH * 8))/6 + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor) + (PAD_BOTTOM_PAUSE_BUTTON * heightUpscaleFactor)))/2;
 		distOfGridFromBottom = distOfPauseButtonFromTop;
 		distOfGridFromTop = distOfPauseButtonFromTop + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor) + (PAD_BOTTOM_PAUSE_BUTTON * heightUpscaleFactor);
-		System.out.println("distOfPauseButtonFromTop: " + distOfPauseButtonFromTop + " distOfGridFromBottom: " + distOfGridFromBottom);
+		if (DEBUG)
+			System.out.println("distOfPauseButtonFromTop: " + distOfPauseButtonFromTop + " distOfGridFromBottom: " + distOfGridFromBottom);
 		if (coordY < distOfGridFromTop || coordY > ChainReactionAIGame.HEIGHT - distOfGridFromBottom) {
 			return;
 		}
@@ -469,9 +519,11 @@ public class MainGameScreenChar implements Screen {
 		// Try to find clickOnEdge in X - coordinate
 		clickCoordY = (int)(((coordY - distOfGridFromTop)/widthUpscaleFactor)/HEIGHT_RECTANGLE);
 		clickCoordY = GRID_SIZE_Y - clickCoordY - 1;
-		System.out.println("distOfPauseButtonFromTop: " + distOfPauseButtonFromTop + " distOfGridFromBottom: " + distOfGridFromBottom);
-		System.out.println("distOfGridFromTop: " + distOfGridFromTop + " heightOfGrid: " + heightOfGrid);
-		System.out.println("clickCoordX: " + clickCoordX + " clickCoordY: " + clickCoordY);
+		if (DEBUG) {
+			System.out.println("distOfPauseButtonFromTop: " + distOfPauseButtonFromTop + " distOfGridFromBottom: " + distOfGridFromBottom);
+			System.out.println("distOfGridFromTop: " + distOfGridFromTop + " heightOfGrid: " + heightOfGrid);
+			System.out.println("clickCoordX: " + clickCoordX + " clickCoordY: " + clickCoordY);
+		}
 		// If the click is within bounds of any one rectangle
 		if (!clickOnEdge) {
 			// Checking the move's validity and changing the board
@@ -483,7 +535,8 @@ public class MainGameScreenChar implements Screen {
 						currentPlayer);
 				highlightPos.coordX = clickCoordX;
 				highlightPos.coordY = clickCoordY;
-				System.out.println("Hightlight set " + clickCoordX + " " + clickCoordY);
+				if (DEBUG)
+					System.out.println("Hightlight set " + clickCoordX + " " + clickCoordY);
 				moveCompleted = false;
 				numberOfMovesPlayed += 1;
 				percentageMovesSearched += incrementValForPercentageMovesSearched;
@@ -538,7 +591,8 @@ public class MainGameScreenChar implements Screen {
 			// Checks if a given rectangle has to be highlighted indicating a move.
 			if (highlightPos.coordX == i && highlightPos.coordY == j) {
 				drawHighlight(tempBlock2.x, tempBlock2.y);
-				System.out.println("Hightlight Time");
+				if (DEBUG)
+					System.out.println("Hightlight Time");
 				shapeRenderer.setColor(Color.RED);
 			}
 			if (gameBoard.getRectangleWinner(i, j) == -1) {
