@@ -11,16 +11,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
 
 /**
  * @author Kartik Parnami
@@ -32,8 +31,8 @@ public class NumPlayersScreen implements Screen {
 	private ChainReactionAIGame myGame;
 	final private int WIDTH_SCREEN = 448;
 	final private int HEIGHT_SCREEN = 645;
-	final private int HEIGHT_DROP_DOWN_MENUS = 35;
 	final private int WIDTH_DROP_DOWN_MENUS = 150;
+	final private int HEIGHT_DROP_DOWN_MENUS = 30;
 	final private int WIDTH_SUBMIT_BUTTON = 100;
 	final private int HEIGHT_SUBMIT_BUTTON = 40;
 	private float heightUpscaleFactor, widthUpscaleFactor;
@@ -44,9 +43,9 @@ public class NumPlayersScreen implements Screen {
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private TextButton submitButton;
 	private Label title;
-	private SelectBox<String> selectBox;
-	private SelectBoxStyle selectBoxStyler;
 	private TextButtonStyle submitButtonStyler;
+	private Slider numPlayerSlider;
+	private Label numPlayerLabel;
 
 	public NumPlayersScreen(ChainReactionAIGame game) {
 		ChainReactionAIGame.currentScreen = 1;
@@ -72,20 +71,20 @@ public class NumPlayersScreen implements Screen {
 		title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		table.add(title).padBottom(10).row();
 		// Initializing the Drop-Down menu
-		selectBox = new SelectBox<String>(skin);
-		selectBox.setMaxListCount(MAX_NUMBER_OF_PLAYERS);
-		Array<String> tempStringArr = new Array<String>();
-		for (int i = 1; i < MAX_NUMBER_OF_PLAYERS; i += 1) {
-			tempStringArr.add(String.valueOf(i+1));
-		}
-		selectBox.setItems(tempStringArr);
-		selectBoxStyler = new SelectBoxStyle(selectBox.getStyle());
-		selectBoxStyler.font.setScale((1+(heightUpscaleFactor-1)/2));
-		selectBox.setStyle(selectBoxStyler);
-		selectBox.setHeight(50);
-		System.out.println("Height: " + selectBox.getHeight() + " max height: " + selectBox.getMaxHeight());
+		numPlayerSlider = new Slider(2, MAX_NUMBER_OF_PLAYERS, 1, false, skin);
 		// Adding the DropDown to the Table.
-		table.add(selectBox).size(WIDTH_DROP_DOWN_MENUS*(1+(widthUpscaleFactor-1)/2), HEIGHT_DROP_DOWN_MENUS*(1+(heightUpscaleFactor-1)/2)).padBottom(10).row();
+		table.add(numPlayerSlider).size(WIDTH_DROP_DOWN_MENUS*widthUpscaleFactor, HEIGHT_DROP_DOWN_MENUS*heightUpscaleFactor).padBottom(10).row();
+		// To allow the sliders to be dragged properly
+		InputListener stopTouchDown = new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				event.stop();
+			    return false;
+			}
+		};
+		numPlayerSlider.addListener(stopTouchDown);
+		// Label Initialize
+		numPlayerLabel = new Label("2", skin);
+		table.add(numPlayerLabel).padBottom(20).row();
 		// Initializing and adding the Submit Button to Table.
 		submitButton = new TextButton(new String("Submit"), skin);
 		submitButtonStyler = new TextButtonStyle(submitButton.getStyle());
@@ -99,7 +98,7 @@ public class NumPlayersScreen implements Screen {
 		submitButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				int chosenNumOfPlayers = Integer.parseInt(selectBox.getSelected());
+				int chosenNumOfPlayers = (int)(numPlayerSlider.getValue());
 				myGame.setScreen(new ChooseOpponentsAndLevelsScreen(myGame, chosenNumOfPlayers, NUMBER_OF_DIFFICULTY_LEVELS));
 			}
 		});
@@ -110,6 +109,7 @@ public class NumPlayersScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(((float)(15)/255), ((float)(15)/255), ((float)(15)/255), 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		numPlayerLabel.setText(String.valueOf((int)(numPlayerSlider.getValue())));
 		stage.act();
 		stage.draw();
 		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {

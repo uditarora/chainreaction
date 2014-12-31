@@ -6,8 +6,8 @@ package com.chainreactionai.game;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,8 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -38,7 +36,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	private ChainReactionAIGame myGame;
 	final private int WIDTH_SCREEN = 448;
 	final private int HEIGHT_SCREEN = 645;
-	final private int HEIGHT_DROP_DOWN_MENUS = 30;
+	final private int HEIGHT_DROP_DOWN_MENUS = 40;
 	final private int WIDTH_DROP_DOWN_MENUS = 150;
 	final private int WIDTH_SUBMIT_BUTTON = 100;
 	final private int HEIGHT_SUBMIT_BUTTON = 40;
@@ -51,14 +49,14 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private TextButton submitButton;
 	private Label title;
-	private Array< SelectBox<String> > userSelectBoxes;
+	private Array<TextButton> userSelectButtons;
 	private Array<Slider> plySliders;
 	private Array<Label> plyLabels;
+	private Array<Boolean> userSelectIsHuman;
 	ArrayList<Boolean> isCPU = new ArrayList<Boolean>();
 	ArrayList<Integer> plyLevelList = new ArrayList<Integer>();
-	private TextButtonStyle submitButtonStyler;
-	private SelectBoxStyle selectBoxStyle;
-
+	private TextButtonStyle submitButtonStyler, userSelectButtonStyler;
+	
 	// Constructor which initializes the number of players passed from
 	// NumPlayersScreen and the number if difficulty levels allowed.
 	public ChooseOpponentsAndLevelsScreen(ChainReactionAIGame game, int numPlayers, int numDifficultyLevels) {
@@ -87,23 +85,21 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		// Creating the DropDown for whether the player should be 
 		// human or CPU.
-		SelectBox<String> temp = new SelectBox<String> (skin);
-		selectBoxStyle = new SelectBoxStyle(temp.getStyle());
-		selectBoxStyle.font.setScale((1+(heightUpscaleFactor-1)/2));
-		temp.setStyle(selectBoxStyle);
-		Array<String> tempStringArr = new Array<String>();
-		tempStringArr.add("Human");
-		tempStringArr.add("CPU");
-		userSelectBoxes = new Array< SelectBox<String> >();
+		TextButton tempButton = new TextButton("Human", skin);
+		userSelectButtonStyler = new TextButtonStyle(tempButton.getStyle());
+		userSelectButtonStyler.font.setScale((1+(heightUpscaleFactor-1)/2));
+		tempButton.setStyle(userSelectButtonStyler);
+		userSelectButtons = new Array<TextButton>();
+		userSelectIsHuman = new Array<Boolean>();
+		tempButton.setChecked(true);
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
-			userSelectBoxes.add(new SelectBox<String>(skin));
-			selectBoxStyle = new SelectBoxStyle(userSelectBoxes.get(i).getStyle());
-			selectBoxStyle.font.setScale((1+(heightUpscaleFactor-1)/2));
-			userSelectBoxes.get(i).setStyle(selectBoxStyle);
-			userSelectBoxes.get(i).setItems(tempStringArr);
-			userSelectBoxes.get(i).setMaxListCount(2);
+			if (i != 0) {
+				tempButton = new TextButton("CPU", userSelectButtonStyler);
+				tempButton.setChecked(false);
+			}
+			userSelectButtons.add(tempButton);
+			userSelectIsHuman.add(tempButton.isChecked());
 		}
-		tempStringArr.clear();
 		// Creating the DropDown for what should be the 
 		// difficulty level of a given CPU player.
 		plySliders = new Array<Slider>();
@@ -119,27 +115,26 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 			    return false;
 			}
 		};
-		
 		// Adding the dropdowns to the Table.
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			Label tempLabel = new Label("Player " + String.valueOf(i+1) + ":", skin);
 			tempLabel.setFontScale(heightUpscaleFactor);
-			table.add(tempLabel);		
+			table.add(tempLabel);
 			// To allow the sliders to be dragged properly
 			plySliders.get(i).addListener(stopTouchDown);
-			table.add(plySliders.get(i)).size(WIDTH_DROP_DOWN_MENUS*widthUpscaleFactor);
+			table.add(plySliders.get(i)).size(WIDTH_DROP_DOWN_MENUS*widthUpscaleFactor, HEIGHT_DROP_DOWN_MENUS*heightUpscaleFactor).padBottom(10).padTop(10);
 			// Add the labels containing the currently selected plyLevel
 			tempLabel = plyLabels.get(i);
 			tempLabel.setFontScale(heightUpscaleFactor);
-			table.add(tempLabel);
-			table.add(userSelectBoxes.get(i)).size(WIDTH_DROP_DOWN_MENUS*(1+(widthUpscaleFactor-1)/2), HEIGHT_DROP_DOWN_MENUS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
+			table.add(tempLabel).size((40*widthUpscaleFactor), (20*heightUpscaleFactor)).padBottom(10).padTop(10);
+			table.add(userSelectButtons.get(i)).size(WIDTH_SUBMIT_BUTTON*(1+(widthUpscaleFactor-1)/2), HEIGHT_SUBMIT_BUTTON*(1+(heightUpscaleFactor-1)/2)).padBottom(10).padTop(10).row();
 		}
 		// Creating and adding the submit button to the Table.
 		submitButton = new TextButton(new String("Submit"), skin);
 		submitButtonStyler = new TextButtonStyle(submitButton.getStyle());
 		submitButtonStyler.font.setScale((1+(heightUpscaleFactor-1)/2));
 		submitButton.setStyle(submitButtonStyler);
-		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*(1+(widthUpscaleFactor-1)/2), HEIGHT_SUBMIT_BUTTON*(1+(heightUpscaleFactor-1)/2)).padBottom(20).padTop(10).row();
+		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*(1+(widthUpscaleFactor-1)/2), HEIGHT_SUBMIT_BUTTON*(1+(heightUpscaleFactor-1)/2)).row();
 		// Scroll pane consisting of the Table.
 		scroll = new ScrollPane(table);
 		// Container is the outside covering which contains the
@@ -157,7 +152,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 				// otherwise you put the screen there where you want to go
 				int j;
 				for (j = 0; j < NUMBER_OF_PLAYERS; j += 1) {
-					if (userSelectBoxes.get(j).getSelectedIndex() == 0) {
+					if (userSelectButtons.get(j).isChecked()) {
 						isCPU.add(false);
 					} else {
 						isCPU.add(true);
@@ -174,6 +169,14 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(((float)(15)/255), ((float)(15)/255), ((float)(15)/255), 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
+			if (userSelectButtons.get(i).isChecked()) {
+				userSelectButtons.get(i).setText("Human");
+			} else {
+				userSelectButtons.get(i).setText("CPU");
+			}
+		}
 		
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			plyLabels.get(i).setText(String.valueOf((int)plySliders.get(i).getValue()));
