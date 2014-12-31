@@ -9,7 +9,7 @@ public class ChainReactionAIGame extends Game {
 	public static int WIDTH;
 	public static int HEIGHT;
 	public static int currentScreen;
-	final private boolean DEBUG = true;
+	final private boolean DEBUG = false;
 
 	@Override
 	public void create() {
