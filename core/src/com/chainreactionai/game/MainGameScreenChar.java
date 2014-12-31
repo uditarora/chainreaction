@@ -78,7 +78,7 @@ public class MainGameScreenChar implements Screen {
 	private Stage stage = new Stage();
 	private Table table = new Table();
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"), new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
-	private TextButton resumeButton, exitButton, newGameButton;
+	private TextButton resumeButton, exitButton, newGameButton, mainMenuButton;
 	private Position highlightPos = new Position(-1, -1);
 	private GameSolverChar solver;
 	private long prevTime, newTime;
@@ -93,7 +93,7 @@ public class MainGameScreenChar implements Screen {
 	public PerspectiveCamera cam;
 	public Environment environment;
 	// All debug printing should go under this flag.
-	final private boolean DEBUG = true;
+	final private boolean DEBUG = false;
 	final private boolean DEBUG_CPU = false;
 	private Preferences stats; 
 
@@ -195,6 +195,7 @@ public class MainGameScreenChar implements Screen {
 		incrementValForPercentageMovesSearched = 1/(double)(3*maxPlyLevel*maxPlyLevel);
 		resumeButton = new TextButton(new String("Resume"), skin);
 		newGameButton = new TextButton(new String("New Game"), skin);
+		mainMenuButton = new TextButton(new String("Main Menu"), skin);
 		exitButton = new TextButton("Exit", skin);
 		handle.writeString("--------------------------------------------------------------------------\r\n", true);
 		
@@ -205,6 +206,8 @@ public class MainGameScreenChar implements Screen {
 		table.add(resumeButton).size(WIDTH_PAUSE_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_PAUSE_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
 		newGameButton.setStyle(resumeButtonStyler);
 		table.add(newGameButton).size(WIDTH_PAUSE_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_PAUSE_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
+		mainMenuButton.setStyle(resumeButtonStyler);
+		table.add(mainMenuButton).size(WIDTH_PAUSE_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_PAUSE_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
 		exitButton.setStyle(resumeButtonStyler);
 		table.add(exitButton).size(WIDTH_PAUSE_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_PAUSE_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
 		table.setFillParent(true);
@@ -220,6 +223,12 @@ public class MainGameScreenChar implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				shiftToNewGameScreen();
+			}
+		});
+		mainMenuButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				myGame.setScreen(new MainMenuScreen(myGame));
 			}
 		});
 		exitButton.addListener(new ClickListener() {
@@ -557,7 +566,8 @@ public class MainGameScreenChar implements Screen {
 		if (coordX > WIDTH_PAUSE_BUTTON * widthUpscaleFactor || coordX < 0) {
 			return;
 		}
-		Gdx.app.log("Pause Button Debug", "coordX: " + coordX + " coordY: " + coordY + " coordX is smaller than: " + WIDTH_PAUSE_BUTTON * widthUpscaleFactor);
+		if (DEBUG)
+			Gdx.app.log("Pause Button Debug", "coordX: " + coordX + " coordY: " + coordY + " coordX is smaller than: " + WIDTH_PAUSE_BUTTON * widthUpscaleFactor);
 		pause();
 	}
 	
