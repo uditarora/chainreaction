@@ -145,8 +145,10 @@ public class GameSolverChar implements Runnable {
 					tempBoardNode.setOpponentPropagatingScore(temp);
 				}
 				// Check if the main player has lost. If yes, decrease the score by 100000.
-				if (tempBoardNode.board.hasLost(mainPlayer)) {
-					tempBoardNode.setOpponentPropagatingScore(-100000);
+				if (currentLevel == 1) {
+					if (tempBoardNode.board.hasLost(mainPlayer)) {
+						tempBoardNode.setSelfPropagatingScore(-100000);
+					}
 				}
 				int nextPlayer = currentPlayer;
 				if (DEBUG)
