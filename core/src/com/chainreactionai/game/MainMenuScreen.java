@@ -37,7 +37,8 @@ public class MainMenuScreen implements Screen {
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private TextButton buttonPlay = new TextButton("Play",
-			skin), buttonExit = new TextButton("Exit", skin), buttonRules = new TextButton("Rules", skin);
+			skin), buttonExit = new TextButton("Exit", skin), buttonRules = new TextButton("Rules", skin),
+			buttonStats = new TextButton("Stats", skin);
 	private Label title = new Label("Chain Reaction", skin);
 	private TextButtonStyle playButtonStyler;
 	
@@ -68,6 +69,8 @@ public class MainMenuScreen implements Screen {
 		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_MAIN_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
 		buttonRules.setStyle(playButtonStyler);
 		table.add(buttonRules).size(WIDTH_MAIN_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_MAIN_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
+		buttonStats.setStyle(playButtonStyler);
+		table.add(buttonStats).size(WIDTH_MAIN_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_MAIN_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
 		buttonExit.setStyle(playButtonStyler);
 		table.add(buttonExit).size(WIDTH_MAIN_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_MAIN_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
 		table.setFillParent(true);
@@ -84,6 +87,12 @@ public class MainMenuScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				myGame.setScreen(new GameRulesScreen(myGame));
+			}
+		});
+		buttonStats.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				myGame.setScreen(new GameStatsScreen(myGame));
 			}
 		});
 		buttonExit.addListener(new ClickListener() {
