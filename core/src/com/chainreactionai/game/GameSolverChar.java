@@ -21,6 +21,7 @@ public class GameSolverChar implements Runnable {
 	private Random rand;
 	private Position answerPosition;
 	private boolean isThreadComplete;
+	private boolean[] isLost;
 	final private boolean DEBUG = false;
 	
 	// Class to keep the click coordinates which were done
@@ -58,6 +59,10 @@ public class GameSolverChar implements Runnable {
 		this.heuristicNumber = heuristicNumber;
 		rand = new Random();
 		isThreadComplete = false;
+		isLost = new boolean[lostPlayer.length];
+		for (int i = 0; i < lostPlayer.length; i += 1) {
+			isLost[i] = lostPlayer[i];
+		}
 	}
 
 	// AI solver - Returns the best move for the given player using minimax
@@ -135,14 +140,16 @@ public class GameSolverChar implements Runnable {
 					// Giving the opportunity to all the players to give
 					// their best move.
 					currentPlayer = (currentPlayer + 1) % numPlayers;
-					if (DEBUG)
-						System.out.println("Current Player is: "
-								+ currentPlayer);
-					double temp = tempBoardNode.getPropagatedScore();
-					tempBoardNode = getBestPossibleMove(tempBoardNode,
-							currentPlayer);
-					tempBoardNode.setScore();
-					tempBoardNode.setOpponentPropagatingScore(temp);
+					if (!isLost[currentPlayer]) {
+						if (DEBUG)
+							System.out.println("Current Player is: "
+									+ currentPlayer);
+						double temp = tempBoardNode.getPropagatedScore();
+						tempBoardNode = getBestPossibleMove(tempBoardNode,
+								currentPlayer);
+						tempBoardNode.setScore();
+						tempBoardNode.setOpponentPropagatingScore(temp);
+					}
 				}
 				// Check if the main player has lost. If yes, decrease the score by 100000.
 				if (currentLevel == 1) {
