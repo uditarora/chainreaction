@@ -62,6 +62,7 @@ public class MainMenuScreen implements Screen {
 	private Label title = new Label("Chain Reaction", skin);
 	private TextButtonStyle playButtonStyler;
 	private Color[] colors;
+	private boolean animationInit = false;
 	// Trying 3D Graphics
 	private Model[] models;
 	private ModelInstance[] instances;
@@ -83,6 +84,7 @@ public class MainMenuScreen implements Screen {
 		speed = new ArrayList<Integer>();
 		numBalls = 0;
 		create();
+		animationInit = true;
 	}
 	
 	public MainMenuScreen(ChainReactionAIGame game, ArrayList<Integer> xVal, ArrayList<Integer> yVal, ArrayList<Integer> color, ArrayList<Integer> startZPosition, ArrayList<Integer> distNow, ArrayList<Integer> speed, int numBalls) {
@@ -107,6 +109,7 @@ public class MainMenuScreen implements Screen {
 			this.speed.add(speed.get(i));
 		}
 		create();
+		animationInit = true;
 	}
 	
 
@@ -197,10 +200,12 @@ public class MainMenuScreen implements Screen {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glClearColor(((float)(15)/255), ((float)(15)/255), ((float)(15)/255), 1);
-		modelBatch.begin(cam);
-		createAnimation();
-		drawAnimation();
-		modelBatch.end();
+		if (animationInit) {
+			modelBatch.begin(cam);
+			createAnimation();
+			drawAnimation();
+			modelBatch.end();
+		}
 		stage.act(delta);
 		stage.draw();
 		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
