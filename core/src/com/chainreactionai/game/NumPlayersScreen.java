@@ -48,12 +48,12 @@ public class NumPlayersScreen implements Screen {
 	final private int WIDTH_SUBMIT_BUTTON = 100;
 	final private int HEIGHT_SUBMIT_BUTTON = 40;
 	private float heightUpscaleFactor, widthUpscaleFactor;
-	final private int INVERSE_CHANCES_OF_NEW_BALLS = 40;
-	final private int MAX_Z_DIST_OF_NEW_BALLS = 400;
-	final private int MIN_Z_DIST_OF_NEW_BALLS = 200;
-	final private int MAX_SPEED_OF_BALLS = 2;
-	final private int MIN_SPEED_OF_BALLS = 1;
-	final private int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = 3;
+	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;
+	final private int MAX_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MAX_Z_DIST_OF_NEW_BALLS;
+	final private int MIN_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MIN_Z_DIST_OF_NEW_BALLS;
+	final private int MAX_SPEED_OF_BALLS = ChainReactionAIGame.MAX_SPEED_OF_BALLS;
+	final private int MIN_SPEED_OF_BALLS = ChainReactionAIGame.MIN_SPEED_OF_BALLS;
+	final private int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = ChainReactionAIGame.MAX_NUMBER_OF_BALLS_AT_A_MOMENT;
 	private int numBalls;
 	private Stage stage = new Stage();
 	private Table table = new Table();
