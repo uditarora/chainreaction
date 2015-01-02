@@ -176,13 +176,13 @@ public class MainMenuScreen implements Screen {
 		buttonRules.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				myGame.setScreen(new GameRulesScreen(myGame));
+				myGame.setScreen(new GameRulesScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
 			}
 		});
 		buttonStats.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				myGame.setScreen(new GameStatsScreen(myGame));
+				myGame.setScreen(new GameStatsScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
 			}
 		});
 		buttonExit.addListener(new ClickListener() {

@@ -113,7 +113,7 @@ public class NumPlayersScreen implements Screen {
 			this.speed.add(speed.get(i));
 		}
 		create();
-		animationInit = true;;
+		animationInit = true;
 	}
 
 	// Initialization function
@@ -187,7 +187,7 @@ public class NumPlayersScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				int chosenNumOfPlayers = (int)(numPlayerSlider.getValue());
-				myGame.setScreen(new ChooseOpponentsAndLevelsScreen(myGame, chosenNumOfPlayers, NUMBER_OF_DIFFICULTY_LEVELS));
+				myGame.setScreen(new ChooseOpponentsAndLevelsScreen(myGame, chosenNumOfPlayers, NUMBER_OF_DIFFICULTY_LEVELS, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
 			}
 		});
 		Gdx.input.setInputProcessor(stage);
