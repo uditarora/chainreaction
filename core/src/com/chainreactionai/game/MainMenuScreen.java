@@ -216,10 +216,12 @@ public class MainMenuScreen implements Screen {
 	private void createAnimation() {
 		int newOrNot, xCoord, yCoord, zCoord, speedOfBall;
 		newOrNot = rand.nextInt(INVERSE_CHANCES_OF_NEW_BALLS);
+		if (numBalls == 0) {
+			clearBallsList();
+		}
+		if (xVal.size() > ChainReactionAIGame.MAX_ARRAY_SIZE)
+			return;
 		if ((newOrNot == 0 || (numBalls == 0)) && numBalls < MAX_NUMBER_OF_BALLS_AT_A_MOMENT) {
-			if (numBalls == 0) {
-				clearBallsList();
-			}
 			zCoord = rand.nextInt(MAX_Z_DIST_OF_NEW_BALLS);
 			if (zCoord < MIN_Z_DIST_OF_NEW_BALLS) {
 				zCoord += MIN_Z_DIST_OF_NEW_BALLS;
