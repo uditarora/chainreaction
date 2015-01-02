@@ -90,7 +90,6 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	public ChooseOpponentsAndLevelsScreen(ChainReactionAIGame game, int numPlayers, int numDifficultyLevels) {
 		myGame = game;
 		NUMBER_OF_PLAYERS = numPlayers;
-		System.out.println(NUMBER_OF_PLAYERS);
 		NUMBER_OF_DIFFICULTY_LEVELS = numDifficultyLevels;
 		// Initialize ArrayLists
 		xVal = new ArrayList<Integer>();
@@ -108,7 +107,6 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		int i;
 		myGame = game;
 		NUMBER_OF_PLAYERS = numPlayers;
-		System.out.println(NUMBER_OF_PLAYERS);
 		NUMBER_OF_DIFFICULTY_LEVELS = numDifficultyLevels;
 		// Initialize ArrayLists
 		this.xVal = new ArrayList<Integer>();
@@ -338,7 +336,6 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	}
 	
 	private void clearBallsList () {
-		System.out.println("Cleared " + startZPosition.size());
 		xVal.clear();
 		yVal.clear();
 		color.clear();
