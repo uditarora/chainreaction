@@ -12,11 +12,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -35,11 +33,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -91,7 +85,6 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	private Environment environment;
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
-	private Drawable submitButtonDrawable, cpuButtonDrawable, humanButtonDrawable;
 	
 	// Constructor which initializes the number of players passed from
 	// NumPlayersScreen and the number if difficulty levels allowed.
@@ -175,22 +168,18 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
-        // Load Drawables
-        submitButtonDrawable = ChainReactionAIGame.submitButtonDraw;
-        cpuButtonDrawable = ChainReactionAIGame.cpuButtonDraw;
-        humanButtonDrawable = ChainReactionAIGame.humanButtonDraw;
-		// Label for title.
+        // Label for title.
 		title = new Label("Choose specifications for the players", skin);
 		title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		// Creating the DropDown for whether the player should be 
 		// human or CPU.
-		ImageButton tempButton = new ImageButton(humanButtonDrawable);
+		ImageButton tempButton = new ImageButton(ChainReactionAIGame.humanButtonDraw);
 		userSelectButtons = new Array<ImageButton>();
 		userSelectIsHuman = new Array<Boolean>();
 		tempButton.setChecked(true);
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			if (i != 0) {
-				tempButton = new ImageButton(cpuButtonDrawable);
+				tempButton = new ImageButton(ChainReactionAIGame.cpuButtonDraw);
 				tempButton.setChecked(false);
 			}
 			userSelectButtons.add(tempButton);
@@ -230,7 +219,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 			table.add(userSelectButtons.get(i)).size(WIDTH_HUMAN_CPU_MENUS*(1+(widthUpscaleFactor-1)/2), HEIGHT_HUMAN_CPU_MENUS*(1+(heightUpscaleFactor-1)/2)).padBottom(10).padTop(5).row();
 		}
 		// Creating and adding the submit button to the Table.
-		submitButton = new ImageButton(submitButtonDrawable);
+		submitButton = new ImageButton(ChainReactionAIGame.submitButtonDraw);
 		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*(1+(widthUpscaleFactor-1)/2), HEIGHT_SUBMIT_BUTTON*(1+(heightUpscaleFactor-1)/2)).row();
 		// Scroll pane consisting of the Table.
 		scroll = new ScrollPane(table);
@@ -275,10 +264,10 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		}
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			if (userSelectButtons.get(i).isChecked()) {
-				ImageButtonStyle temp = new ImageButtonStyle(humanButtonDrawable, humanButtonDrawable, humanButtonDrawable, humanButtonDrawable, humanButtonDrawable, humanButtonDrawable);
+				ImageButtonStyle temp = new ImageButtonStyle(ChainReactionAIGame.humanButtonDraw, ChainReactionAIGame.humanButtonDraw, ChainReactionAIGame.humanButtonDraw, ChainReactionAIGame.humanButtonDraw, ChainReactionAIGame.humanButtonDraw, ChainReactionAIGame.humanButtonDraw);
 				userSelectButtons.get(i).setStyle(temp);
 			} else {
-				ImageButtonStyle temp = new ImageButtonStyle(cpuButtonDrawable, cpuButtonDrawable, cpuButtonDrawable, cpuButtonDrawable, cpuButtonDrawable, cpuButtonDrawable);
+				ImageButtonStyle temp = new ImageButtonStyle(ChainReactionAIGame.cpuButtonDraw, ChainReactionAIGame.cpuButtonDraw, ChainReactionAIGame.cpuButtonDraw, ChainReactionAIGame.cpuButtonDraw, ChainReactionAIGame.cpuButtonDraw, ChainReactionAIGame.cpuButtonDraw);
 				userSelectButtons.get(i).setStyle(temp);
 			}
 		}

@@ -29,10 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 /**
  * @author Kartik Parnami
@@ -60,7 +57,6 @@ public class MainMenuScreen implements Screen {
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private ImageButton buttonPlay, buttonExit, buttonRules, buttonStats;
 	private Label title = new Label("Chain Reaction", skin);
-	private TextButtonStyle playButtonStyler;
 	private Color[] colors;
 	private boolean animationInit = false;
 	// Trying 3D Graphics
@@ -71,7 +67,6 @@ public class MainMenuScreen implements Screen {
 	private Environment environment;
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
-	private Drawable playButtonDrawable, rulesButtonDrawable, statsButtonDrawable, exitButtonDrawable;
 	
 	public MainMenuScreen(ChainReactionAIGame game) {
 		ChainReactionAIGame.currentScreen = 0;
@@ -151,21 +146,16 @@ public class MainMenuScreen implements Screen {
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
-        // Load Drawables
-        playButtonDrawable = ChainReactionAIGame.playButtonDraw;
-        rulesButtonDrawable = ChainReactionAIGame.rulesButtonDraw;
-        statsButtonDrawable = ChainReactionAIGame.statsButtonDraw;
-        exitButtonDrawable = ChainReactionAIGame.exitButtonDraw;
-		// Adds the title and buttons to the Table.
+        // Adds the title and buttons to the Table.
 		title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		table.add(title).padBottom(40).row();
-		buttonPlay = new ImageButton(playButtonDrawable);
+		buttonPlay = new ImageButton(ChainReactionAIGame.playButtonDraw);
 		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_MAIN_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
-		buttonRules = new ImageButton(rulesButtonDrawable);
+		buttonRules = new ImageButton(ChainReactionAIGame.rulesButtonDraw);
 		table.add(buttonRules).size(WIDTH_MAIN_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_MAIN_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
-		buttonStats = new ImageButton(statsButtonDrawable);
+		buttonStats = new ImageButton(ChainReactionAIGame.statsButtonDraw);
 		table.add(buttonStats).size(WIDTH_MAIN_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_MAIN_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
-		buttonExit = new ImageButton(exitButtonDrawable);
+		buttonExit = new ImageButton(ChainReactionAIGame.exitButtonDraw);
 		table.add(buttonExit).size(WIDTH_MAIN_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_MAIN_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
 		table.setFillParent(true);
 		// Adding the table to stage.
