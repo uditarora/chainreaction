@@ -27,17 +27,8 @@ public class ChainReactionAIGame extends Game {
 	final private boolean DEBUG = false;
 	
 	// Drawables for ImageButtons
-	public static Drawable backButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("backButton.jpg"))));
-	public static Drawable cpuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/cpu_button.png"))));
-	public static Drawable exitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/exit_button.png"))));
-	public static Drawable humanButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/human_button.png"))));
-	public static Drawable mainMenuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/main_menu_button.png"))));
-	public static Drawable newGameButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/new_game_button.png"))));
-	public static Drawable playButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/play_button.png"))));
-	public static Drawable resumeButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/resume_button.png"))));
-	public static Drawable rulesButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/rules_button.png"))));
-	public static Drawable statsButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/stats_button.png"))));
-	public static Drawable submitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/submit_button.png"))));
+	public static Drawable backButtonDraw, cpuButtonDraw, exitButtonDraw, humanButtonDraw, mainMenuButtonDraw, newGameButtonDraw,
+		playButtonDraw, resumeButtonDraw, rulesButtonDraw, statsButtonDraw, submitButtonDraw;
 
 	@Override
 	public void create() {
@@ -48,6 +39,20 @@ public class ChainReactionAIGame extends Game {
 			Gdx.app.log("Screen Size", WIDTH + " " + HEIGHT);
 		}
 		MAX_NUMBER_PLAYERS = 6;
+		
+		// Load the drawables for image buttons
+		backButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("backButton.jpg"))));
+		cpuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/cpu_button.png"))));
+		exitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/exit_button.png"))));
+		humanButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/human_button.png"))));
+		mainMenuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/main_menu_button.png"))));
+		newGameButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/new_game_button.png"))));
+		playButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/play_button.png"))));
+		resumeButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/resume_button.png"))));
+		rulesButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/rules_button.png"))));
+		statsButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/stats_button.png"))));
+		submitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/submit_button.png"))));
+		
 		//Shift to the splash screen
 		setScreen(new SplashScreen(this));
 	}
