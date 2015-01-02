@@ -38,7 +38,7 @@ public class NumPlayersScreen implements Screen {
 	private float heightUpscaleFactor, widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private int MAX_NUMBER_OF_PLAYERS = 6, NUMBER_OF_DIFFICULTY_LEVELS = 10;
+	private int MAX_NUMBER_OF_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS, NUMBER_OF_DIFFICULTY_LEVELS = 10;
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private TextButton submitButton;
@@ -46,7 +46,7 @@ public class NumPlayersScreen implements Screen {
 	private TextButtonStyle submitButtonStyler;
 	private Slider numPlayerSlider;
 	private Label numPlayerLabel;
-
+	
 	public NumPlayersScreen(ChainReactionAIGame game) {
 		ChainReactionAIGame.currentScreen = 1;
 		myGame = game;

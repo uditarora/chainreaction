@@ -9,6 +9,7 @@ public class ChainReactionAIGame extends Game {
 	public static int WIDTH;
 	public static int HEIGHT;
 	public static int currentScreen;
+	public static int MAX_NUMBER_PLAYERS;
 	final private boolean DEBUG = false;
 
 	@Override
@@ -19,6 +20,7 @@ public class ChainReactionAIGame extends Game {
 		if (DEBUG) {
 			Gdx.app.log("Screen Size", WIDTH + " " + HEIGHT);
 		}
+		MAX_NUMBER_PLAYERS = 6;
 		//Shift to the splash screen
 		setScreen(new SplashScreen(this));
 	}
