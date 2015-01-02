@@ -79,6 +79,15 @@ public class NumPlayersScreen implements Screen {
 	public NumPlayersScreen(ChainReactionAIGame game) {
 		ChainReactionAIGame.currentScreen = 1;
 		myGame = game;
+		// Initialize ArrayLists
+		xVal = new ArrayList<Integer>();
+		yVal = new ArrayList<Integer>();
+		color = new ArrayList<Integer>();
+		startZPosition = new ArrayList<Integer>();
+		distNow = new ArrayList<Integer>();
+		speed = new ArrayList<Integer>();
+		numBalls = 0;
+		animationInit = true;
 		create();
 	}
 	
