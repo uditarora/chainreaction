@@ -74,8 +74,41 @@ public class MainMenuScreen implements Screen {
 	public MainMenuScreen(ChainReactionAIGame game) {
 		ChainReactionAIGame.currentScreen = 0;
 		myGame = game;
+		// Initialize ArrayLists
+		xVal = new ArrayList<Integer>();
+		yVal = new ArrayList<Integer>();
+		color = new ArrayList<Integer>();
+		startZPosition = new ArrayList<Integer>();
+		distNow = new ArrayList<Integer>();
+		speed = new ArrayList<Integer>();
+		numBalls = 0;
 		create();
 	}
+	
+	public MainMenuScreen(ChainReactionAIGame game, ArrayList<Integer> xVal, ArrayList<Integer> yVal, ArrayList<Integer> color, ArrayList<Integer> startZPosition, ArrayList<Integer> distNow, ArrayList<Integer> speed, int numBalls) {
+		int i;
+		ChainReactionAIGame.currentScreen = 0;
+		myGame = game;
+		// Initialize ArrayLists
+		this.xVal = new ArrayList<Integer>();
+		this.yVal = new ArrayList<Integer>();
+		this.color = new ArrayList<Integer>();
+		this.startZPosition = new ArrayList<Integer>();
+		this.distNow = new ArrayList<Integer>();
+		this.speed = new ArrayList<Integer>();
+		this.numBalls = numBalls;
+		// Copy ArrayLists
+		for (i = 0; i < xVal.size(); i += 1) {
+			this.xVal.add(xVal.get(i));
+			this.yVal.add(yVal.get(i));
+			this.color.add(color.get(i));
+			this.startZPosition.add(startZPosition.get(i));
+			this.distNow.add(distNow.get(i));
+			this.speed.add(speed.get(i));
+		}
+		create();
+	}
+	
 
 	private void create() {
 		batch = new SpriteBatch();
@@ -93,14 +126,6 @@ public class MainMenuScreen implements Screen {
 		colors[3] = Color.ORANGE;
 		colors[4] = Color.PURPLE;
 		colors[5] = Color.GREEN;
-		// Initialize ArrayLists
-		xVal = new ArrayList<Integer>();
-		yVal = new ArrayList<Integer>();
-		color = new ArrayList<Integer>();
-		startZPosition = new ArrayList<Integer>();
-		distNow = new ArrayList<Integer>();
-		speed = new ArrayList<Integer>();
-		numBalls = 0;
 		// Trying 3D graphics
 		cam = new PerspectiveCamera(30, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		float camZ = ((float)1440*720/1240)*((float)Gdx.graphics.getHeight()/Gdx.graphics.getWidth());
@@ -142,7 +167,7 @@ public class MainMenuScreen implements Screen {
 		buttonPlay.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				myGame.setScreen(new NumPlayersScreen(myGame));
+				myGame.setScreen(new NumPlayersScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
 			}
 		});
 		buttonRules.addListener(new ClickListener() {
@@ -196,9 +221,9 @@ public class MainMenuScreen implements Screen {
 			}
 			startZPosition.add(zCoord);
 			distNow.add(0);
-			xCoord = rand.nextInt(WIDTH_SCREEN - WIDTH_MAIN_MENU_BUTTONS);
-			if (xCoord >= (WIDTH_SCREEN - WIDTH_MAIN_MENU_BUTTONS)/2) {
-				xCoord = (xCoord + WIDTH_MAIN_MENU_BUTTONS);
+			xCoord = rand.nextInt(WIDTH_SCREEN/2);
+			if (xCoord >= (WIDTH_SCREEN/4)) {
+				xCoord = (xCoord + (WIDTH_SCREEN/2));
 			}
 			xVal.add(xCoord);
 			yCoord = rand.nextInt(HEIGHT_SCREEN);
