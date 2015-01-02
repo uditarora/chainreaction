@@ -268,7 +268,6 @@ public class MainMenuScreen implements Screen {
 	}
 	
 	private void clearBallsList () {
-		System.out.println("Cleared " + startZPosition.size());
 		xVal.clear();
 		yVal.clear();
 		color.clear();
