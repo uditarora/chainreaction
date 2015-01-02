@@ -11,11 +11,12 @@ public class ChainReactionAIGame extends Game {
 	public static int currentScreen;
 	public static int MAX_NUMBER_PLAYERS;
 	public static int INVERSE_CHANCES_OF_NEW_BALLS = 40;
-	public static int MAX_Z_DIST_OF_NEW_BALLS = 400;
+	public static int MAX_Z_DIST_OF_NEW_BALLS = 600;
 	public static int MIN_Z_DIST_OF_NEW_BALLS = 200;
-	public static int MAX_SPEED_OF_BALLS = 2;
+	public static int MAX_SPEED_OF_BALLS = 3;
 	public static int MIN_SPEED_OF_BALLS = 1;
-	public static int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = 3;
+	public static int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = 5;
+	public static int MAX_ARRAY_SIZE = 150;
 	final private boolean DEBUG = false;
 
 	@Override
