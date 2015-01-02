@@ -3,13 +3,26 @@
  */
 package com.chainreactionai.game;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -25,12 +38,19 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
  */
 public class MainMenuScreen implements Screen {
 	SpriteBatch batch;
-	private OrthographicCamera camera;
 	private ChainReactionAIGame myGame;
 	final private int WIDTH_SCREEN = 448;
 	final private int HEIGHT_SCREEN = 645;
 	final private int HEIGHT_MAIN_MENU_BUTTONS = 60;
 	final private int WIDTH_MAIN_MENU_BUTTONS = 150;
+	final private int MAX_NUM_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
+	final private int INVERSE_CHANCES_OF_NEW_BALLS = 40;
+	final private int MAX_Z_DIST_OF_NEW_BALLS = 400;
+	final private int MIN_Z_DIST_OF_NEW_BALLS = 200;
+	final private int MAX_SPEED_OF_BALLS = 2;
+	final private int MIN_SPEED_OF_BALLS = 1;
+	final private int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = 3;
+	private int numBalls;
 	private float heightUpscaleFactor, widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
@@ -41,6 +61,15 @@ public class MainMenuScreen implements Screen {
 			buttonStats = new TextButton("Stats", skin);
 	private Label title = new Label("Chain Reaction", skin);
 	private TextButtonStyle playButtonStyler;
+	private Color[] colors;
+	// Trying 3D Graphics
+	private Model[] models;
+	private ModelInstance[] instances;
+	private ModelBatch modelBatch;
+	private PerspectiveCamera cam;
+	private Environment environment;
+	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
+	private Random rand;
 	
 	public MainMenuScreen(ChainReactionAIGame game) {
 		ChainReactionAIGame.currentScreen = 0;
@@ -50,16 +79,49 @@ public class MainMenuScreen implements Screen {
 
 	private void create() {
 		batch = new SpriteBatch();
-		// Show the world to be 440*480 no matter the
-		// size of the screen
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, WIDTH_SCREEN, HEIGHT_SCREEN);
 		// The elements are displayed in the order you add them.
 		// The first appear on top, the last at the bottom.
 		// Up-scale Factors are used to get proper sized buttons
 		// upscaled or downscaled according to the Screen Dimensions
 		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
 		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
+		// Initialize colors
+		colors = new Color[MAX_NUM_PLAYERS];
+		colors[0] = Color.WHITE;
+		colors[1] = Color.BLUE;
+		colors[2] = Color.MAROON;
+		colors[3] = Color.ORANGE;
+		colors[4] = Color.PURPLE;
+		colors[5] = Color.GREEN;
+		// Initialize ArrayLists
+		xVal = new ArrayList<Integer>();
+		yVal = new ArrayList<Integer>();
+		color = new ArrayList<Integer>();
+		startZPosition = new ArrayList<Integer>();
+		distNow = new ArrayList<Integer>();
+		speed = new ArrayList<Integer>();
+		numBalls = 0;
+		// Trying 3D graphics
+		cam = new PerspectiveCamera(30, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		float camZ = ((float)1440*720/1240)*((float)Gdx.graphics.getHeight()/Gdx.graphics.getWidth());
+		cam.position.set(WIDTH_SCREEN/2, HEIGHT_SCREEN/2, camZ);
+	    cam.lookAt(WIDTH_SCREEN/2, HEIGHT_SCREEN/2, 0);
+	    cam.near = 1f;
+	    cam.far = 4000f;
+	    cam.update();
+	    // Building models for spheres of different colors
+	    ModelBuilder modelBuilder = new ModelBuilder();
+		models = new Model[MAX_NUM_PLAYERS];
+		instances = new ModelInstance[MAX_NUM_PLAYERS];
+		for (int i = 0; i < MAX_NUM_PLAYERS; i += 1) {
+			models[i] = modelBuilder.createSphere(25f, 25f, 25f, 30, 30, new Material(ColorAttribute.createDiffuse(colors[i])), Usage.Position | Usage.Normal | Usage.TextureCoordinates);
+			instances[i] = new ModelInstance(models[i]);
+		}
+		modelBatch = new ModelBatch();
+        environment = new Environment();
+        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
+        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+        rand = new Random();
 		// Adds the title and buttons to the Table.
 		title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		table.add(title).padBottom(40).row();
@@ -107,15 +169,82 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
+		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glClearColor(((float)(15)/255), ((float)(15)/255), ((float)(15)/255), 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		stage.act();
+		modelBatch.begin(cam);
+		createAnimation();
+		drawAnimation();
+		modelBatch.end();
+		stage.act(delta);
 		stage.draw();
 		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
 			Gdx.app.exit();
 		}
 	}
-
+	
+	private void createAnimation() {
+		int newOrNot, xCoord, yCoord, zCoord, speedOfBall;
+		newOrNot = rand.nextInt(INVERSE_CHANCES_OF_NEW_BALLS);
+		if ((newOrNot == 0 || (numBalls == 0)) && numBalls < MAX_NUMBER_OF_BALLS_AT_A_MOMENT) {
+			if (numBalls == 0) {
+				clearBallsList();
+			}
+			zCoord = rand.nextInt(MAX_Z_DIST_OF_NEW_BALLS);
+			if (zCoord < MIN_Z_DIST_OF_NEW_BALLS) {
+				zCoord += MIN_Z_DIST_OF_NEW_BALLS;
+			}
+			startZPosition.add(zCoord);
+			distNow.add(0);
+			xCoord = rand.nextInt(WIDTH_SCREEN - WIDTH_MAIN_MENU_BUTTONS);
+			if (xCoord >= (WIDTH_SCREEN - WIDTH_MAIN_MENU_BUTTONS)/2) {
+				xCoord = (xCoord + WIDTH_MAIN_MENU_BUTTONS);
+			}
+			xVal.add(xCoord);
+			yCoord = rand.nextInt(HEIGHT_SCREEN);
+			yVal.add(yCoord);
+			color.add(rand.nextInt(MAX_NUM_PLAYERS));
+			speedOfBall = rand.nextInt(MAX_SPEED_OF_BALLS) + 1;
+			if (speedOfBall < MIN_SPEED_OF_BALLS) {
+				speedOfBall += MIN_SPEED_OF_BALLS;
+			}
+			speed.add(speedOfBall);
+			numBalls += 1;
+		}
+	}
+	
+	private void drawAnimation() {
+		int xCoord, yCoord, zCoord;
+		for (int i = 0; i < startZPosition.size(); i += 1) {
+			xCoord = xVal.get(i);
+			if (xCoord != -1) {
+				yCoord = yVal.get(i);
+				zCoord = -startZPosition.get(i) + distNow.get(i);
+				instances[color.get(i)].transform.setTranslation(xCoord, yCoord, zCoord);
+				modelBatch.render(instances[color.get(i)], environment);
+				distNow.set(i, distNow.get(i) + speed.get(i));
+				if (distNow.get(i) - startZPosition.get(i) > 0) {
+					deleteBallFromList(i);
+				}
+			}
+		}
+	}
+	
+	private void deleteBallFromList(int index) {
+		xVal.set(index, -1);
+		numBalls -= 1;
+	}
+	
+	private void clearBallsList () {
+		System.out.println("Cleared " + startZPosition.size());
+		xVal.clear();
+		yVal.clear();
+		color.clear();
+		startZPosition.clear();
+		distNow.clear();
+		speed.clear();
+	}
+	
 	@Override
 	public void resize(int width, int height) {
 	}

@@ -87,15 +87,16 @@ public class MainGameScreenChar implements Screen {
 	private Color[] colors;
 	private TextButtonStyle resumeButtonStyler;
 	// Trying 3D Graphics
-	public Model[] models;
-	public ModelInstance[] instances;
-	public ModelBatch modelBatch;
-	public PerspectiveCamera cam;
-	public Environment environment;
+	private Model[] models;
+	private ModelInstance[] instances;
+	private ModelBatch modelBatch;
+	private PerspectiveCamera cam;
+	private Environment environment;
+	// Stats to be stored
+	private Preferences stats;
 	// All debug printing should go under this flag.
 	final private boolean DEBUG = false;
-	final private boolean DEBUG_CPU = false;
-	private Preferences stats; 
+	final private boolean DEBUG_CPU = false; 
 
 	// Constructor to initialize which player is CPU and which is human.
 	// Also sets difficulty levels for CPU players.
@@ -480,7 +481,7 @@ public class MainGameScreenChar implements Screen {
 			modelBatch.begin(cam);
 			drawGameBoard();
 	        modelBatch.end();
-	        shapeRenderer.end();
+	        shapeRenderer.end();		
 		} else {
 			// If the game is paused, add the pause menu to the stage.
 			stage.addActor(table);
