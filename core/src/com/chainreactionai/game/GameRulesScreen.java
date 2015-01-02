@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -26,13 +27,14 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 /**
  * @author Parnami
@@ -58,10 +60,7 @@ public class GameRulesScreen implements Screen {
 	private float heightUpscaleFactor, widthUpscaleFactor;
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
-	private TextButton backButton;
 	private Label rules;
-	private TextButtonStyle backButtonStyler;
-	Texture[] images = new Texture[15];
 	private int currentImage;
 	private ScrollPane scroll;
 	private Color[] colors;
@@ -74,6 +73,8 @@ public class GameRulesScreen implements Screen {
 	private Environment environment;
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
+	// Trying ImageButton
+	private ImageButton backButtonImg = new ImageButton((Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("backButton.jpg")))));
 	
 	// Constructor
 	public GameRulesScreen(ChainReactionAIGame game) {
@@ -173,12 +174,7 @@ public class GameRulesScreen implements Screen {
 				+ "existing balls present in that rectangle.", skin);
 		rules.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
 		table.add(rules).padLeft(10).padRight(10).padBottom(10).row();
-		// Adds the backButton to the Table.
-		backButton = new TextButton(new String("Back"), skin);
-		backButtonStyler = new TextButtonStyle(backButton.getStyle());
-		backButtonStyler.font.setScale((1+(heightUpscaleFactor-1)/2));
-		backButton.setStyle(backButtonStyler);
-		table.add(backButton).size(WIDTH_RULES_SCREEN_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_RULES_SCREEN_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
+		table.add(backButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_RULES_SCREEN_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
 		table.setFillParent(true);
 		// Scroll pane consisting of the Table.
 		scroll = new ScrollPane(table);
@@ -189,7 +185,7 @@ public class GameRulesScreen implements Screen {
 		// Adding container to stage.
 		stage.addActor(container);
 		// Attaching the ClickListener to the back button.
-		backButton.addListener(new ClickListener() {
+		backButtonImg.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				myGame.setScreen(new MainMenuScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
