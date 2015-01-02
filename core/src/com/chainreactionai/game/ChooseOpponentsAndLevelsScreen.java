@@ -222,11 +222,11 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 			}
 			// To allow the sliders to be dragged properly
 			plySliders.get(i).addListener(stopTouchDown);
-			table.add(plySliders.get(i)).size(WIDTH_SLIDER*widthUpscaleFactor, HEIGHT_SLIDER*heightUpscaleFactor).padBottom(5).padTop(5).row();
+			table.add(plySliders.get(i)).size(WIDTH_SLIDER*widthUpscaleFactor, HEIGHT_SLIDER*heightUpscaleFactor).padBottom(5).padTop(5);
 			// Add the labels containing the currently selected plyLevel
 			tempLabel = plyLabels.get(i);
 			tempLabel.setFontScale(heightUpscaleFactor);
-			table.add(tempLabel).size((30*widthUpscaleFactor), (15*heightUpscaleFactor)).padBottom(2).padTop(2).row();
+			table.add(tempLabel).size((30*widthUpscaleFactor), (15*heightUpscaleFactor)).padBottom(8).padTop(2).padLeft(5).row();
 			table.add(userSelectButtons.get(i)).size(WIDTH_HUMAN_CPU_MENUS*(1+(widthUpscaleFactor-1)/2), HEIGHT_HUMAN_CPU_MENUS*(1+(heightUpscaleFactor-1)/2)).padBottom(10).padTop(5).row();
 		}
 		// Creating and adding the submit button to the Table.

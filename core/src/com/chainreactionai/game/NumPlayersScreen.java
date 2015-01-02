@@ -26,6 +26,7 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
@@ -33,6 +34,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 /**
  * @author Kartik Parnami
@@ -60,7 +62,7 @@ public class NumPlayersScreen implements Screen {
 	private int MAX_NUMBER_OF_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS, NUMBER_OF_DIFFICULTY_LEVELS = 10;
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
-	private TextButton submitButton;
+	private ImageButton submitButton;
 	private Label title;
 	private TextButtonStyle submitButtonStyler;
 	private Slider numPlayerSlider;
@@ -174,10 +176,7 @@ public class NumPlayersScreen implements Screen {
 		numPlayerLabel = new Label("2", skin);
 		table.add(numPlayerLabel).padBottom(20).row();
 		// Initializing and adding the Submit Button to Table.
-		submitButton = new TextButton(new String("Submit"), skin);
-		submitButtonStyler = new TextButtonStyle(submitButton.getStyle());
-		submitButtonStyler.font.setScale((1+(heightUpscaleFactor-1)/2));
-		submitButton.setStyle(submitButtonStyler);
+		submitButton = new ImageButton(ChainReactionAIGame.submitButtonDraw);
 		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*(1+(widthUpscaleFactor-1)/2), HEIGHT_SUBMIT_BUTTON*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
 		table.setFillParent(true);
 		// Adding the table to the stage.
