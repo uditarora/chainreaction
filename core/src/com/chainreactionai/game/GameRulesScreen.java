@@ -74,7 +74,7 @@ public class GameRulesScreen implements Screen {
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
 	// Trying ImageButton
-	private ImageButton backButtonImg = new ImageButton((Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("backButton.jpg")))));
+	private ImageButton backButtonImg = new ImageButton(ChainReactionAIGame.backButtonDraw);
 	
 	// Constructor
 	public GameRulesScreen(ChainReactionAIGame game) {

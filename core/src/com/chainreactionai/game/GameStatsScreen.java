@@ -27,6 +27,7 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -59,7 +60,6 @@ public class GameStatsScreen implements Screen {
 	private float heightUpscaleFactor, widthUpscaleFactor;
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
-	private TextButton backButton;
 	private Label stat;
 	private TextButtonStyle backButtonStyler;
 	Texture[] images = new Texture[15];
@@ -76,6 +76,7 @@ public class GameStatsScreen implements Screen {
 	private Environment environment;
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
+	private ImageButton backButton = new ImageButton(ChainReactionAIGame.backButtonDraw);
 	
 	// Constructor
 	public GameStatsScreen(ChainReactionAIGame game) {
@@ -174,10 +175,6 @@ public class GameStatsScreen implements Screen {
 		}
 		
 		// Adds the backButton to the Table.
-		backButton = new TextButton(new String("Back"), skin);
-		backButtonStyler = new TextButtonStyle(backButton.getStyle());
-		backButtonStyler.font.setScale((1+(heightUpscaleFactor-1)/2));
-		backButton.setStyle(backButtonStyler);
 		table.add(backButton).size(WIDTH_RULES_SCREEN_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_RULES_SCREEN_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
 		table.setFillParent(true);
 		// Scroll pane consisting of the Table.

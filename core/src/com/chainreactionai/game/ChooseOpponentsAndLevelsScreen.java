@@ -178,7 +178,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
         // Load Drawables
         submitButtonDrawable = ChainReactionAIGame.submitButtonDraw;
         cpuButtonDrawable = ChainReactionAIGame.cpuButtonDraw;
-        humanButtonDrawable = ChainReactionAIGame.humantButtonDraw;
+        humanButtonDrawable = ChainReactionAIGame.humanButtonDraw;
 		// Label for title.
 		title = new Label("Choose specifications for the players", skin);
 		title.setFontScale((1+(heightUpscaleFactor-1)/2));
