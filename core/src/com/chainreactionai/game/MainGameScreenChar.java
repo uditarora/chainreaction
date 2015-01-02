@@ -32,10 +32,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 
@@ -86,14 +85,13 @@ public class MainGameScreenChar implements Screen {
 	private Stage stage = new Stage();
 	private Table table = new Table();
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"), new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
-	private TextButton resumeButton, exitButton, newGameButton, mainMenuButton;
+	private ImageButton resumeButton, exitButton, newGameButton, mainMenuButton;
 	private Position highlightPos = new Position(-1, -1);
 	private GameSolverChar solver;
 	private long prevTime, newTime;
 	private FileHandle handle = Gdx.files.external("data/myfile.txt");
 	private ShapeRenderer shapeRenderer = new ShapeRenderer();
 	private Color[] colors;
-	private TextButtonStyle resumeButtonStyler;
 	// Trying 3D Graphics
 	private Model[] models;
 	private ModelInstance[] instances;
@@ -215,22 +213,17 @@ public class MainGameScreenChar implements Screen {
 		else
 			percentageMovesSearched = 1/(double)(maxPlyLevel);
 		incrementValForPercentageMovesSearched = 1/(double)(3*maxPlyLevel*maxPlyLevel);
-		resumeButton = new TextButton(new String("Resume"), skin);
-		newGameButton = new TextButton(new String("New Game"), skin);
-		mainMenuButton = new TextButton(new String("Main Menu"), skin);
-		exitButton = new TextButton("Exit", skin);
+		resumeButton = new ImageButton(ChainReactionAIGame.resumeButtonDraw);
+		newGameButton = new ImageButton(ChainReactionAIGame.newGameButtonDraw);
+		mainMenuButton = new ImageButton(ChainReactionAIGame.mainMenuButtonDraw);
+		exitButton = new ImageButton(ChainReactionAIGame.exitButtonDraw);
+		
 		handle.writeString("--------------------------------------------------------------------------\r\n", true);
 		
 		// Populating the Pause menu with the buttons.
-		resumeButtonStyler = new TextButtonStyle(resumeButton.getStyle());
-		resumeButtonStyler.font.setScale((1+(heightUpscaleFactor-1)/2));
-		resumeButton.setStyle(resumeButtonStyler);
 		table.add(resumeButton).size(WIDTH_PAUSE_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_PAUSE_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
-		newGameButton.setStyle(resumeButtonStyler);
 		table.add(newGameButton).size(WIDTH_PAUSE_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_PAUSE_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
-		mainMenuButton.setStyle(resumeButtonStyler);
 		table.add(mainMenuButton).size(WIDTH_PAUSE_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_PAUSE_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
-		exitButton.setStyle(resumeButtonStyler);
 		table.add(exitButton).size(WIDTH_PAUSE_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_PAUSE_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
 		table.setFillParent(true);
 		
