@@ -342,7 +342,7 @@ public class MainGameScreenChar implements Screen {
 		// If game is not paused
 		if (gameState == 0) {
 			batch.begin();
-		    batch.draw(ChainReactionAIGame.mainGameScreenTexture, 0, 0, ChainReactionAIGame.WIDTH, ChainReactionAIGame.HEIGHT);
+		    batch.draw(ChainReactionAIGame.mainGameScreenTexture, 0, 0, WIDTH_SCREEN, HEIGHT_SCREEN);
 		    batch.end();
 			// Check if any player has lost the game and doesn't permit
 			// it to play any further.

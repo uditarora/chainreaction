@@ -159,7 +159,7 @@ public class GameEndScreen implements Screen {
 		Gdx.gl.glClearColor(((float)(15)/255), ((float)(15)/255), ((float)(15)/255), 1);
 		batch.setProjectionMatrix(cam.combined);
 	    batch.begin();
-	    batch.draw(ChainReactionAIGame.texture, 0, 0, ChainReactionAIGame.WIDTH, ChainReactionAIGame.HEIGHT);
+	    batch.draw(ChainReactionAIGame.texture, 0, 0, WIDTH_SCREEN, HEIGHT_SCREEN);
 	    batch.end();
 		if (animationInit) {
 			modelBatch.begin(cam);
