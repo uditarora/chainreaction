@@ -146,13 +146,13 @@ public class MainMenuScreen implements Screen {
 		title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		table.add(title).padBottom(40).row();
 		buttonPlay = new ImageButton(ChainReactionAIGame.playButtonDraw);
-		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_MAIN_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
+		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		buttonRules = new ImageButton(ChainReactionAIGame.rulesButtonDraw);
-		table.add(buttonRules).size(WIDTH_MAIN_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_MAIN_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
+		table.add(buttonRules).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		buttonStats = new ImageButton(ChainReactionAIGame.statsButtonDraw);
-		table.add(buttonStats).size(WIDTH_MAIN_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_MAIN_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
+		table.add(buttonStats).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		buttonExit = new ImageButton(ChainReactionAIGame.exitButtonDraw);
-		table.add(buttonExit).size(WIDTH_MAIN_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_MAIN_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
+		table.add(buttonExit).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		table.setFillParent(true);
 		// Adding the table to stage.
 		stage.addActor(table);
