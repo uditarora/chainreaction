@@ -41,7 +41,7 @@ public class MainMenuScreen implements Screen {
 	final private int WIDTH_SCREEN = 448;
 	final private int HEIGHT_SCREEN = 645;
 	final private int HEIGHT_MAIN_MENU_BUTTONS = 60;
-	final private int WIDTH_MAIN_MENU_BUTTONS = 150;
+	final private int WIDTH_MAIN_MENU_BUTTONS = 275;
 	final private int MAX_NUM_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;
 	final private int MAX_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MAX_Z_DIST_OF_NEW_BALLS;
@@ -194,6 +194,10 @@ public class MainMenuScreen implements Screen {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glClearColor(((float)(15)/255), ((float)(15)/255), ((float)(15)/255), 1);
+		batch.setProjectionMatrix(cam.combined);
+	    batch.begin();
+	    batch.draw(ChainReactionAIGame.texture, 0, 0, ChainReactionAIGame.WIDTH, ChainReactionAIGame.HEIGHT);
+	    batch.end();
 		if (animationInit) {
 			modelBatch.begin(cam);
 			createAnimation();
@@ -222,10 +226,7 @@ public class MainMenuScreen implements Screen {
 			}
 			startZPosition.add(zCoord);
 			distNow.add(0);
-			xCoord = rand.nextInt(WIDTH_SCREEN/2);
-			if (xCoord >= (WIDTH_SCREEN/4)) {
-				xCoord = (xCoord + (WIDTH_SCREEN/2));
-			}
+			xCoord = rand.nextInt(WIDTH_SCREEN);
 			xVal.add(xCoord);
 			yCoord = rand.nextInt(HEIGHT_SCREEN);
 			yVal.add(yCoord);

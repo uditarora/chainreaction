@@ -46,9 +46,10 @@ public class MainGameScreenChar implements Screen {
 	final private int GRID_SIZE_X = 6;
 	final private int GRID_SIZE_Y = 8;
 	final private int HEIGHT_PAUSE_BUTTON = 27;
-	final private int WIDTH_PAUSE_BUTTON = 55;
+	final private int WIDTH_PAUSE_BUTTON = 123;
 	final private int PAD_BOTTOM_PAUSE_BUTTON = 10;
 	final private int PAD_TOP_PAUSE_BUTTON = 10;
+	final private int PAD_LEFT_PAUSE_BUTTON = 10;
 	final private int THREE_D_EFFECT_DISTANCE_FOR_GRID = 24;
 	final private int WIDTH_SCREEN = 448;
 	final private float WIDTH_RECTANGLE = ((float)(WIDTH_SCREEN)/GRID_SIZE_X);
@@ -57,7 +58,7 @@ public class MainGameScreenChar implements Screen {
 	final private float HEIGHT_INNER_RECTANGLE = ((float)((HEIGHT_RECTANGLE * GRID_SIZE_Y) - THREE_D_EFFECT_DISTANCE_FOR_GRID))/GRID_SIZE_Y;
 	final private int HEIGHT_SCREEN = (int)((GRID_SIZE_Y * HEIGHT_RECTANGLE) + PAD_BOTTOM_PAUSE_BUTTON + HEIGHT_PAUSE_BUTTON + PAD_TOP_PAUSE_BUTTON) + 1;
 	final private int HEIGHT_PAUSE_MENU_BUTTONS = 60;
-	final private int WIDTH_PAUSE_MENU_BUTTONS = 150;
+	final private int WIDTH_PAUSE_MENU_BUTTONS = 275;
 	final private int MAX_NUM_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;
 	final private int MAX_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MAX_Z_DIST_OF_NEW_BALLS;
@@ -68,7 +69,7 @@ public class MainGameScreenChar implements Screen {
 	private int numBalls;
 	private int INVERSE_SPEED_OF_BALL_VIBRATION = 28;
 	private int NUMBER_OF_PLAYERS, breakingAway, splittableBreakingAway;
-	private Texture pauseButtonImg = new Texture("pauseButton.jpg");
+	private Texture pauseButtonImg = new Texture(Gdx.files.internal("buttons/pause.jpg"));
 	private Array<Rectangle> rectangularGrid, innerRectangularGrid;
 	private GameBoardChar gameBoard;
 	private int clickCoordX, clickCoordY, currentPlayer, numberOfMovesPlayed, gameState, maxPlyLevel;
@@ -171,6 +172,8 @@ public class MainGameScreenChar implements Screen {
 
 	private void create() {
 		batch = new SpriteBatch();
+		Color c = batch.getColor();
+		batch.setColor(c.r, c.g, c.b, 0.3f);
 		// Initializing stuff.
 		rectangularGrid = new Array<Rectangle>();
 		innerRectangularGrid = new Array<Rectangle>();
@@ -334,10 +337,13 @@ public class MainGameScreenChar implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		Gdx.gl.glClearColor(((float)(15)/255), ((float)(15)/255), ((float)(15)/255), 1);
-		
+		Gdx.gl.glClearColor(((float)(15)/256), ((float)(15)/256), ((float)(15)/256), 1);
+		batch.setProjectionMatrix(cam.combined);
 		// If game is not paused
 		if (gameState == 0) {
+			batch.begin();
+		    batch.draw(ChainReactionAIGame.mainGameScreenTexture, 0, 0, ChainReactionAIGame.WIDTH, ChainReactionAIGame.HEIGHT);
+		    batch.end();
 			// Check if any player has lost the game and doesn't permit
 			// it to play any further.
 			if (numberOfMovesPlayed > NUMBER_OF_PLAYERS) {
@@ -483,7 +489,7 @@ public class MainGameScreenChar implements Screen {
 			batch = (SpriteBatch)stage.getBatch();
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
-			batch.draw(pauseButtonImg, 0, ((GRID_SIZE_Y * HEIGHT_RECTANGLE) + PAD_BOTTOM_PAUSE_BUTTON));
+			batch.draw(pauseButtonImg, PAD_LEFT_PAUSE_BUTTON, ((GRID_SIZE_Y * HEIGHT_RECTANGLE) + PAD_BOTTOM_PAUSE_BUTTON), WIDTH_PAUSE_BUTTON, HEIGHT_PAUSE_BUTTON);
 			batch.end();
 			shapeRenderer.setProjectionMatrix(cam.combined);
 			shapeRenderer.begin(ShapeType.Line);
@@ -494,6 +500,9 @@ public class MainGameScreenChar implements Screen {
 	        modelBatch.end();
 	        shapeRenderer.end();		
 		} else {
+			batch.begin();
+		    batch.draw(ChainReactionAIGame.texture, 0, 0, ChainReactionAIGame.WIDTH, ChainReactionAIGame.HEIGHT);
+		    batch.end();
 			// If the game is paused, add the pause menu to the stage.
 			if (animationInit) {
 				modelBatch.begin(cam);
@@ -581,7 +590,7 @@ public class MainGameScreenChar implements Screen {
 		if (coordY > distOfGridFromTop || coordY < distOfPauseButtonFromTop) {
 			return;
 		}
-		if (coordX > WIDTH_PAUSE_BUTTON * widthUpscaleFactor || coordX < 0) {
+		if (coordX > ((WIDTH_PAUSE_BUTTON + PAD_LEFT_PAUSE_BUTTON) * widthUpscaleFactor) || coordX < PAD_LEFT_PAUSE_BUTTON) {
 			return;
 		}
 		if (DEBUG)
@@ -605,13 +614,21 @@ public class MainGameScreenChar implements Screen {
 			shapeRenderer.set(ShapeType.Line);
 			shapeRenderer.setColor(colors[currentPlayer]);
 			shapeRenderer.line(tempBlock.x, tempBlock.y, tempBlock.x + WIDTH_RECTANGLE, tempBlock.y);
+			shapeRenderer.line(tempBlock.x, tempBlock.y + 1, tempBlock.x + WIDTH_RECTANGLE, tempBlock.y + 1);
 			shapeRenderer.line(tempBlock.x, tempBlock.y, tempBlock.x, tempBlock.y + HEIGHT_RECTANGLE);
+			shapeRenderer.line(tempBlock.x + 1, tempBlock.y, tempBlock.x + 1, tempBlock.y + HEIGHT_RECTANGLE);
 			shapeRenderer.line(tempBlock.x, tempBlock.y + HEIGHT_RECTANGLE, tempBlock.x + WIDTH_RECTANGLE, tempBlock.y + HEIGHT_RECTANGLE);
+			shapeRenderer.line(tempBlock.x, tempBlock.y + HEIGHT_RECTANGLE + 1, tempBlock.x + WIDTH_RECTANGLE, tempBlock.y + HEIGHT_RECTANGLE + 1);
 			shapeRenderer.line(tempBlock.x + WIDTH_RECTANGLE, tempBlock.y, tempBlock.x + WIDTH_RECTANGLE, tempBlock.y + HEIGHT_RECTANGLE);
+			shapeRenderer.line(tempBlock.x + WIDTH_RECTANGLE + 1, tempBlock.y, tempBlock.x + WIDTH_RECTANGLE + 1, tempBlock.y + HEIGHT_RECTANGLE);
 			shapeRenderer.line(tempBlock2.x, tempBlock2.y, tempBlock2.x + WIDTH_INNER_RECTANGLE, tempBlock2.y);
+			shapeRenderer.line(tempBlock2.x, tempBlock2.y + 1, tempBlock2.x + WIDTH_INNER_RECTANGLE, tempBlock2.y + 1);
 			shapeRenderer.line(tempBlock2.x, tempBlock2.y, tempBlock2.x, tempBlock2.y + HEIGHT_INNER_RECTANGLE);
+			shapeRenderer.line(tempBlock2.x + 1, tempBlock2.y, tempBlock2.x + 1, tempBlock2.y + HEIGHT_INNER_RECTANGLE);
 			shapeRenderer.line(tempBlock2.x, tempBlock2.y + HEIGHT_INNER_RECTANGLE, tempBlock2.x + WIDTH_INNER_RECTANGLE, tempBlock2.y + HEIGHT_INNER_RECTANGLE);
+			shapeRenderer.line(tempBlock2.x, tempBlock2.y + HEIGHT_INNER_RECTANGLE + 1, tempBlock2.x + WIDTH_INNER_RECTANGLE, tempBlock2.y + HEIGHT_INNER_RECTANGLE + 1);
 			shapeRenderer.line(tempBlock2.x + WIDTH_INNER_RECTANGLE, tempBlock2.y, tempBlock2.x + WIDTH_INNER_RECTANGLE, tempBlock2.y + HEIGHT_INNER_RECTANGLE);
+			shapeRenderer.line(tempBlock2.x + WIDTH_INNER_RECTANGLE + 1, tempBlock2.y, tempBlock2.x + WIDTH_INNER_RECTANGLE + 1, tempBlock2.y + HEIGHT_INNER_RECTANGLE);
 			shapeRenderer.line(tempBlock.x, tempBlock.y, tempBlock2.x, tempBlock2.y);
 			shapeRenderer.line(tempBlock.x + WIDTH_RECTANGLE, tempBlock.y, tempBlock2.x + WIDTH_INNER_RECTANGLE, tempBlock2.y);
 			shapeRenderer.line(tempBlock.x, tempBlock.y + HEIGHT_RECTANGLE, tempBlock2.x, tempBlock2.y + HEIGHT_INNER_RECTANGLE);
@@ -805,10 +822,7 @@ public class MainGameScreenChar implements Screen {
 			}
 			startZPosition.add(zCoord);
 			distNow.add(0);
-			xCoord = rand.nextInt(WIDTH_SCREEN/2);
-			if (xCoord >= (WIDTH_SCREEN/4)) {
-				xCoord = (xCoord + (WIDTH_SCREEN/2));
-			}
+			xCoord = rand.nextInt(WIDTH_SCREEN);
 			xVal.add(xCoord);
 			yCoord = rand.nextInt(HEIGHT_SCREEN);
 			yVal.add(yCoord);

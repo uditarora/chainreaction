@@ -27,7 +27,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -46,10 +45,10 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	private ChainReactionAIGame myGame;
 	final private int WIDTH_SCREEN = 448;
 	final private int HEIGHT_SCREEN = 645;
-	final private int WIDTH_HUMAN_CPU_MENUS = 100;
+	final private int WIDTH_HUMAN_CPU_MENUS = 30;
 	final private int HEIGHT_HUMAN_CPU_MENUS = 30;
-	final private int WIDTH_SUBMIT_BUTTON = 150;
-	final private int HEIGHT_SUBMIT_BUTTON = 40;
+	final private int WIDTH_SUBMIT_BUTTON = 275;
+	final private int HEIGHT_SUBMIT_BUTTON = 60;
 	final private int WIDTH_SLIDER = 150;
 	final private int HEIGHT_SLIDER = 10;
 	private float heightUpscaleFactor, widthUpscaleFactor;
@@ -173,13 +172,13 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		// Creating the DropDown for whether the player should be 
 		// human or CPU.
-		ImageButton tempButton = new ImageButton(ChainReactionAIGame.humanButtonDraw);
+		ImageButton tempButton = new ImageButton(ChainReactionAIGame.redUnpressedButtonDraw, ChainReactionAIGame.redPressedButtonDraw);
 		userSelectButtons = new Array<ImageButton>();
 		userSelectIsHuman = new Array<Boolean>();
 		tempButton.setChecked(true);
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			if (i != 0) {
-				tempButton = new ImageButton(ChainReactionAIGame.cpuButtonDraw);
+				tempButton = new ImageButton(ChainReactionAIGame.redUnpressedButtonDraw, ChainReactionAIGame.redPressedButtonDraw);
 				tempButton.setChecked(false);
 			}
 			userSelectButtons.add(tempButton);
@@ -204,19 +203,15 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			Label tempLabel = new Label("Player " + String.valueOf(i+1) + ":", skin);
 			tempLabel.setFontScale(heightUpscaleFactor);
-			if (i == 0) {
-				table.add(tempLabel).row().padTop(10);
-			} else {
-				table.add(tempLabel).row();
-			}
+			table.add(tempLabel).padTop(3).padBottom(7);
 			// To allow the sliders to be dragged properly
 			plySliders.get(i).addListener(stopTouchDown);
-			table.add(plySliders.get(i)).size(WIDTH_SLIDER*widthUpscaleFactor, HEIGHT_SLIDER*heightUpscaleFactor).padBottom(5).padTop(5);
+			table.add(plySliders.get(i)).size(WIDTH_SLIDER*widthUpscaleFactor, HEIGHT_SLIDER*heightUpscaleFactor).padTop(5).padBottom(5);
 			// Add the labels containing the currently selected plyLevel
 			tempLabel = plyLabels.get(i);
 			tempLabel.setFontScale(heightUpscaleFactor);
-			table.add(tempLabel).size((30*widthUpscaleFactor), (15*heightUpscaleFactor)).padBottom(8).padTop(2).padLeft(5).row();
-			table.add(userSelectButtons.get(i)).size(WIDTH_HUMAN_CPU_MENUS*(1+(widthUpscaleFactor-1)/2), HEIGHT_HUMAN_CPU_MENUS*(1+(heightUpscaleFactor-1)/2)).padBottom(10).padTop(5).row();
+			table.add(tempLabel).size((30*widthUpscaleFactor), (15*heightUpscaleFactor)).padTop(3).padBottom(7).padRight(10);
+			table.add(userSelectButtons.get(i)).size(WIDTH_HUMAN_CPU_MENUS*(1+(widthUpscaleFactor-1)/2), HEIGHT_HUMAN_CPU_MENUS*(1+(heightUpscaleFactor-1)/2)).row();
 		}
 		// Creating and adding the submit button to the Table.
 		submitButton = new ImageButton(ChainReactionAIGame.submitButtonDraw);
@@ -256,21 +251,21 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glClearColor(((float)(15)/255), ((float)(15)/255), ((float)(15)/255), 1);
+		batch.setProjectionMatrix(cam.combined);
+	    batch.begin();
+	    batch.draw(ChainReactionAIGame.texture, 0, 0, ChainReactionAIGame.WIDTH, ChainReactionAIGame.HEIGHT);
+	    batch.end();
 		if (animationInit) {
 			modelBatch.begin(cam);
 			createAnimation();
 			drawAnimation();
 			modelBatch.end();
 		}
-		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
-			if (userSelectButtons.get(i).isChecked()) {
-				ImageButtonStyle temp = new ImageButtonStyle(ChainReactionAIGame.humanButtonDraw, ChainReactionAIGame.humanButtonDraw, ChainReactionAIGame.humanButtonDraw, ChainReactionAIGame.humanButtonDraw, ChainReactionAIGame.humanButtonDraw, ChainReactionAIGame.humanButtonDraw);
-				userSelectButtons.get(i).setStyle(temp);
-			} else {
-				ImageButtonStyle temp = new ImageButtonStyle(ChainReactionAIGame.cpuButtonDraw, ChainReactionAIGame.cpuButtonDraw, ChainReactionAIGame.cpuButtonDraw, ChainReactionAIGame.cpuButtonDraw, ChainReactionAIGame.cpuButtonDraw, ChainReactionAIGame.cpuButtonDraw);
-				userSelectButtons.get(i).setStyle(temp);
-			}
-		}
+//		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
+//			if (userSelectButtons.get(i).isChecked()) {
+//			} else {
+//			}
+//		}
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			plyLabels.get(i).setText(String.valueOf((int)plySliders.get(i).getValue()));
 		}
@@ -297,10 +292,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 			}
 			startZPosition.add(zCoord);
 			distNow.add(0);
-			xCoord = rand.nextInt(WIDTH_SCREEN/2);
-			if (xCoord >= (WIDTH_SCREEN/4)) {
-				xCoord = (xCoord + (WIDTH_SCREEN/2));
-			}
+			xCoord = rand.nextInt(WIDTH_SCREEN);
 			xVal.add(xCoord);
 			yCoord = rand.nextInt(HEIGHT_SCREEN);
 			yVal.add(yCoord);
