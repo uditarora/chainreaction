@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -27,7 +26,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -53,10 +51,8 @@ public class MainMenuScreen implements Screen {
 	private float heightUpscaleFactor, widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
-			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private ImageButton buttonPlay, buttonExit, buttonRules, buttonStats;
-	private Label title = new Label("Chain Reaction", skin);
+	private Label title = new Label("Chain Reaction", ChainReactionAIGame.skin);
 	private Color[] colors;
 	private boolean animationInit = false;
 	// Trying 3D Graphics
@@ -295,6 +291,5 @@ public class MainMenuScreen implements Screen {
 	@Override
 	public void dispose() {
 		stage.dispose();
-		skin.dispose();
 	}
 }
