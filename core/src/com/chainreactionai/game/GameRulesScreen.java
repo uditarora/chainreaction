@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -27,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -52,7 +54,7 @@ public class GameRulesScreen implements Screen {
 	private Stage stage = new Stage();
 	private Table table = new Table(), container = new Table();
 	private float heightUpscaleFactor, widthUpscaleFactor;
-	private Label rules;
+	private Label rules, rulesHeading;
 	private int currentImage;
 	private ScrollPane scroll;
 	private Color[] colors;
@@ -67,6 +69,8 @@ public class GameRulesScreen implements Screen {
 	private Random rand;
 	// Trying ImageButton
 	private ImageButton backButtonImg = new ImageButton(ChainReactionAIGame.backButtonDraw);
+	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
+			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	
 	// Constructor
 	public GameRulesScreen(ChainReactionAIGame game) {
@@ -149,6 +153,8 @@ public class GameRulesScreen implements Screen {
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
 		// Initializing and adding the rules to Table.
+        rulesHeading = new Label("GAME RULES", ChainReactionAIGame.skin);
+        rulesHeading.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
 		rules = new Label("There's only one rule - Eliminate your\n"
 				+ "opponent's atoms! Players take turns to place\n"
 				+ "their atoms on a square. If a square reaches\n"
@@ -163,8 +169,9 @@ public class GameRulesScreen implements Screen {
 				+ "If your atom reaches a given rectangle, you\n"
 				+ "become the winning player for that rectangle\n"
 				+ "and your new ball gets added to the previously\n"
-				+ "existing balls present in that rectangle.", ChainReactionAIGame.skin);
+				+ "existing balls present in that rectangle.", skin);
 		rules.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+		table.add(rulesHeading).row();
 		table.add(rules).padLeft(10).padRight(10).padBottom(10).row();
 		table.add(backButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		table.setFillParent(true);
