@@ -161,7 +161,7 @@ public class NumPlayersScreen implements Screen {
 		numPlayerSlider = new Slider(2, MAX_NUMBER_OF_PLAYERS, 1, false, ChainReactionAIGame.skin);
 		numPlayerSlider.getStyle().knob.setMinHeight(HEIGHT_KNOB*heightUpscaleFactor);
 		// Adding the DropDown to the Table.
-		table.add(numPlayerSlider).size(WIDTH_SLIDER*widthUpscaleFactor, HEIGHT_SLIDER*heightUpscaleFactor*2).padTop(5).padBottom(50);
+		table.add(numPlayerSlider).size(WIDTH_SLIDER*widthUpscaleFactor, HEIGHT_SLIDER*heightUpscaleFactor*2).padTop(5).padBottom(5);
 		// To allow the sliders to be dragged properly
 		InputListener stopTouchDown = new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
