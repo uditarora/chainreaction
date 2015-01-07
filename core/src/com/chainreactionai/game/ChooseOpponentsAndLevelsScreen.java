@@ -198,7 +198,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 			Label tempLabel = new Label("Player " + String.valueOf(i+1) + ":", ChainReactionAIGame.skin);
 			tempLabel.setFontScale(heightUpscaleFactor);
 			table.add(tempLabel);
-			table.add(userSelectButtons.get(i)).size(WIDTH_HUMAN_CPU_MENUS*(1+(widthUpscaleFactor-1)/2), HEIGHT_HUMAN_CPU_MENUS*(1+(heightUpscaleFactor-1)/2)).row();
+			table.add(userSelectButtons.get(i)).size(WIDTH_HUMAN_CPU_MENUS*(widthUpscaleFactor), (HEIGHT_HUMAN_CPU_MENUS*widthUpscaleFactor)).row();
 			// To allow the sliders to be dragged properly
 			plySliders.get(i).addListener(stopTouchDown);
 			plySliders.get(i).getStyle().knob.setMinHeight(HEIGHT_KNOB*heightUpscaleFactor);
@@ -210,7 +210,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		}
 		// Creating and adding the submit button to the Table.
 		submitButton = new ImageButton(ChainReactionAIGame.submitButtonDraw);
-		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*widthUpscaleFactor, HEIGHT_SUBMIT_BUTTON*heightUpscaleFactor).row();
+		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*widthUpscaleFactor, HEIGHT_SUBMIT_BUTTON*widthUpscaleFactor).row();
 		// Scroll pane consisting of the Table.
 		scroll = new ScrollPane(table);
 		// Container is the outside covering which contains the
