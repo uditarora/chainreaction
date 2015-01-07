@@ -166,7 +166,7 @@ public class GameRulesScreen implements Screen {
 				+ "existing balls present in that rectangle.", ChainReactionAIGame.skin);
 		rules.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
 		table.add(rules).padLeft(10).padRight(10).padBottom(10).row();
-		table.add(backButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_RULES_SCREEN_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(20).row();
+		table.add(backButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		table.setFillParent(true);
 		// Scroll pane consisting of the Table.
 		scroll = new ScrollPane(table);

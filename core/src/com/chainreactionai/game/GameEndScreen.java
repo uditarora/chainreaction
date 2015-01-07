@@ -49,6 +49,7 @@ public class GameEndScreen implements Screen {
 	final private int HEIGHT_BUTTONS = 60;
 	private int numBalls;
 	private int MAX_NUMBER_OF_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
+	private float widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
 	private ImageButton buttonPlayAgain, buttonExit;
@@ -92,6 +93,9 @@ public class GameEndScreen implements Screen {
 		colors[3] = Color.ORANGE;
 		colors[4] = Color.PURPLE;
 		colors[5] = Color.GREEN;
+		// Up-scale Factors are used to get proper sized buttons
+		// upscaled or downscaled according to the Screen Dimensions
+		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
 		// Trying 3D graphics
 		cam = new PerspectiveCamera(30, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		float camZ = ((float)1440*720/1240)*((float)Gdx.graphics.getHeight()/Gdx.graphics.getWidth());
@@ -124,8 +128,8 @@ public class GameEndScreen implements Screen {
 		// Add the PlayAgain and Exit buttons to the Table.
 		buttonPlayAgain = new ImageButton(newGameButtonDrawable);
 		buttonExit = new ImageButton(exitButtonDrawable);
-		table.add(buttonPlayAgain).size(WIDTH_BUTTONS, HEIGHT_BUTTONS).padBottom(20).row();
-		table.add(buttonExit).size(WIDTH_BUTTONS, HEIGHT_BUTTONS).padBottom(20).row();
+		table.add(buttonPlayAgain).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+		table.add(buttonExit).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		table.setFillParent(true);
 		// Add table to the stage.
 		stage.addActor(table);

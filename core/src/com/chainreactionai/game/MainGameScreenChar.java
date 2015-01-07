@@ -221,10 +221,10 @@ public class MainGameScreenChar implements Screen {
 		handle.writeString("--------------------------------------------------------------------------\r\n", true);
 		
 		// Populating the Pause menu with the buttons.
-		table.add(resumeButton).size(WIDTH_PAUSE_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_PAUSE_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
-		table.add(newGameButton).size(WIDTH_PAUSE_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_PAUSE_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
-		table.add(mainMenuButton).size(WIDTH_PAUSE_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_PAUSE_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
-		table.add(exitButton).size(WIDTH_PAUSE_MENU_BUTTONS*(1+(widthUpscaleFactor-1)/2), HEIGHT_PAUSE_MENU_BUTTONS*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
+		table.add(resumeButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
+		table.add(newGameButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
+		table.add(mainMenuButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
+		table.add(exitButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
 		table.setFillParent(true);
 		
 		//Attaching click handlers to the pause menu buttons.
