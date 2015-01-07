@@ -52,7 +52,7 @@ public class MainMenuScreen implements Screen {
 	private Stage stage = new Stage();
 	private Table table = new Table();
 	private ImageButton buttonPlay, buttonExit, buttonRules, buttonStats;
-	private Label title = new Label("Chain Reaction", ChainReactionAIGame.skin);
+	private Label title = new Label("CHAIN REACTION", ChainReactionAIGame.skin);
 	private Color[] colors;
 	private boolean animationInit = false;
 	// Trying 3D Graphics
