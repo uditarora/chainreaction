@@ -3,7 +3,9 @@ package com.chainreactionai.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
@@ -17,13 +19,14 @@ public class ChainReactionAIGame extends Game {
 	
 	// For background animation
 	public static int INVERSE_CHANCES_OF_NEW_BALLS = 40;
-	public static int MAX_Z_DIST_OF_NEW_BALLS = 600;
+	public static int MAX_Z_DIST_OF_NEW_BALLS = 900;
 	public static int MIN_Z_DIST_OF_NEW_BALLS = 300;
-	public static int MAX_SPEED_OF_BALLS = 3;
-	public static int MIN_SPEED_OF_BALLS = 1;
+	public static int MAX_SPEED_OF_BALLS = 8;
+	public static int MIN_SPEED_OF_BALLS = 2;
 	public static int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = 10;
 	public static int MAX_ARRAY_SIZE = 250;
 	public static Texture texture, mainGameScreenTexture;
+	public static Skin skin;
 	
 	final private boolean DEBUG = false;
 	
@@ -59,6 +62,10 @@ public class ChainReactionAIGame extends Game {
 		// Loading game background image
 		texture = new Texture(Gdx.files.internal("back.jpg"));
 		mainGameScreenTexture = new Texture(Gdx.files.internal("mainGameScreenBack.jpg"));
+		
+		// Loading the skin
+		skin = new Skin(Gdx.files.internal("data/uiskin.json"),
+				new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
 		
 		//Shift to the splash screen
 		setScreen(new SplashScreen(this));
