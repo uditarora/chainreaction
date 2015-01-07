@@ -187,7 +187,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		plySliders = new Array<Slider>();
 		plyLabels = new Array<Label>();
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
-			plySliders.add(new Slider(1, NUMBER_OF_DIFFICULTY_LEVELS, 1, false, skin));
+			plySliders.add(new Slider(1, NUMBER_OF_DIFFICULTY_LEVELS, 1, false, ChainReactionAIGame.skin));
 			plyLabels.add(new Label(String.valueOf((int)plySliders.get(i).getValue()), skin));
 		}
 		// To allow the sliders to be dragged properly

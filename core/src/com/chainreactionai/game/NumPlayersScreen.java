@@ -158,7 +158,7 @@ public class NumPlayersScreen implements Screen {
 		title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		table.add(title).padBottom(10).row();
 		// Initializing the Drop-Down menu
-		numPlayerSlider = new Slider(2, MAX_NUMBER_OF_PLAYERS, 1, false, skin);
+		numPlayerSlider = new Slider(2, MAX_NUMBER_OF_PLAYERS, 1, false, ChainReactionAIGame.skin);
 		numPlayerSlider.getStyle().knob.setMinHeight(HEIGHT_KNOB*heightUpscaleFactor);
 		// Adding the DropDown to the Table.
 		table.add(numPlayerSlider).size(WIDTH_SLIDER*widthUpscaleFactor, HEIGHT_SLIDER*heightUpscaleFactor*2).padTop(5).padBottom(50);
