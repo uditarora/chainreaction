@@ -44,8 +44,8 @@ public class NumPlayersScreen implements Screen {
 	final private int HEIGHT_SCREEN = 645;
 	final private int WIDTH_DROP_DOWN_MENUS = 150;
 	final private int HEIGHT_DROP_DOWN_MENUS = 30;
-	final private int WIDTH_SUBMIT_BUTTON = 100;
-	final private int HEIGHT_SUBMIT_BUTTON = 40;
+	final private int WIDTH_SUBMIT_BUTTON = 275;
+	final private int HEIGHT_SUBMIT_BUTTON = 60;
 	private float heightUpscaleFactor, widthUpscaleFactor;
 	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;
 	final private int MAX_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MAX_Z_DIST_OF_NEW_BALLS;
@@ -159,7 +159,7 @@ public class NumPlayersScreen implements Screen {
 		// Initializing the Drop-Down menu
 		numPlayerSlider = new Slider(2, MAX_NUMBER_OF_PLAYERS, 1, false, skin);
 		// Adding the DropDown to the Table.
-		table.add(numPlayerSlider).size(WIDTH_DROP_DOWN_MENUS*widthUpscaleFactor, HEIGHT_DROP_DOWN_MENUS*heightUpscaleFactor).padBottom(10).row();
+		table.add(numPlayerSlider).size(WIDTH_DROP_DOWN_MENUS*widthUpscaleFactor, HEIGHT_DROP_DOWN_MENUS*heightUpscaleFactor).padTop(5).padBottom(5);
 		// To allow the sliders to be dragged properly
 		InputListener stopTouchDown = new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -170,7 +170,7 @@ public class NumPlayersScreen implements Screen {
 		numPlayerSlider.addListener(stopTouchDown);
 		// Label Initialize
 		numPlayerLabel = new Label("2", skin);
-		table.add(numPlayerLabel).padBottom(20).row();
+		table.add(numPlayerLabel).padBottom(7).padTop(3).row();
 		// Initializing and adding the Submit Button to Table.
 		submitButton = new ImageButton(ChainReactionAIGame.submitButtonDraw);
 		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*(1+(widthUpscaleFactor-1)/2), HEIGHT_SUBMIT_BUTTON*(1+(heightUpscaleFactor-1)/2)).padBottom(2).row();
@@ -193,6 +193,10 @@ public class NumPlayersScreen implements Screen {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glClearColor(((float)(15)/255), ((float)(15)/255), ((float)(15)/255), 1);
+		batch.setProjectionMatrix(cam.combined);
+	    batch.begin();
+	    batch.draw(ChainReactionAIGame.texture, 0, 0, ChainReactionAIGame.WIDTH, ChainReactionAIGame.HEIGHT);
+	    batch.end();
 		if (animationInit) {
 			modelBatch.begin(cam);
 			createAnimation();
@@ -222,10 +226,7 @@ public class NumPlayersScreen implements Screen {
 			}
 			startZPosition.add(zCoord);
 			distNow.add(0);
-			xCoord = rand.nextInt(WIDTH_SCREEN/2);
-			if (xCoord >= (WIDTH_SCREEN/4)) {
-				xCoord = (xCoord + (WIDTH_SCREEN/2));
-			}
+			xCoord = rand.nextInt(WIDTH_SCREEN);
 			xVal.add(xCoord);
 			yCoord = rand.nextInt(HEIGHT_SCREEN);
 			yVal.add(yCoord);

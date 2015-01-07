@@ -18,17 +18,19 @@ public class ChainReactionAIGame extends Game {
 	// For background animation
 	public static int INVERSE_CHANCES_OF_NEW_BALLS = 40;
 	public static int MAX_Z_DIST_OF_NEW_BALLS = 600;
-	public static int MIN_Z_DIST_OF_NEW_BALLS = 200;
+	public static int MIN_Z_DIST_OF_NEW_BALLS = 300;
 	public static int MAX_SPEED_OF_BALLS = 3;
 	public static int MIN_SPEED_OF_BALLS = 1;
-	public static int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = 5;
-	public static int MAX_ARRAY_SIZE = 150;
+	public static int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = 10;
+	public static int MAX_ARRAY_SIZE = 250;
+	public static Texture texture, mainGameScreenTexture;
 	
 	final private boolean DEBUG = false;
 	
 	// Drawables for ImageButtons
-	public static Drawable backButtonDraw, cpuButtonDraw, exitButtonDraw, humanButtonDraw, mainMenuButtonDraw, newGameButtonDraw,
-		playButtonDraw, resumeButtonDraw, rulesButtonDraw, statsButtonDraw, submitButtonDraw;
+	public static Drawable backButtonDraw, exitButtonDraw, mainMenuButtonDraw, newGameButtonDraw,
+		playButtonDraw, resumeButtonDraw, rulesButtonDraw, statsButtonDraw, submitButtonDraw, 
+		redPressedButtonDraw, redUnpressedButtonDraw, pauseButtonDraw;
 
 	@Override
 	public void create() {
@@ -41,17 +43,22 @@ public class ChainReactionAIGame extends Game {
 		MAX_NUMBER_PLAYERS = 6;
 		
 		// Load the drawables for image buttons
-		backButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("backButton.jpg"))));
-		cpuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/cpu_button.png"))));
-		exitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/exit_button.png"))));
-		humanButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/human_button.png"))));
-		mainMenuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/main_menu_button.png"))));
-		newGameButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/new_game_button.png"))));
-		playButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/play_button.png"))));
-		resumeButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/resume_button.png"))));
-		rulesButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/rules_button.png"))));
-		statsButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/stats_button.png"))));
-		submitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/submit_button.png"))));
+		backButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/backb.jpg"))));
+		exitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/exit.jpg"))));
+		mainMenuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/main-menu.jpg"))));
+		newGameButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/new-game.jpg"))));
+		pauseButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/pause.jpg"))));
+		playButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/play.jpg"))));
+		resumeButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/resume.jpg"))));
+		rulesButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/rules.jpg"))));
+		statsButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/statistics.jpg"))));
+		submitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/submit.jpg"))));
+		redPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/pressed.png"))));
+		redUnpressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/unpressed.png"))));
+		
+		// Loading game background image
+		texture = new Texture(Gdx.files.internal("back.jpg"));
+		mainGameScreenTexture = new Texture(Gdx.files.internal("mainGameScreenBack.jpg"));
 		
 		//Shift to the splash screen
 		setScreen(new SplashScreen(this));

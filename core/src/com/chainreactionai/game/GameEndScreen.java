@@ -47,6 +47,8 @@ public class GameEndScreen implements Screen {
 	final private int MAX_SPEED_OF_BALLS = ChainReactionAIGame.MAX_SPEED_OF_BALLS;
 	final private int MIN_SPEED_OF_BALLS = ChainReactionAIGame.MIN_SPEED_OF_BALLS;
 	final private int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = ChainReactionAIGame.MAX_NUMBER_OF_BALLS_AT_A_MOMENT;
+	final private int WIDTH_BUTTONS = 275;
+	final private int HEIGHT_BUTTONS = 60;
 	private int numBalls;
 	private int MAX_NUMBER_OF_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	private Stage stage = new Stage();
@@ -126,8 +128,8 @@ public class GameEndScreen implements Screen {
 		// Add the PlayAgain and Exit buttons to the Table.
 		buttonPlayAgain = new ImageButton(newGameButtonDrawable);
 		buttonExit = new ImageButton(exitButtonDrawable);
-		table.add(buttonPlayAgain).size(150, 60).padBottom(20).row();
-		table.add(buttonExit).size(150, 60).padBottom(20).row();
+		table.add(buttonPlayAgain).size(WIDTH_BUTTONS, HEIGHT_BUTTONS).padBottom(20).row();
+		table.add(buttonExit).size(WIDTH_BUTTONS, HEIGHT_BUTTONS).padBottom(20).row();
 		table.setFillParent(true);
 		// Add table to the stage.
 		stage.addActor(table);
@@ -155,6 +157,10 @@ public class GameEndScreen implements Screen {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glClearColor(((float)(15)/255), ((float)(15)/255), ((float)(15)/255), 1);
+		batch.setProjectionMatrix(cam.combined);
+	    batch.begin();
+	    batch.draw(ChainReactionAIGame.texture, 0, 0, ChainReactionAIGame.WIDTH, ChainReactionAIGame.HEIGHT);
+	    batch.end();
 		if (animationInit) {
 			modelBatch.begin(cam);
 			createAnimation();
@@ -183,10 +189,7 @@ public class GameEndScreen implements Screen {
 			}
 			startZPosition.add(zCoord);
 			distNow.add(0);
-			xCoord = rand.nextInt(WIDTH_SCREEN/2);
-			if (xCoord >= (WIDTH_SCREEN/4)) {
-				xCoord = (xCoord + (WIDTH_SCREEN/2));
-			}
+			xCoord = rand.nextInt(WIDTH_SCREEN);
 			xVal.add(xCoord);
 			yCoord = rand.nextInt(HEIGHT_SCREEN);
 			yVal.add(yCoord);
