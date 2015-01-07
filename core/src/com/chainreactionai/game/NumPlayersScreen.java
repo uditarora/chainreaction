@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -27,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -70,6 +72,8 @@ public class NumPlayersScreen implements Screen {
 	private Environment environment;
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
+	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
+			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	
 	public NumPlayersScreen(ChainReactionAIGame game) {
 		ChainReactionAIGame.currentScreen = 1;
@@ -150,11 +154,11 @@ public class NumPlayersScreen implements Screen {
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
 		// Initializing and adding the title to Table.
-		title = new Label("Choose number of players", ChainReactionAIGame.skin);
+		title = new Label("Choose number of players", skin);
 		title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		table.add(title).padBottom(10).row();
 		// Initializing the Drop-Down menu
-		numPlayerSlider = new Slider(2, MAX_NUMBER_OF_PLAYERS, 1, false, ChainReactionAIGame.skin);
+		numPlayerSlider = new Slider(2, MAX_NUMBER_OF_PLAYERS, 1, false, skin);
 		numPlayerSlider.getStyle().knob.setMinHeight(HEIGHT_KNOB*heightUpscaleFactor);
 		// Adding the DropDown to the Table.
 		table.add(numPlayerSlider).size(WIDTH_SLIDER*widthUpscaleFactor, HEIGHT_SLIDER*heightUpscaleFactor*2).padTop(5).padBottom(50);
@@ -167,7 +171,7 @@ public class NumPlayersScreen implements Screen {
 		};
 		numPlayerSlider.addListener(stopTouchDown);
 		// Label Initialize
-		numPlayerLabel = new Label("2", ChainReactionAIGame.skin);
+		numPlayerLabel = new Label("2", skin);
 		table.add(numPlayerLabel).padBottom(7).padTop(3).row();
 		// Initializing and adding the Submit Button to Table.
 		submitButton = new ImageButton(ChainReactionAIGame.submitButtonDraw);
