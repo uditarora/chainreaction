@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -29,6 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -54,7 +56,7 @@ public class GameStatsScreen implements Screen {
 	private Stage stage = new Stage();
 	private Table table = new Table(), container = new Table();
 	private float heightUpscaleFactor, widthUpscaleFactor;
-	private Label stat;
+	private Label stat, statHeadingGame, statHeadingStatistics;
 	Texture[] images = new Texture[15];
 	private ScrollPane scroll;
 	final private int NUMBER_OF_DIFFICULTY_LEVELS;
@@ -70,6 +72,8 @@ public class GameStatsScreen implements Screen {
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
 	private ImageButton backButton = new ImageButton(ChainReactionAIGame.backButtonDraw);
+	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
+			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	
 	// Constructor
 	public GameStatsScreen(ChainReactionAIGame game) {
@@ -157,18 +161,23 @@ public class GameStatsScreen implements Screen {
 		// Initializing and adding the stats to Table.
 		String keyWon, keyLost;
 		int numLost, numWon;
+		statHeadingGame = new Label("GAME", ChainReactionAIGame.skin);
+		statHeadingStatistics = new Label("STATISTICS", ChainReactionAIGame.skin);
+		statHeadingGame.setFontScale((float)heightUpscaleFactor);
+		statHeadingStatistics.setFontScale((float)heightUpscaleFactor);
+		table.add(statHeadingGame).row();
+		table.add(statHeadingStatistics).row();
 		for (int i = 1; i <= NUMBER_OF_DIFFICULTY_LEVELS; i += 1) {
 			keyWon = "wonLevel"+i;
 			keyLost = "lostLevel"+i;
 			numLost = stats.getInteger(keyLost, 0);
 			numWon = stats.getInteger(keyWon, 0);
-			stat = new Label("Level "+i+"- Won: "+numWon+", Lost: "+numLost, ChainReactionAIGame.skin);
+			stat = new Label("Level "+i+"- Won: "+numWon+", Lost: "+numLost, skin);
 			stat.setFontScale((float)heightUpscaleFactor);
 			table.add(stat).padLeft(10).padRight(10).padBottom(10).row();
 		}
-		
 		// Adds the backButton to the Table.
-		table.add(backButton).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+		table.add(backButton).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(100*heightUpscaleFactor).row();
 		table.setFillParent(true);
 		// Scroll pane consisting of the Table.
 		scroll = new ScrollPane(table);
