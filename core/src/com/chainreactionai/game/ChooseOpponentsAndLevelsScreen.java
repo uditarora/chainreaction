@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -29,6 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -81,6 +83,8 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	private Environment environment;
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
+	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
+			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	
 	// Constructor which initializes the number of players passed from
 	// NumPlayersScreen and the number if difficulty levels allowed.
@@ -183,8 +187,8 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		plySliders = new Array<Slider>();
 		plyLabels = new Array<Label>();
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
-			plySliders.add(new Slider(1, NUMBER_OF_DIFFICULTY_LEVELS, 1, false, ChainReactionAIGame.skin));
-			plyLabels.add(new Label(String.valueOf((int)plySliders.get(i).getValue()), ChainReactionAIGame.skin));
+			plySliders.add(new Slider(1, NUMBER_OF_DIFFICULTY_LEVELS, 1, false, skin));
+			plyLabels.add(new Label(String.valueOf((int)plySliders.get(i).getValue()), skin));
 		}
 		// To allow the sliders to be dragged properly
 		InputListener stopTouchDown = new InputListener() {
@@ -195,7 +199,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		};
 		// Adding the dropdowns to the Table.
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
-			Label tempLabel = new Label("Player " + String.valueOf(i+1) + ":", ChainReactionAIGame.skin);
+			Label tempLabel = new Label("Player " + String.valueOf(i+1) + ":", skin);
 			tempLabel.setFontScale(heightUpscaleFactor);
 			table.add(tempLabel);
 			table.add(userSelectButtons.get(i)).size(WIDTH_HUMAN_CPU_MENUS*(widthUpscaleFactor), (HEIGHT_HUMAN_CPU_MENUS*widthUpscaleFactor)).row();
