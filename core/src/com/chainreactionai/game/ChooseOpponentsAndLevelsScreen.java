@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -29,7 +28,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -50,7 +48,8 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	final private int WIDTH_SUBMIT_BUTTON = 275;
 	final private int HEIGHT_SUBMIT_BUTTON = 60;
 	final private int WIDTH_SLIDER = 150;
-	final private int HEIGHT_SLIDER = 10;
+	final private int HEIGHT_SLIDER = 30;
+	final private int HEIGHT_KNOB = 20;
 	private float heightUpscaleFactor, widthUpscaleFactor;
 	final private int MAX_NUM_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;
@@ -64,8 +63,6 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	private Table table = new Table(), container = new Table();
 	private ScrollPane scroll;
 	private int NUMBER_OF_PLAYERS, NUMBER_OF_DIFFICULTY_LEVELS;
-	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
-			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private ImageButton submitButton;
 	private Label title;
 	private Array<ImageButton> userSelectButtons;
@@ -168,7 +165,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
         // Label for title.
-		title = new Label("Choose specifications for the players", skin);
+		title = new Label("Choose specifications for the players", ChainReactionAIGame.skin);
 		title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		// Creating the DropDown for whether the player should be 
 		// human or CPU.
@@ -189,8 +186,8 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		plySliders = new Array<Slider>();
 		plyLabels = new Array<Label>();
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
-			plySliders.add(new Slider(1, NUMBER_OF_DIFFICULTY_LEVELS, 1, false, skin));
-			plyLabels.add(new Label(String.valueOf((int)plySliders.get(i).getValue()), skin));
+			plySliders.add(new Slider(1, NUMBER_OF_DIFFICULTY_LEVELS, 1, false, ChainReactionAIGame.skin));
+			plyLabels.add(new Label(String.valueOf((int)plySliders.get(i).getValue()), ChainReactionAIGame.skin));
 		}
 		// To allow the sliders to be dragged properly
 		InputListener stopTouchDown = new InputListener() {
@@ -201,12 +198,13 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		};
 		// Adding the dropdowns to the Table.
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
-			Label tempLabel = new Label("Player " + String.valueOf(i+1) + ":", skin);
+			Label tempLabel = new Label("Player " + String.valueOf(i+1) + ":", ChainReactionAIGame.skin);
 			tempLabel.setFontScale(heightUpscaleFactor);
 			table.add(tempLabel).padTop(3).padBottom(7);
 			// To allow the sliders to be dragged properly
 			plySliders.get(i).addListener(stopTouchDown);
-			table.add(plySliders.get(i)).size(WIDTH_SLIDER*widthUpscaleFactor, HEIGHT_SLIDER*heightUpscaleFactor).padTop(5).padBottom(5);
+			plySliders.get(i).getStyle().knob.setMinHeight(HEIGHT_KNOB*heightUpscaleFactor);
+			table.add(plySliders.get(i)).height(HEIGHT_SLIDER*heightUpscaleFactor).width(WIDTH_SLIDER*widthUpscaleFactor).padTop(5).padBottom(5);
 			// Add the labels containing the currently selected plyLevel
 			tempLabel = plyLabels.get(i);
 			tempLabel.setFontScale(heightUpscaleFactor);
@@ -361,6 +359,6 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	@Override
 	public void dispose() {
 		stage.dispose();
-		skin.dispose();
+//		skin.dispose();
 	}
 }

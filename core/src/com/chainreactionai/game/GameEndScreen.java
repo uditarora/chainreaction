@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -27,7 +26,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -53,8 +51,6 @@ public class GameEndScreen implements Screen {
 	private int MAX_NUMBER_OF_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
-			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private ImageButton buttonPlayAgain, buttonExit;
 	private int winningPlayer, numMovesPlayed;
 	private Label title;
@@ -123,7 +119,7 @@ public class GameEndScreen implements Screen {
 		// The elements are displayed in the order you add them.
 		// The first appear on top, the last at the bottom.
 		// Initialize and add the winning quote to the Table
-		title = new Label("Player " + String.valueOf(winningPlayer + 1) + " has won the game after " + numMovesPlayed + " moves!", skin);
+		title = new Label("Player " + String.valueOf(winningPlayer + 1) + " has won the game after " + numMovesPlayed + " moves!", ChainReactionAIGame.skin);
 		table.add(title).padBottom(40).row();
 		// Add the PlayAgain and Exit buttons to the Table.
 		buttonPlayAgain = new ImageButton(newGameButtonDrawable);
@@ -258,6 +254,6 @@ public class GameEndScreen implements Screen {
 	@Override
 	public void dispose() {
 		stage.dispose();
-		skin.dispose();
+//		skin.dispose();
 	}
 }
