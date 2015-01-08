@@ -30,6 +30,15 @@ public class ChainReactionAIGame extends Game {
 	
 	final private boolean DEBUG = false;
 	
+	public static IGoogleServices googleServices;
+
+	public ChainReactionAIGame(IGoogleServices googleServices)
+	{
+	super();
+	this.googleServices = googleServices;
+	}
+
+	
 	// Drawables for ImageButtons
 	public static Drawable backButtonDraw, exitButtonDraw, mainMenuButtonDraw, newGameButtonDraw,
 		playButtonDraw, resumeButtonDraw, rulesButtonDraw, statsButtonDraw, submitButtonDraw, 
