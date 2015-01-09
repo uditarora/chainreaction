@@ -17,7 +17,7 @@ public class AndroidLauncher extends AndroidApplication implements
 		IGoogleServices {
 
 	private GameHelper _gameHelper;
-	private final static int REQUEST_CODE_UNUSED = 9002;
+	private final static int REQUEST_CODE_UNUSED = 9002, REQUEST_ACHIEVEMENTS = 9001;
 
 	// @Override
 	// protected void onCreate (Bundle savedInstanceState) {
@@ -43,8 +43,7 @@ public class AndroidLauncher extends AndroidApplication implements
 		_gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
 		_gameHelper.enableDebugLog(false);
 
-		GameHelperListener gameHelperListener = new GameHelper.GameHelperListener() 
-		{
+		GameHelperListener gameHelperListener = new GameHelper.GameHelperListener() {
 			@Override
 			public void onSignInSucceeded() {
 			}
@@ -56,7 +55,6 @@ public class AndroidLauncher extends AndroidApplication implements
 
 		_gameHelper.setup(gameHelperListener);
 
-	
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 
 		// Changes in config to disable Accelerometer and Compass so as
@@ -65,34 +63,29 @@ public class AndroidLauncher extends AndroidApplication implements
 		config.useCompass = false;
 
 		// Initialize the game
-		
-		
+
 		// The rest of your onCreate() code here...
-		System.out.println("System Out"+this.isSignedIn());
+		System.out.println("System Out" + this.isSignedIn());
 		initialize(new ChainReactionAIGame(this), config);
 
-		
-	}
-	
-	@Override
-	protected void onStart()
-	{
-	super.onStart();
-	_gameHelper.onStart(this);
 	}
 
 	@Override
-	protected void onStop()
-	{
-	super.onStop();
-	_gameHelper.onStop();
+	protected void onStart() {
+		super.onStart();
+		_gameHelper.onStart(this);
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-	super.onActivityResult(requestCode, resultCode, data);
-	_gameHelper.onActivityResult(requestCode, resultCode, data);
+	protected void onStop() {
+		super.onStop();
+		_gameHelper.onStop();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		_gameHelper.onActivityResult(requestCode, resultCode, data);
 	}
 
 	@Override
@@ -159,6 +152,33 @@ public class AndroidLauncher extends AndroidApplication implements
 	@Override
 	public boolean isSignedIn() {
 		return _gameHelper.isSignedIn();
+	}
+
+	@Override
+	public void showAchievement() {
+		// TODO Auto-generated method stub
+		if (isSignedIn() == true)
+			startActivityForResult(
+				Games.Achievements.getAchievementsIntent(_gameHelper
+						.getApiClient()), REQUEST_ACHIEVEMENTS);
+		else {
+			// Maybe sign in here then redirect to showing scores?
+		}
+	}
+
+	@Override
+	public void getAchievement(String achievementCode) {
+		// TODO Auto-generated method stub
+		Games.Achievements.unlock(_gameHelper.getApiClient(), achievementCode);
+
+	}
+
+	@Override
+	public void getIncAchievement(String achievementCode, int inc) {
+		// TODO Auto-generated method stub
+		Games.Achievements.increment(_gameHelper.getApiClient(),
+				achievementCode, inc);
+
 	}
 
 }
