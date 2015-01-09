@@ -33,7 +33,7 @@ public class ChainReactionAIGame extends Game {
 	// Drawables for ImageButtons
 	public static Drawable backButtonDraw, exitButtonDraw, mainMenuButtonDraw, newGameButtonDraw,
 		playButtonDraw, resumeButtonDraw, rulesButtonDraw, statsButtonDraw, submitButtonDraw, 
-		pressedButtonDraw, unpressedHumanButtonDraw, unpressedCpuButtonDraw, pauseButtonDraw;
+		pressedButtonDraw, unpressedHumanButtonDraw, unpressedCpuButtonDraw, pauseButtonDraw, logoDraw;
 
 	@Override
 	public void create() {
@@ -59,6 +59,7 @@ public class ChainReactionAIGame extends Game {
 		pressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/pressed.png"))));
 		unpressedHumanButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/unpressedHuman.png"))));
 		unpressedCpuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/unpressedCPU.png"))));
+		logoDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("Logo.png"))));
 		
 		// Loading game background image
 		texture = new Texture(Gdx.files.internal("back.jpg"));

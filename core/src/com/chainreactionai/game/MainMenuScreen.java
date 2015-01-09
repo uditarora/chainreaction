@@ -40,6 +40,8 @@ public class MainMenuScreen implements Screen {
 	final private int HEIGHT_SCREEN = 645;
 	final private int HEIGHT_MAIN_MENU_BUTTONS = 60;
 	final private int WIDTH_MAIN_MENU_BUTTONS = 275;
+	final private int WIDTH_LOGO = 192;
+	final private int HEIGHT_LOGO = 150;
 	final private int MAX_NUM_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;
 	final private int MAX_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MAX_Z_DIST_OF_NEW_BALLS;
@@ -51,7 +53,7 @@ public class MainMenuScreen implements Screen {
 	private float heightUpscaleFactor, widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private ImageButton buttonPlay, buttonExit, buttonRules, buttonStats;
+	private ImageButton buttonPlay, buttonExit, buttonRules, buttonStats, logo;
 	private Label title = new Label("CHAIN REACTION", ChainReactionAIGame.skin);
 	private Color[] colors;
 	private boolean animationInit = false;
@@ -143,8 +145,10 @@ public class MainMenuScreen implements Screen {
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
         // Adds the title and buttons to the Table.
-		title.setFontScale((1+(heightUpscaleFactor-1)/2));
-		table.add(title).padBottom(40).row();
+		//title.setFontScale((1+(heightUpscaleFactor-1)/2));
+		//table.add(title).padBottom(40).row();
+        logo = new ImageButton(ChainReactionAIGame.logoDraw);
+        table.add(logo).size(WIDTH_LOGO*widthUpscaleFactor, HEIGHT_LOGO*widthUpscaleFactor).padBottom(20).row();
 		buttonPlay = new ImageButton(ChainReactionAIGame.playButtonDraw);
 		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		buttonRules = new ImageButton(ChainReactionAIGame.rulesButtonDraw);
