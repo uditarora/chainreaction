@@ -28,21 +28,42 @@ public class ChainReactionAIGame extends Game {
 	public static Texture texture, mainGameScreenTexture;
 	public static Skin skin;
 	
+	// For achievements
+	public static final String achievement_almost_there="CgkIu_W6xfwCEAIQDg";
+	public static final String achievement_beginners_luck= "CgkIu_W6xfwCEAIQAw";
+	public static final String achievement_conqueror_quattro="CgkIu_W6xfwCEAIQEg";
+	public static final String achievement_decimus="CgkIu_W6xfwCEAIQEQ";
+	public static final String achievement_experienced_professional="CgkIu_W6xfwCEAIQGQ";
+	public static final String achievement_high_five="CgkIu_W6xfwCEAIQEw";
+	public static final String achievement_i_eight_a_lot="CgkIu_W6xfwCEAIQFg";
+	public static final String achievement_king_of_the_world="CgkIu_W6xfwCEAIQHg";
+	public static final String achievement_like_seriously="CgkIu_W6xfwCEAIQEw";
+	public static final String achievement_lucky_number_seven="CgkIu_W6xfwCEAIQFQ";
+	public static final String achievement_no_longer_an_amateur="CgkIu_W6xfwCEAIQDw";
+	public static final String achievement_quick_mover="CgkIu_W6xfwCEAIQHA";
+	public static final String achievement_secret_of_the_universe="CgkIu_W6xfwCEAIQHw";
+	public static final String achievement_silver_jubilee="CgkIu_W6xfwCEAIQGG";
+	public static final String achievement_sore_loser="CgkIu_W6xfwCEAIQHQ";
+	public static final String achievement_thats_a_six="CgkIu_W6xfwCEAIQFA";
+	public static final String achievement_third_times_a_charm="CgkIu_W6xfwCEAIQEA";
+	public static final String achievement_welcome_to_the_jungle="CgkIu_W6xfwCEAIQDg";
+	public static final String achievement_you_are_the_champion="CgkIu_W6xfwCEAIQGA";
+	
 	final private boolean DEBUG = false;
 	
 	public static IGoogleServices googleServices;
 
 	public ChainReactionAIGame(IGoogleServices googleServices)
 	{
-	super();
-	this.googleServices = googleServices;
+		super();
+		this.googleServices = googleServices;
 	}
 
 	
 	// Drawables for ImageButtons
 	public static Drawable backButtonDraw, exitButtonDraw, mainMenuButtonDraw, newGameButtonDraw,
 		playButtonDraw, resumeButtonDraw, rulesButtonDraw, statsButtonDraw, submitButtonDraw, 
-		pressedButtonDraw, unpressedHumanButtonDraw, unpressedCpuButtonDraw, pauseButtonDraw;
+		pressedButtonDraw, unpressedHumanButtonDraw, unpressedCpuButtonDraw, pauseButtonDraw, logoDraw;
 
 	@Override
 	public void create() {
@@ -68,6 +89,7 @@ public class ChainReactionAIGame extends Game {
 		pressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/pressed.png"))));
 		unpressedHumanButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/unpressedHuman.png"))));
 		unpressedCpuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/unpressedCPU.png"))));
+		logoDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("Logo.png"))));
 		
 		// Loading game background image
 		texture = new Texture(Gdx.files.internal("back.jpg"));

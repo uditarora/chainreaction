@@ -2,4 +2,34 @@
 <resources>
 <string name="app_id">102151142075</string>
 <string name="leaderboard_id">CgkIu_W6xfwCEAIQAA</string>
+<string name="achievement_welcome_to_the_jungle">CgkIu_W6xfwCEAIQDg</string>
+  <string name="achievement_beginners_luck">CgkIu_W6xfwCEAIQAw</string>
+  <string name="achievement_no_longer_an_amateur">CgkIu_W6xfwCEAIQDw</string>
+  <string name="achievement_third_times_a_charm">CgkIu_W6xfwCEAIQEA</string>
+  <string name="achievement_decimus">CgkIu_W6xfwCEAIQEQ</string>
+  <string name="achievement_conqueror_quattro">CgkIu_W6xfwCEAIQEg</string>
+  <string name="achievement_high_five">CgkIu_W6xfwCEAIQEw</string>
+  <string name="achievement_thats_a_six">CgkIu_W6xfwCEAIQFA</string>
+  <string name="achievement_lucky_number_seven">CgkIu_W6xfwCEAIQFQ</string>
+  <string name="achievement_i_eight_a_lot.">CgkIu_W6xfwCEAIQFg</string>
+  <string name="achievement_almost_there">CgkIu_W6xfwCEAIQFw</string>
+  <string name="achievement_you_are_the_champion">CgkIu_W6xfwCEAIQGA</string>
+  <string name="achievement_experienced_professional">CgkIu_W6xfwCEAIQGQ</string>
+  <string name="achievement_silver_jubilee">CgkIu_W6xfwCEAIQGg</string>
+  <string name="achievement_like_seriously">CgkIu_W6xfwCEAIQGw</string>
+  <string name="achievement_quick_mover">CgkIu_W6xfwCEAIQHA</string>
+  <string name="achievement_sore_loser">CgkIu_W6xfwCEAIQHQ</string>
+  <string name="achievement_king_of_the_world">CgkIu_W6xfwCEAIQHg</string>
+  <string name="achievement_secret_of_the_universe">CgkIu_W6xfwCEAIQHw</string>
+  <string name="leaderboard_level_1_minimum_moves__single_player">CgkIu_W6xfwCEAIQAA</string>
+  <string name="leaderboard_level_2_minimum_moves__single_player">CgkIu_W6xfwCEAIQBA</string>
+  <string name="leaderboard_level_3_minimum_moves__single_player">CgkIu_W6xfwCEAIQBQ</string>
+  <string name="leaderboard_level_4_minimum_moves__single_player">CgkIu_W6xfwCEAIQBg</string>
+  <string name="leaderboard_level_5_minimum_moves__single_player">CgkIu_W6xfwCEAIQBw</string>
+  <string name="leaderboard_level_6_minimum_moves__single_player">CgkIu_W6xfwCEAIQCA</string>
+  <string name="leaderboard_level_7_minimum_moves__single_player">CgkIu_W6xfwCEAIQCQ</string>
+  <string name="leaderboard_level_8_minimum_moves__single_player">CgkIu_W6xfwCEAIQCg</string>
+  <string name="leaderboard_level_9_minimum_moves__single_player">CgkIu_W6xfwCEAIQCw</string>
+  <string name="leaderboard_level_10_minimum_moves__single_player">CgkIu_W6xfwCEAIQDA</string>
+  <string name="leaderboard_overall_score">CgkIu_W6xfwCEAIQDQ</string>
 </resources>
