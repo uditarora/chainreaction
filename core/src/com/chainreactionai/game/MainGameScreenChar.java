@@ -103,8 +103,10 @@ public class MainGameScreenChar implements Screen {
 	//Sound Object
 	private Sound ballSound;
 	private Sound splitSound;
+
 	// Stats to be stored
 	private Preferences stats;
+	
 	// All debug printing should go under this flag.
 	final private boolean DEBUG = false;
 	final private boolean DEBUG_CPU = false; 
@@ -244,18 +246,24 @@ public class MainGameScreenChar implements Screen {
 		newGameButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+				if (numberOfMovesPlayed < 1)
+					ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_like_seriously);
 				myGame.setScreen(new NumPlayersScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
 			}
 		});
 		mainMenuButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+				if (numberOfMovesPlayed < 1)
+					ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_like_seriously);
 				myGame.setScreen(new MainMenuScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
 			}
 		});
 		exitButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+				if (numberOfMovesPlayed < 1)
+					ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_like_seriously);
 				Gdx.app.exit();
 			}
 		});
@@ -444,25 +452,23 @@ public class MainGameScreenChar implements Screen {
 							System.out.println("Player " + currentPlayer
 								+ " has won the game!");
 						
+						int humans = 0, humanPlayer = 0;
+						for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
+							if (!isCPU[i]) {
+								humans++;
+								humanPlayer = i;
+							}
+						}
+						if (humans == 1) {
+							if (currentPlayer == humanPlayer)
+								updateAchievements(humanPlayer, true);
+							else
+								updateAchievements(humanPlayer, false);
+						}
+						
 						// Update statistics
 						if (NUMBER_OF_PLAYERS == 2 && (isCPU[0] == true || isCPU[1] == true) && !(isCPU[0] && isCPU[1])) {
-							String key;
-							if (isCPU[0]) {
-								if (currentPlayer == 0)
-									key = "lostLevel";
-								else
-									key = "wonLevel";
-								key += difficultyLevels[0];
-							}
-							else {
-								if (currentPlayer == 1)
-									key = "lostLevel";
-								else
-									key = "wonLevel";
-								key += difficultyLevels[1];
-							}
-							stats.putInteger(key, stats.getInteger(key, 0)+1);
-							stats.flush();
+							updateStatistics();
 						}
 						
 						myGame.setScreen(new GameEndScreen(myGame, currentPlayer, numberOfMovesPlayed));
@@ -882,6 +888,83 @@ public class MainGameScreenChar implements Screen {
 		startZPosition.clear();
 		distNow.clear();
 		speed.clear();
+	}
+	
+	private void updateStatistics() {
+		String key;
+		if (isCPU[0]) {
+			if (currentPlayer == 0)
+				key = "lostLevel";
+			else
+				key = "wonLevel";
+			key += difficultyLevels[0];
+		}
+		else {
+			if (currentPlayer == 1)
+				key = "lostLevel";
+			else
+				key = "wonLevel";
+			key += difficultyLevels[1];
+		}
+		stats.putInteger(key, stats.getInteger(key, 0)+1);
+		stats.flush();
+	}
+	
+	private void updateAchievements(int humanPlayer, boolean won) {
+		if (!ChainReactionAIGame.googleServices.isSignedIn())
+			return;
+		else {
+			// Achievements updated regardless of win or loss
+			ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_welcome_to_the_jungle);
+			ChainReactionAIGame.googleServices.getIncAchievement(ChainReactionAIGame.achievement_king_of_the_world, 1);
+			ChainReactionAIGame.googleServices.getIncAchievement(ChainReactionAIGame.achievement_experienced_professional, 1);
+			
+			// Achievements updated when the user wins the game 
+			if (won) {
+				ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_beginners_luck);
+				ChainReactionAIGame.googleServices.getIncAchievement(ChainReactionAIGame.achievement_secret_of_the_universe, 1);
+				ChainReactionAIGame.googleServices.getIncAchievement(ChainReactionAIGame.achievement_decimus, 1);
+				ChainReactionAIGame.googleServices.getIncAchievement(ChainReactionAIGame.achievement_silver_jubilee, 1);
+				if (numberOfMovesPlayed < 41)
+					ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_quick_mover);
+				
+				if (NUMBER_OF_PLAYERS == 2) {
+					switch (difficultyLevels[(humanPlayer+1)%2]) {
+					case 2:		// combination of 1ply and 3ply
+						ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_no_longer_an_amateur);
+						break;
+					case 3:
+						ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_third_times_a_charm);
+						break;
+					case 4:
+						ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_conqueror_quattro);
+						break;
+					case 5:
+						ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_high_five);
+						break;
+					case 6:
+						ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_thats_a_six);
+						break;
+					case 7:
+						ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_lucky_number_seven);
+						break;
+					case 8:
+						ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_i_eight_a_lot);
+						break;
+					case 9:
+						ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_almost_there);
+						break;
+					case 10:
+						ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_you_are_the_champion);
+						break;
+					}
+				}
+			}
+			else {
+				if (numberOfMovesPlayed < 11)
+					ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_sore_loser);
+			}
+		}
 	}
 	
 	@Override

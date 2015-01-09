@@ -54,7 +54,7 @@ public class GameEndScreen implements Screen {
 	private float widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private ImageButton buttonPlayAgain, buttonExit;
+	private ImageButton buttonPlayAgain, buttonExit, buttonAchievements;
 	private int winningPlayer, numMovesPlayed;
 	private Label title;
 	private Color[] colors;
@@ -132,7 +132,9 @@ public class GameEndScreen implements Screen {
 		// Add the PlayAgain and Exit buttons to the Table.
 		buttonPlayAgain = new ImageButton(newGameButtonDrawable);
 		buttonExit = new ImageButton(exitButtonDrawable);
+		buttonAchievements = new ImageButton(ChainReactionAIGame.backButtonDraw);
 		table.add(buttonPlayAgain).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+		table.add(buttonAchievements).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		table.add(buttonExit).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		table.setFillParent(true);
 		// Add table to the stage.
@@ -145,6 +147,13 @@ public class GameEndScreen implements Screen {
 				// We set it to new Splash because we got no other screens
 				// otherwise you put the screen there where you want to go
 				myGame.setScreen(new NumPlayersScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+			}
+		});
+		buttonAchievements.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (ChainReactionAIGame.googleServices.isSignedIn())
+					ChainReactionAIGame.googleServices.showAchievement();
 			}
 		});
 		buttonExit.addListener(new ClickListener() {
