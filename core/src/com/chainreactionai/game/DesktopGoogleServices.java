@@ -38,4 +38,22 @@ public boolean isSignedIn()
 System.out.println("DesktopGoogleServies: isSignedIn()");
 return false;
 }
+
+@Override
+public void showAchievement() {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void getAchievement(String achievementCode) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void getIncAchievement(String achievementCode, int inc) {
+	// TODO Auto-generated method stub
+	
+}
 }
