@@ -11,6 +11,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -99,14 +100,18 @@ public class MainGameScreenChar implements Screen {
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private boolean animationInit = false;
 	private Random rand;
-	
+	//Sound Object
+	private Sound ballSound;
+	private Sound splitSound;
+
+
 	// Stats to be stored
 	private Preferences stats;
 	
 	// All debug printing should go under this flag.
 	final private boolean DEBUG = false;
 	final private boolean DEBUG_CPU = false; 
-
+	
 	// Constructor to initialize which player is CPU and which is human.
 	// Also sets difficulty levels for CPU players.
 	public MainGameScreenChar(ChainReactionAIGame game, ArrayList<Boolean> CPU, ArrayList<Integer> difficultyLevelList) {
@@ -168,6 +173,9 @@ public class MainGameScreenChar implements Screen {
 		distNow = new ArrayList<Integer>();
 		speed = new ArrayList<Integer>();
 		numBalls = 0;
+		this.ballSound = Gdx.audio.newSound(Gdx.files.internal("sounds/balls.mp3"));
+		this.splitSound = Gdx.audio.newSound(Gdx.files.internal("sounds/balls.mp3"));
+
 		create();
 		animationInit = true;
 	}
@@ -384,6 +392,8 @@ public class MainGameScreenChar implements Screen {
 										System.out.println("Error Time.");
 								}
 								// Initialize the animation for changing the Board.
+								this.splitSound.play();
+
 								gameBoard.changeBoard2(winningMove.coordX, winningMove.coordY, currentPlayer);
 								// Store these coordinates so they can be shown as highlighted.
 								highlightPos.coordX = winningMove.coordX;
@@ -424,6 +434,9 @@ public class MainGameScreenChar implements Screen {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				//Play Sound
+				
+				this.splitSound.play();
 				// Animates board to show new board with next level of BFS
 				// calls done. Returns whether the BFS is complete or not.
 				moveCompleted = gameBoard.nextBoard(currentPlayer);
@@ -571,6 +584,7 @@ public class MainGameScreenChar implements Screen {
 			// Checking the move's validity and changing the board
 			// accordingly.
 			// Also passing the move to the next player.
+			
 			if (!isCPU[currentPlayer] && gameBoard.isValidMove(clickCoordX, clickCoordY,
 					currentPlayer)) {
 				gameBoard.changeBoard2(clickCoordX, clickCoordY,
@@ -582,6 +596,10 @@ public class MainGameScreenChar implements Screen {
 				moveCompleted = false;
 				numberOfMovesPlayed += 1;
 				percentageMovesSearched += incrementValForPercentageMovesSearched;
+				
+				//Audio Play
+				this.ballSound.play();
+				
 			}
 		}
 	}
