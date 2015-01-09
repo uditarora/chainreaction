@@ -121,7 +121,7 @@ public class AndroidLauncher extends AndroidApplication implements
 	@Override
 	public void rateGame() {
 		// Replace the end of the URL with the package of your game
-		String str = "https://play.google.com/store/apps/details?id=org.fortheloss.plunderperil";
+		String str = "https://play.google.com/store/apps/details?id=com.chainreactionai.game.android";
 		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(str)));
 	}
 
@@ -156,7 +156,6 @@ public class AndroidLauncher extends AndroidApplication implements
 
 	@Override
 	public void showAchievement() {
-		// TODO Auto-generated method stub
 		if (isSignedIn() == true)
 			startActivityForResult(
 				Games.Achievements.getAchievementsIntent(_gameHelper
@@ -170,7 +169,6 @@ public class AndroidLauncher extends AndroidApplication implements
 	public void getAchievement(String achievementCode) {
 		// TODO Auto-generated method stub
 		Games.Achievements.unlock(_gameHelper.getApiClient(), achievementCode);
-
 	}
 
 	@Override
@@ -178,7 +176,6 @@ public class AndroidLauncher extends AndroidApplication implements
 		// TODO Auto-generated method stub
 		Games.Achievements.increment(_gameHelper.getApiClient(),
 				achievementCode, inc);
-
 	}
 
 }
