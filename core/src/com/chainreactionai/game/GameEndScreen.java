@@ -71,7 +71,7 @@ public class GameEndScreen implements Screen {
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	
-	public GameEndScreen (ChainReactionAIGame game, int winner, int numMovesPlayed, boolean[] isCPU) {
+	public GameEndScreen (ChainReactionAIGame game, int winner, int numMovesPlayed) {
 		myGame = game;
 		winningPlayer = winner;
 		this.numMovesPlayed = numMovesPlayed;
@@ -84,9 +84,6 @@ public class GameEndScreen implements Screen {
 		speed = new ArrayList<Integer>();
 		numBalls = 0;
 		animationInit = true;
-		if (isCPU[winner] == false) {
-			ChainReactionAIGame.googleServices.submitScore(numMovesPlayed);
-		}
 		create();
 	}
 	

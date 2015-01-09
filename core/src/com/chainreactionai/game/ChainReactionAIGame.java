@@ -63,7 +63,8 @@ public class ChainReactionAIGame extends Game {
 	// Drawables for ImageButtons
 	public static Drawable backButtonDraw, exitButtonDraw, mainMenuButtonDraw, newGameButtonDraw,
 		playButtonDraw, resumeButtonDraw, rulesButtonDraw, statsButtonDraw, submitButtonDraw, 
-		pressedButtonDraw, unpressedHumanButtonDraw, unpressedCpuButtonDraw, pauseButtonDraw, logoDraw;
+		pressedHumanCpuButtonDraw, unpressedHumanButtonDraw, unpressedCpuButtonDraw, pauseButtonDraw, logoDraw,
+		rulesPressedButtonDraw, backPressedButtonDraw;
 
 	@Override
 	public void create() {
@@ -83,13 +84,15 @@ public class ChainReactionAIGame extends Game {
 		pauseButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/pause.jpg"))));
 		playButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/play.jpg"))));
 		resumeButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/resume.jpg"))));
-		rulesButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/rules.jpg"))));
+		rulesButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/ruless.png"))));
+		rulesPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/ruless.png"))));
 		statsButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/statistics.jpg"))));
 		submitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/submit.jpg"))));
-		pressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/pressed.png"))));
+		pressedHumanCpuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/pressed.png"))));
 		unpressedHumanButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/unpressedHuman.png"))));
 		unpressedCpuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/unpressedCPU.png"))));
 		logoDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("Logo.png"))));
+		backPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/back-pressed.png"))));
 		
 		// Loading game background image
 		texture = new Texture(Gdx.files.internal("back.jpg"));

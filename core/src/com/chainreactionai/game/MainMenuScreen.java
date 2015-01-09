@@ -25,7 +25,6 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -50,11 +49,10 @@ public class MainMenuScreen implements Screen {
 	final private int MIN_SPEED_OF_BALLS = ChainReactionAIGame.MIN_SPEED_OF_BALLS;
 	final private int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = ChainReactionAIGame.MAX_NUMBER_OF_BALLS_AT_A_MOMENT;
 	private int numBalls;
-	private float heightUpscaleFactor, widthUpscaleFactor;
+	private float widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
 	private ImageButton buttonPlay, buttonExit, buttonRules, buttonStats, buttonAchievements, logo;
-	private Label title = new Label("CHAIN REACTION", ChainReactionAIGame.skin);
 	private Color[] colors;
 	private boolean animationInit = false;
 	// Trying 3D Graphics
@@ -113,7 +111,6 @@ public class MainMenuScreen implements Screen {
 		// The first appear on top, the last at the bottom.
 		// Up-scale Factors are used to get proper sized buttons
 		// upscaled or downscaled according to the Screen Dimensions
-		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
 		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
 		// Initialize colors
 		colors = new Color[MAX_NUM_PLAYERS];
@@ -151,7 +148,7 @@ public class MainMenuScreen implements Screen {
         table.add(logo).size(WIDTH_LOGO*widthUpscaleFactor, HEIGHT_LOGO*widthUpscaleFactor).padBottom(20).row();
 		buttonPlay = new ImageButton(ChainReactionAIGame.playButtonDraw);
 		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		buttonRules = new ImageButton(ChainReactionAIGame.rulesButtonDraw);
+		buttonRules = new ImageButton(ChainReactionAIGame.rulesButtonDraw, ChainReactionAIGame.rulesPressedButtonDraw);
 		table.add(buttonRules).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		buttonStats = new ImageButton(ChainReactionAIGame.statsButtonDraw);
 		table.add(buttonStats).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
