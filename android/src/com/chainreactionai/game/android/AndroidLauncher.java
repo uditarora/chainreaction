@@ -56,8 +56,7 @@ public class AndroidLauncher extends AndroidApplication implements
 
 		_gameHelper.setup(gameHelperListener);
 
-		super.onCreate(savedInstanceState);
-
+	
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 
 		// Changes in config to disable Accelerometer and Compass so as
@@ -66,9 +65,34 @@ public class AndroidLauncher extends AndroidApplication implements
 		config.useCompass = false;
 
 		// Initialize the game
+		
+		
+		// The rest of your onCreate() code here...
+		System.out.println("System Out"+this.isSignedIn());
 		initialize(new ChainReactionAIGame(this), config);
 
-		// The rest of your onCreate() code here...
+		
+	}
+	
+	@Override
+	protected void onStart()
+	{
+	super.onStart();
+	_gameHelper.onStart(this);
+	}
+
+	@Override
+	protected void onStop()
+	{
+	super.onStop();
+	_gameHelper.onStop();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+	super.onActivityResult(requestCode, resultCode, data);
+	_gameHelper.onActivityResult(requestCode, resultCode, data);
 	}
 
 	@Override
