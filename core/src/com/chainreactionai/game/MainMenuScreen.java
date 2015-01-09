@@ -56,7 +56,7 @@ public class MainMenuScreen implements Screen {
 	private float heightUpscaleFactor, widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private ImageButton buttonPlay, buttonExit, buttonRules, buttonStats, logo;
+	private ImageButton buttonPlay, buttonExit, buttonRules, buttonStats, buttonAchievements, logo;
 	private Label title = new Label("CHAIN REACTION", ChainReactionAIGame.skin);
 	private Color[] colors;
 	private boolean animationInit = false;
@@ -160,6 +160,8 @@ public class MainMenuScreen implements Screen {
 		table.add(buttonRules).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		buttonStats = new ImageButton(ChainReactionAIGame.statsButtonDraw);
 		table.add(buttonStats).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+		buttonAchievements = new ImageButton(ChainReactionAIGame.backButtonDraw);
+		table.add(buttonAchievements).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		buttonExit = new ImageButton(ChainReactionAIGame.exitButtonDraw);
 		table.add(buttonExit).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		table.setFillParent(true);
@@ -182,6 +184,13 @@ public class MainMenuScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				myGame.setScreen(new GameStatsScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+			}
+		});
+		buttonAchievements.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (ChainReactionAIGame.googleServices.isSignedIn())
+					ChainReactionAIGame.googleServices.showAchievement();
 			}
 		});
 		buttonExit.addListener(new ClickListener() {
