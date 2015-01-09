@@ -9,6 +9,7 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -28,6 +29,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 
 /**
  * @author Kartik Parnami
@@ -65,6 +68,8 @@ public class MainMenuScreen implements Screen {
 	private Environment environment;
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
+	// Initializing sounds 
+	private Sound sound;
 	
 	public MainMenuScreen(ChainReactionAIGame game) {
 		ChainReactionAIGame.currentScreen = 0;
@@ -187,6 +192,10 @@ public class MainMenuScreen implements Screen {
 		});
 		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(stage);
+		sound = Gdx.audio.newSound(Gdx.files.internal("sounds/game.mp3"));
+		final long id = sound.loop();
+		
+		
 	}
 
 	@Override
