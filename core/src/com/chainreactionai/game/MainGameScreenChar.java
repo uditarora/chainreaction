@@ -104,6 +104,9 @@ public class MainGameScreenChar implements Screen {
 	private Sound ballSound;
 	private Sound splitSound;
 
+	//Sound Object
+	private Sound ballSound;
+	private Sound splitSound;
 	// Stats to be stored
 	private Preferences stats;
 	
