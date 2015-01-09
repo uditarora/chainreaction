@@ -223,10 +223,10 @@ public class MainGameScreenChar implements Screen {
 		else
 			percentageMovesSearched = 1/(double)(maxPlyLevel);
 		incrementValForPercentageMovesSearched = 1/(double)(3*maxPlyLevel*maxPlyLevel);
-		resumeButton = new ImageButton(ChainReactionAIGame.resumeButtonDraw);
-		newGameButton = new ImageButton(ChainReactionAIGame.newGameButtonDraw);
-		mainMenuButton = new ImageButton(ChainReactionAIGame.mainMenuButtonDraw);
-		exitButton = new ImageButton(ChainReactionAIGame.exitButtonDraw);
+		resumeButton = new ImageButton(ChainReactionAIGame.resumeButtonDraw, ChainReactionAIGame.resumePressedButtonDraw);
+		newGameButton = new ImageButton(ChainReactionAIGame.newGameButtonDraw, ChainReactionAIGame.newGamePressedButtonDraw);
+		mainMenuButton = new ImageButton(ChainReactionAIGame.mainMenuButtonDraw, ChainReactionAIGame.mainMenuPressedButtonDraw);
+		exitButton = new ImageButton(ChainReactionAIGame.exitButtonDraw, ChainReactionAIGame.exitPressedButtonDraw);
 		
 		handle.writeString("--------------------------------------------------------------------------\r\n", true);
 		
@@ -472,7 +472,7 @@ public class MainGameScreenChar implements Screen {
 							updateStatistics();
 						}
 						
-						myGame.setScreen(new GameEndScreen(myGame, currentPlayer, numberOfMovesPlayed));
+						myGame.setScreen(new GameEndScreen(myGame, currentPlayer, numberOfMovesPlayed, isCPU, difficultyLevels));
 					}
 					currentPlayer = (currentPlayer + 1) % NUMBER_OF_PLAYERS;
 					if (DEBUG)

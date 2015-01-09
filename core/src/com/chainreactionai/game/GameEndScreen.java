@@ -52,9 +52,11 @@ public class GameEndScreen implements Screen {
 	private int numBalls;
 	private int MAX_NUMBER_OF_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	private float widthUpscaleFactor;
+	private ArrayList<Boolean> isCPU = new ArrayList<Boolean>();
+	private ArrayList<Integer> difficultyLevelList = new ArrayList<Integer>();
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private ImageButton buttonPlayAgain, buttonExit, buttonAchievements;
+	private ImageButton buttonPlayAgain, buttonNewGame, buttonExit, buttonAchievements;
 	private int winningPlayer, numMovesPlayed;
 	private Label title;
 	private Color[] colors;
@@ -67,14 +69,17 @@ public class GameEndScreen implements Screen {
 	private Environment environment;
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
-	private Drawable exitButtonDrawable, newGameButtonDrawable;
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	
-	public GameEndScreen (ChainReactionAIGame game, int winner, int numMovesPlayed) {
+	public GameEndScreen (ChainReactionAIGame game, int winner, int numMovesPlayed, boolean[] isCPU, int[] difficultyLevels) {
 		myGame = game;
 		winningPlayer = winner;
 		this.numMovesPlayed = numMovesPlayed;
+		for (int i = 0; i < isCPU.length; i += 1) {
+			this.isCPU.add(isCPU[i]);
+			this.difficultyLevelList.add(difficultyLevels[i]);
+		}
 		// Initialize ArrayLists
 		xVal = new ArrayList<Integer>();
 		yVal = new ArrayList<Integer>();
@@ -121,19 +126,18 @@ public class GameEndScreen implements Screen {
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
-        // Load Drawables
-        newGameButtonDrawable = ChainReactionAIGame.newGameButtonDraw;
-        exitButtonDrawable = ChainReactionAIGame.exitButtonDraw;
-		// The elements are displayed in the order you add them.
+        // The elements are displayed in the order you add them.
 		// The first appear on top, the last at the bottom.
 		// Initialize and add the winning quote to the Table
 		title = new Label("Player " + String.valueOf(winningPlayer + 1) + " has won the game after " + numMovesPlayed + " moves!", skin);
 		table.add(title).padBottom(40).row();
 		// Add the PlayAgain and Exit buttons to the Table.
-		buttonPlayAgain = new ImageButton(newGameButtonDrawable);
-		buttonExit = new ImageButton(exitButtonDrawable);
-		buttonAchievements = new ImageButton(ChainReactionAIGame.backButtonDraw);
+		buttonPlayAgain = new ImageButton(ChainReactionAIGame.playAgainButtonDraw, ChainReactionAIGame.playAgainPressedButtonDraw);
+		buttonNewGame = new ImageButton(ChainReactionAIGame.newGameButtonDraw, ChainReactionAIGame.newGamePressedButtonDraw);
+		buttonExit = new ImageButton(ChainReactionAIGame.exitButtonDraw, ChainReactionAIGame.exitPressedButtonDraw);
+		buttonAchievements = new ImageButton(ChainReactionAIGame.achievementsButtonDraw, ChainReactionAIGame.achievementsPressedButtonDraw);
 		table.add(buttonPlayAgain).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+		table.add(buttonNewGame).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		table.add(buttonAchievements).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		table.add(buttonExit).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		table.setFillParent(true);
@@ -141,6 +145,15 @@ public class GameEndScreen implements Screen {
 		stage.addActor(table);
 		// Add ClickListeners to the Play Again and Exit buttons
 		buttonPlayAgain.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				// Same way we moved here from the Splash Screen
+				// We set it to new Splash because we got no other screens
+				// otherwise you put the screen there where you want to go
+				myGame.setScreen(new MainGameScreenChar(myGame, isCPU, difficultyLevelList));
+			}
+		});
+		buttonNewGame.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				// Same way we moved here from the Splash Screen

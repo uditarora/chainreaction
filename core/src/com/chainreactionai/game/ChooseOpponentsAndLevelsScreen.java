@@ -213,7 +213,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 			table.add(tempLabel2).padBottom(10).row();
 		}
 		// Creating and adding the submit button to the Table.
-		submitButton = new ImageButton(ChainReactionAIGame.submitButtonDraw);
+		submitButton = new ImageButton(ChainReactionAIGame.submitButtonDraw, ChainReactionAIGame.submitPressedButtonDraw);
 		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*widthUpscaleFactor, HEIGHT_SUBMIT_BUTTON*widthUpscaleFactor).row();
 		// Scroll pane consisting of the Table.
 		scroll = new ScrollPane(table);
