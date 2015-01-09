@@ -170,13 +170,13 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
         rand = new Random();
         // Creating the DropDown for whether the player should be 
 		// human or CPU.
-		ImageButton tempButton = new ImageButton(ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedButtonDraw);
+		ImageButton tempButton = new ImageButton(ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw);
 		userSelectButtons = new Array<ImageButton>();
 		userSelectIsHuman = new Array<Boolean>();
 		tempButton.setChecked(true);
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			if (i != 0) {
-				tempButton = new ImageButton(ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.pressedButtonDraw);
+				tempButton = new ImageButton(ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw);
 				tempButton.setChecked(false);
 			}
 			userSelectButtons.add(tempButton);
@@ -262,10 +262,10 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		}
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			if (userSelectButtons.get(i).isChecked()) {
-				ImageButtonStyle temp = new ImageButtonStyle(ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw);
+				ImageButtonStyle temp = new ImageButtonStyle(ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw);
 				userSelectButtons.get(i).setStyle(temp);
 			} else {
-				ImageButtonStyle temp = new ImageButtonStyle(ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.pressedButtonDraw, ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.pressedButtonDraw, ChainReactionAIGame.unpressedCpuButtonDraw);
+				ImageButtonStyle temp = new ImageButtonStyle(ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedCpuButtonDraw);
 				userSelectButtons.get(i).setStyle(temp);
 			}
 		}
