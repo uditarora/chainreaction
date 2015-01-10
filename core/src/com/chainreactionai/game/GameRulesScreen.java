@@ -12,9 +12,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -26,11 +28,14 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 /**
  * @author Parnami
@@ -43,13 +48,16 @@ public class GameRulesScreen implements Screen {
 	final private int HEIGHT_SCREEN = 645;
 	final private int HEIGHT_RULES_SCREEN_BUTTONS = 60;
 	final private int WIDTH_RULES_SCREEN_BUTTONS = 275;
+	final private int WIDTH_ANIMATION_BUTTONS = 113;
+	final private int HEIGHT_ANIMATION_BUTTONS = 137;
 	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;
 	final private int MAX_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MAX_Z_DIST_OF_NEW_BALLS;
 	final private int MIN_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MIN_Z_DIST_OF_NEW_BALLS;
 	final private int MAX_SPEED_OF_BALLS = ChainReactionAIGame.MAX_SPEED_OF_BALLS;
 	final private int MIN_SPEED_OF_BALLS = ChainReactionAIGame.MIN_SPEED_OF_BALLS;
 	final private int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = ChainReactionAIGame.MAX_NUMBER_OF_BALLS_AT_A_MOMENT;
-	private int numBalls;
+	final private int MAX_CORNER_SPLIT_WAIT_TIME = 50;
+	private int numBalls, cornerSplitWaitTime;
 	final private int MAX_NUMBER_OF_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	private Stage stage = new Stage();
 	private Table table = new Table(), container = new Table();
@@ -67,8 +75,10 @@ public class GameRulesScreen implements Screen {
 	private Environment environment;
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
+	private Drawable cornerBeforeSplitButtonDraw, cornerAfterSplitButtonDraw;
 	// Trying ImageButton
 	private ImageButton backButtonImg = new ImageButton(ChainReactionAIGame.backButtonDraw, ChainReactionAIGame.backPressedButtonDraw);
+	private ImageButton cornerSplitButton;
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	
@@ -152,7 +162,11 @@ public class GameRulesScreen implements Screen {
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
-		// Initializing and adding the rules to Table.
+        cornerBeforeSplitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("RulesAnimation/cornerBeforeSplit.png"))));
+        cornerAfterSplitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("RulesAnimation/cornerAfterSplit.png"))));
+        cornerSplitButton = new ImageButton(cornerBeforeSplitButtonDraw);
+        cornerSplitWaitTime = 0;
+        // Initializing and adding the rules to Table.
         rulesHeading = new Label("GAME RULES", ChainReactionAIGame.skin);
         rulesHeading.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
 		rules = new Label("There's only one rule - Eliminate your\n"
@@ -173,6 +187,7 @@ public class GameRulesScreen implements Screen {
 		rules.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
 		table.add(rulesHeading).row();
 		table.add(rules).padLeft(10).padRight(10).padBottom(10).row();
+		table.add(cornerSplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).row();
 		table.add(backButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		table.setFillParent(true);
 		// Scroll pane consisting of the Table.
@@ -188,6 +203,16 @@ public class GameRulesScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				myGame.setScreen(new MainMenuScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+			}
+		});
+		cornerSplitButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				ImageButtonStyle temp = new ImageButtonStyle(cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw);
+				cornerSplitButton.setStyle(temp);
+				cornerSplitWaitTime += 1;
+				System.out.println("Clicked");
+				cornerSplitButton.removeListener(this);
 			}
 		});
 		currentImage = 0;
@@ -209,6 +234,24 @@ public class GameRulesScreen implements Screen {
 			createAnimation();
 			drawAnimation();
 			modelBatch.end();
+		}
+		if (cornerSplitWaitTime > 0) {
+			cornerSplitWaitTime += 1;
+			if (cornerSplitWaitTime > MAX_CORNER_SPLIT_WAIT_TIME) {
+				cornerSplitWaitTime = 0;
+				ImageButtonStyle temp = new ImageButtonStyle(cornerBeforeSplitButtonDraw, cornerBeforeSplitButtonDraw, cornerBeforeSplitButtonDraw, cornerBeforeSplitButtonDraw, cornerBeforeSplitButtonDraw, cornerBeforeSplitButtonDraw);
+				cornerSplitButton.setStyle(temp);
+				cornerSplitButton.addListener(new ClickListener() {
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						ImageButtonStyle temp = new ImageButtonStyle(cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw);
+						cornerSplitButton.setStyle(temp);
+						cornerSplitWaitTime += 1;
+						System.out.println("Clicked");
+						cornerSplitButton.removeListener(this);
+					}
+				});
+			}
 		}
 		stage.act(delta);
 		stage.draw();
