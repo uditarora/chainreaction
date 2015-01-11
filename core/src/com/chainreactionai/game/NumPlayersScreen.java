@@ -154,13 +154,13 @@ public class NumPlayersScreen implements Screen {
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
 		// Initializing and adding the title to Table.
-		title = new Label("Choose number of players", skin);
+		title = new Label("Choose number of opponents", skin);
 		title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		table.add(title).padBottom(10).row();
-		// Initializing the Drop-Down menu
-		numPlayerSlider = new Slider(2, MAX_NUMBER_OF_PLAYERS, 1, false, ChainReactionAIGame.skin);
+		// Initializing the Slider
+		numPlayerSlider = new Slider(1, MAX_NUMBER_OF_PLAYERS-1, 1, false, ChainReactionAIGame.skin);
 		numPlayerSlider.getStyle().knob.setMinHeight(HEIGHT_KNOB*heightUpscaleFactor);
-		// Adding the DropDown to the Table.
+		// Adding the Slider to the Table.
 		table.add(numPlayerSlider).size(WIDTH_SLIDER*widthUpscaleFactor, HEIGHT_SLIDER*heightUpscaleFactor*2).padTop(5).padBottom(5);
 		// To allow the sliders to be dragged properly
 		InputListener stopTouchDown = new InputListener() {
@@ -171,7 +171,7 @@ public class NumPlayersScreen implements Screen {
 		};
 		numPlayerSlider.addListener(stopTouchDown);
 		// Label Initialize
-		numPlayerLabel = new Label("2", skin);
+		numPlayerLabel = new Label("1", skin);
 		table.add(numPlayerLabel).padBottom(7).padTop(3).row();
 		// Initializing and adding the Submit Button to Table.
 		submitButton = new ImageButton(ChainReactionAIGame.submitButtonDraw, ChainReactionAIGame.submitPressedButtonDraw);
@@ -183,7 +183,7 @@ public class NumPlayersScreen implements Screen {
 		submitButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				int chosenNumOfPlayers = (int)(numPlayerSlider.getValue());
+				int chosenNumOfPlayers = (int)(numPlayerSlider.getValue())+1;
 				myGame.setScreen(new ChooseOpponentsAndLevelsScreen(myGame, chosenNumOfPlayers, NUMBER_OF_DIFFICULTY_LEVELS, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
 			}
 		});
