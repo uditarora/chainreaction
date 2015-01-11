@@ -9,12 +9,12 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -24,27 +24,31 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.Timer.Task;
 
 /**
  * @author Kartik Parnami
- * 
+ *
  */
-public class MainMenuScreen implements Screen {
+
+public class SinglePlayerMenuScreen implements Screen {
 	SpriteBatch batch;
 	private ChainReactionAIGame myGame;
 	final private int WIDTH_SCREEN = 448;
 	final private int HEIGHT_SCREEN = 645;
-	final private int HEIGHT_MAIN_MENU_BUTTONS = 60;
-	final private int WIDTH_MAIN_MENU_BUTTONS = 275;
-	final private int WIDTH_LOGO = 192;
-	final private int HEIGHT_LOGO = 150;
-	final private int MAX_NUM_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
+	final private int WIDTH_SUBMIT_BUTTON = 275;
+	final private int HEIGHT_SUBMIT_BUTTON = 60;
+	final private int WIDTH_SLIDER = 150;
+	final private int HEIGHT_SLIDER = 30;
+	final private int HEIGHT_KNOB = 20;
+	private float heightUpscaleFactor, widthUpscaleFactor;
 	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;
 	final private int MAX_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MAX_Z_DIST_OF_NEW_BALLS;
 	final private int MIN_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MIN_Z_DIST_OF_NEW_BALLS;
@@ -52,10 +56,14 @@ public class MainMenuScreen implements Screen {
 	final private int MIN_SPEED_OF_BALLS = ChainReactionAIGame.MIN_SPEED_OF_BALLS;
 	final private int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = ChainReactionAIGame.MAX_NUMBER_OF_BALLS_AT_A_MOMENT;
 	private int numBalls;
-	private float widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private ImageButton buttonPlay, buttonExit, buttonRules, buttonStats, buttonAchievements, logo;
+	private int NUMBER_OF_DIFFICULTY_LEVELS, MAX_NUM_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
+	private ImageButton submitButton;
+	private Slider plySlider;
+	private Label plyLabel;
+	ArrayList<Boolean> isCPU = new ArrayList<Boolean>();
+	ArrayList<Integer> plyLevelList = new ArrayList<Integer>();
 	private Color[] colors;
 	private boolean animationInit = false;
 	// Trying 3D Graphics
@@ -66,12 +74,14 @@ public class MainMenuScreen implements Screen {
 	private Environment environment;
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
-	// Initializing sounds 
-	private Sound sound;
+	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
+			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	
-	public MainMenuScreen(ChainReactionAIGame game) {
-		ChainReactionAIGame.currentScreen = 0;
+	// Constructor which initializes the number of players passed from
+	// NumPlayersScreen and the number if difficulty levels allowed.
+	public SinglePlayerMenuScreen(ChainReactionAIGame game, int numDifficultyLevels) {
 		myGame = game;
+		NUMBER_OF_DIFFICULTY_LEVELS = numDifficultyLevels;
 		// Initialize ArrayLists
 		xVal = new ArrayList<Integer>();
 		yVal = new ArrayList<Integer>();
@@ -84,10 +94,10 @@ public class MainMenuScreen implements Screen {
 		animationInit = true;
 	}
 	
-	public MainMenuScreen(ChainReactionAIGame game, ArrayList<Integer> xVal, ArrayList<Integer> yVal, ArrayList<Integer> color, ArrayList<Integer> startZPosition, ArrayList<Integer> distNow, ArrayList<Integer> speed, int numBalls) {
+	public SinglePlayerMenuScreen(ChainReactionAIGame game, int numDifficultyLevels, ArrayList<Integer> xVal, ArrayList<Integer> yVal, ArrayList<Integer> color, ArrayList<Integer> startZPosition, ArrayList<Integer> distNow, ArrayList<Integer> speed, int numBalls) {
 		int i;
-		ChainReactionAIGame.currentScreen = 0;
 		myGame = game;
+		NUMBER_OF_DIFFICULTY_LEVELS = numDifficultyLevels;
 		// Initialize ArrayLists
 		this.xVal = new ArrayList<Integer>();
 		this.yVal = new ArrayList<Integer>();
@@ -108,14 +118,15 @@ public class MainMenuScreen implements Screen {
 		create();
 		animationInit = true;
 	}
-	
 
+	// Initializer function.
 	private void create() {
 		batch = new SpriteBatch();
 		// The elements are displayed in the order you add them.
 		// The first appear on top, the last at the bottom.
 		// Up-scale Factors are used to get proper sized buttons
 		// upscaled or downscaled according to the Screen Dimensions
+		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
 		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
 		// Initialize colors
 		colors = new Color[MAX_NUM_PLAYERS];
@@ -146,62 +157,48 @@ public class MainMenuScreen implements Screen {
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
-        // Adds the title and buttons to the Table.
-		//title.setFontScale((1+(heightUpscaleFactor-1)/2));
-		//table.add(title).padBottom(40).row();
-        logo = new ImageButton(ChainReactionAIGame.logoDraw);
-        table.add(logo).size(WIDTH_LOGO*widthUpscaleFactor, HEIGHT_LOGO*widthUpscaleFactor).padBottom(20).row();
-		buttonPlay = new ImageButton(ChainReactionAIGame.playButtonDraw, ChainReactionAIGame.playPressedButtonDraw);
-		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		buttonRules = new ImageButton(ChainReactionAIGame.rulesButtonDraw, ChainReactionAIGame.rulesPressedButtonDraw);
-		table.add(buttonRules).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		buttonStats = new ImageButton(ChainReactionAIGame.statsButtonDraw, ChainReactionAIGame.statsPressedButtonDraw);
-		table.add(buttonStats).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		buttonAchievements = new ImageButton(ChainReactionAIGame.achievementsButtonDraw, ChainReactionAIGame.achievementsPressedButtonDraw);
-		table.add(buttonAchievements).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		buttonExit = new ImageButton(ChainReactionAIGame.exitButtonDraw, ChainReactionAIGame.exitPressedButtonDraw);
-		table.add(buttonExit).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+        
+		// Creating the Slider for what should be the 
+		// difficulty level of the CPU player.
+		plySlider = new Slider(1, NUMBER_OF_DIFFICULTY_LEVELS, 1, false, ChainReactionAIGame.skin);
+		plyLabel = new Label(String.valueOf((int)plySlider.getValue()), skin);
+
+		// To allow the sliders to be dragged properly
+		InputListener stopTouchDown = new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				event.stop();
+			    return false;
+			}
+		};
+		// Adding the Slider and Labels to the Table.
+		Label tempLabel = new Label("Choose CPU Difficulty Level:", skin);
+		tempLabel.setFontScale(heightUpscaleFactor);
+		table.add(tempLabel).padBottom(10).row();
+		// To allow the sliders to be dragged properly
+		plySlider.addListener(stopTouchDown);
+		plySlider.getStyle().knob.setMinHeight(HEIGHT_KNOB*heightUpscaleFactor);
+		table.add(plySlider).height(HEIGHT_SLIDER*heightUpscaleFactor).width(WIDTH_SLIDER*widthUpscaleFactor).padBottom(10);
+		// Add the label containing the currently selected plyLevel
+		plyLabel.setFontScale(heightUpscaleFactor);
+		table.add(plyLabel).padBottom(10).row();
+		// Creating and adding the submit button to the Table.
+		submitButton = new ImageButton(ChainReactionAIGame.submitButtonDraw, ChainReactionAIGame.submitPressedButtonDraw);
+		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*widthUpscaleFactor, HEIGHT_SUBMIT_BUTTON*widthUpscaleFactor).row();
 		table.setFillParent(true);
-		// Adding the table to stage.
+		//Adding the table to the stage
 		stage.addActor(table);
-		// Attaching ClickListeners to the Play and Exit buttons.
-		buttonPlay.addListener(new ClickListener() {
+		// Adding ClickListener to the submit button
+		submitButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				myGame.setScreen(new ChooseGameTypeScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+				isCPU.add(false);
+				isCPU.add(true);
+				plyLevelList.add(1);
+				plyLevelList.add((int)plySlider.getValue());
+				myGame.setScreen(new MainGameScreenChar(myGame, isCPU, plyLevelList));
 			}
 		});
-		buttonRules.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				myGame.setScreen(new GameRulesScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
-			}
-		});
-		buttonStats.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				myGame.setScreen(new GameStatsScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
-			}
-		});
-		buttonAchievements.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				if (ChainReactionAIGame.googleServices.isSignedIn())
-					ChainReactionAIGame.googleServices.showAchievement();
-			}
-		});
-		buttonExit.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				Gdx.app.exit();
-			}
-		});
-		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(stage);
-		sound = Gdx.audio.newSound(Gdx.files.internal("sounds/game.mp3"));
-		final long id = sound.loop();
-		
-		
 	}
 
 	@Override
@@ -219,10 +216,12 @@ public class MainMenuScreen implements Screen {
 			drawAnimation();
 			modelBatch.end();
 		}
-		stage.act(delta);
+		// Updating the difficulty level label
+		plyLabel.setText(String.valueOf((int)plySlider.getValue()));
+		stage.act();
 		stage.draw();
 		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
-			Gdx.app.exit();
+			myGame.setScreen(new NumPlayersScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
 		}
 	}
 	
@@ -285,7 +284,7 @@ public class MainMenuScreen implements Screen {
 		distNow.clear();
 		speed.clear();
 	}
-	
+
 	@Override
 	public void resize(int width, int height) {
 	}
@@ -310,5 +309,6 @@ public class MainMenuScreen implements Screen {
 	@Override
 	public void dispose() {
 		stage.dispose();
+//		skin.dispose();
 	}
 }

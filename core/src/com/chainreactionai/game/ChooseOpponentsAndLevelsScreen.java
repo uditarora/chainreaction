@@ -168,7 +168,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
-        // Creating the DropDown for whether the player should be 
+        // Creating the ToggleButton for whether the player should be 
 		// human or CPU.
 		ImageButton tempButton = new ImageButton(ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw);
 		userSelectButtons = new Array<ImageButton>();
@@ -182,7 +182,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 			userSelectButtons.add(tempButton);
 			userSelectIsHuman.add(tempButton.isChecked());
 		}
-		// Creating the DropDown for what should be the 
+		// Creating the Sliders for what should be the 
 		// difficulty level of a given CPU player.
 		plySliders = new Array<Slider>();
 		plyLabels = new Array<Label>();
@@ -197,7 +197,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 			    return false;
 			}
 		};
-		// Adding the dropdowns to the Table.
+		// Adding the Slider to the Table.
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
 			Label tempLabel = new Label("Player " + String.valueOf(i+1) + ":", skin);
 			tempLabel.setFontScale(heightUpscaleFactor);
@@ -264,9 +264,11 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 			if (userSelectButtons.get(i).isChecked()) {
 				ImageButtonStyle temp = new ImageButtonStyle(ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw);
 				userSelectButtons.get(i).setStyle(temp);
+				plySliders.get(i).setDisabled(true);
 			} else {
 				ImageButtonStyle temp = new ImageButtonStyle(ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedCpuButtonDraw);
 				userSelectButtons.get(i).setStyle(temp);
+				plySliders.get(i).setDisabled(false);
 			}
 		}
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i += 1) {
