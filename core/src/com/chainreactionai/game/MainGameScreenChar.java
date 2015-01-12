@@ -32,6 +32,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -100,6 +101,7 @@ public class MainGameScreenChar implements Screen {
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private boolean animationInit = false;
 	private Random rand;
+	private Image img;
 	//Sound Object
 	private Sound ballSound;
 	private Sound splitSound;
@@ -231,6 +233,8 @@ public class MainGameScreenChar implements Screen {
 		handle.writeString("--------------------------------------------------------------------------\r\n", true);
 		
 		// Populating the Pause menu with the buttons.
+		img = new Image(ChainReactionAIGame.texture);
+		img.setFillParent(true);
 		table.add(resumeButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
 		table.add(newGameButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
 		table.add(mainMenuButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
@@ -519,9 +523,6 @@ public class MainGameScreenChar implements Screen {
 	        modelBatch.end();
 	        shapeRenderer.end();		
 		} else {
-			batch.begin();
-		    batch.draw(ChainReactionAIGame.texture, 0, 0, ChainReactionAIGame.WIDTH, ChainReactionAIGame.HEIGHT);
-		    batch.end();
 			// If the game is paused, add the pause menu to the stage.
 			if (animationInit) {
 				modelBatch.begin(cam);
@@ -529,6 +530,7 @@ public class MainGameScreenChar implements Screen {
 				drawAnimation();
 				modelBatch.end();
 			}
+			stage.addActor(img);
 			stage.addActor(table);
 			stage.act();
 			stage.draw();

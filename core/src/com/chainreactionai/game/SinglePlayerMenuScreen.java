@@ -26,6 +26,7 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -76,6 +77,7 @@ public class SinglePlayerMenuScreen implements Screen {
 	private Random rand;
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
+	private Image img = new Image(ChainReactionAIGame.texture);
 	
 	// Constructor which initializes the number of players passed from
 	// NumPlayersScreen and the number if difficulty levels allowed.
@@ -186,6 +188,8 @@ public class SinglePlayerMenuScreen implements Screen {
 		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*widthUpscaleFactor, HEIGHT_SUBMIT_BUTTON*widthUpscaleFactor).row();
 		table.setFillParent(true);
 		//Adding the table to the stage
+		img.setFillParent(true);
+		stage.addActor(img);
 		stage.addActor(table);
 		// Adding ClickListener to the submit button
 		submitButton.addListener(new ClickListener() {

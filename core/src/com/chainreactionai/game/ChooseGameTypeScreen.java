@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -61,6 +62,7 @@ public class ChooseGameTypeScreen implements Screen {
 	private Environment environment;
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
+	private Image img;
 	
 	public ChooseGameTypeScreen(ChainReactionAIGame game) {
 		ChainReactionAIGame.currentScreen = 0;
@@ -138,14 +140,17 @@ public class ChooseGameTypeScreen implements Screen {
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
+        img = new Image(ChainReactionAIGame.texture);
         
         // Adds the buttons to the Table.
-		buttonSinglePlayer = new ImageButton(ChainReactionAIGame.playButtonDraw, ChainReactionAIGame.playPressedButtonDraw);
+		buttonSinglePlayer = new ImageButton(ChainReactionAIGame.singlePlayerButtonDraw, ChainReactionAIGame.singlePlayerPressedButtonDraw);
 		table.add(buttonSinglePlayer).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		buttonMultiPlayer = new ImageButton(ChainReactionAIGame.rulesButtonDraw, ChainReactionAIGame.rulesPressedButtonDraw);
+		buttonMultiPlayer = new ImageButton(ChainReactionAIGame.multiPlayerButtonDraw, ChainReactionAIGame.multiPlayerPressedButtonDraw);
 		table.add(buttonMultiPlayer).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		table.setFillParent(true);
 		// Adding the table to stage.
+		stage.addActor(img);
+		img.setFillParent(true);
 		stage.addActor(table);
 		// Attaching ClickListeners to the Play and Exit buttons.
 		buttonSinglePlayer.addListener(new ClickListener() {
@@ -169,10 +174,6 @@ public class ChooseGameTypeScreen implements Screen {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glClearColor(((float)(15)/255), ((float)(15)/255), ((float)(15)/255), 1);
-		batch.setProjectionMatrix(cam.combined);
-	    batch.begin();
-	    batch.draw(ChainReactionAIGame.texture, 0, 0, WIDTH_SCREEN, HEIGHT_SCREEN);
-	    batch.end();
 		if (animationInit) {
 			modelBatch.begin(cam);
 			createAnimation();
