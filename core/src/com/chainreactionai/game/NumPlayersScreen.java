@@ -26,6 +26,7 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -74,6 +75,7 @@ public class NumPlayersScreen implements Screen {
 	private Random rand;
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
+	private Image img = new Image(ChainReactionAIGame.texture);
 	
 	public NumPlayersScreen(ChainReactionAIGame game) {
 		ChainReactionAIGame.currentScreen = 1;
@@ -178,6 +180,8 @@ public class NumPlayersScreen implements Screen {
 		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*widthUpscaleFactor, HEIGHT_SUBMIT_BUTTON*widthUpscaleFactor).padBottom(2).row();
 		table.setFillParent(true);
 		// Adding the table to the stage.
+		img.setFillParent(true);
+		stage.addActor(img);
 		stage.addActor(table);
 		// Attaching the ClickListener to the submit button.
 		submitButton.addListener(new ClickListener() {

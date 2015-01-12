@@ -64,9 +64,10 @@ public class ChainReactionAIGame extends Game {
 	public static Drawable achievementsButtonDraw, achievementsPressedButtonDraw, backButtonDraw,
 		backPressedButtonDraw, exitButtonDraw, exitPressedButtonDraw, leaderboardButtonDraw,
 		leaderboardPressedButtonDraw, mainMenuButtonDraw, mainMenuPressedButtonDraw,
-		newGameButtonDraw, newGamePressedButtonDraw, pauseButtonDraw, pausePressedButtonDraw,
-		playButtonDraw, playPressedButtonDraw, playAgainButtonDraw, playAgainPressedButtonDraw,
-		resumeButtonDraw, resumePressedButtonDraw, rulesButtonDraw, rulesPressedButtonDraw,
+		multiPlayerButtonDraw, multiPlayerPressedButtonDraw, newGameButtonDraw, newGamePressedButtonDraw,
+		pauseButtonDraw, pausePressedButtonDraw, playButtonDraw, playPressedButtonDraw,
+		playAgainButtonDraw, playAgainPressedButtonDraw, resumeButtonDraw, resumePressedButtonDraw,
+		rulesButtonDraw, rulesPressedButtonDraw, singlePlayerButtonDraw, singlePlayerPressedButtonDraw,
 		statsButtonDraw, statsPressedButtonDraw, submitButtonDraw, submitPressedButtonDraw,
 		pressedHumanCpuButtonDraw, unpressedHumanButtonDraw, unpressedCpuButtonDraw, logoDraw;
 
@@ -91,6 +92,8 @@ public class ChainReactionAIGame extends Game {
 		leaderboardPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/leaderboardPressed.png"))));
 		mainMenuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/mainMenu.jpg"))));
 		mainMenuPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/mainMenuPressed.png"))));
+		multiPlayerButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/multiPlayer.jpg"))));
+		multiPlayerPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/multiPlayerPressed.png"))));
 		newGameButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/newGame.jpg"))));
 		newGamePressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/newGamePressed.png"))));
 		pauseButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/pause.jpg"))));
@@ -103,6 +106,8 @@ public class ChainReactionAIGame extends Game {
 		resumePressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/resumePressed.png"))));
 		rulesButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/rules.jpg"))));
 		rulesPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/rulesPressed.png"))));
+		singlePlayerButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/singlePlayer.jpg"))));
+		singlePlayerPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/singlePlayerPressed.png"))));
 		statsButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/statistics.jpg"))));
 		statsPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/statisticsPressed.png"))));
 		submitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/submit.jpg"))));

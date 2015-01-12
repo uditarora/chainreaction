@@ -27,6 +27,7 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -74,6 +75,7 @@ public class GameStatsScreen implements Screen {
 	private ImageButton backButton = new ImageButton(ChainReactionAIGame.backButtonDraw, ChainReactionAIGame.backPressedButtonDraw);
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
+	private Image img = new Image(ChainReactionAIGame.texture);
 	
 	// Constructor
 	public GameStatsScreen(ChainReactionAIGame game) {
@@ -186,6 +188,8 @@ public class GameStatsScreen implements Screen {
 		container.setFillParent(true);
 		container.add(scroll).fill().expand().row();
 		// Adding container to stage.
+		img.setFillParent(true);
+		stage.addActor(img);
 		stage.addActor(container);
 		// Attaching the ClickListener to the back button.
 		backButton.addListener(new ClickListener() {

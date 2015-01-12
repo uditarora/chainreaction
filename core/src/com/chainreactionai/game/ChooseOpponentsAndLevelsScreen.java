@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -85,6 +86,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	private Random rand;
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
+	private Image img = new Image(ChainReactionAIGame.texture);
 	
 	// Constructor which initializes the number of players passed from
 	// NumPlayersScreen and the number if difficulty levels allowed.
@@ -222,6 +224,8 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		container.setFillParent(true);
 		container.add(scroll).fill().expand().row();
 		// Adding container to stage.
+		img.setFillParent(true);
+		stage.addActor(img);
 		stage.addActor(container);
 		// Adding ClickListener to the submit button
 		submitButton.addListener(new ClickListener() {
@@ -250,10 +254,6 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glClearColor(((float)(15)/255), ((float)(15)/255), ((float)(15)/255), 1);
-		batch.setProjectionMatrix(cam.combined);
-	    batch.begin();
-	    batch.draw(ChainReactionAIGame.texture, 0, 0, WIDTH_SCREEN, HEIGHT_SCREEN);
-	    batch.end();
 		if (animationInit) {
 			modelBatch.begin(cam);
 			createAnimation();
