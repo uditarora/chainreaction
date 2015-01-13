@@ -9,7 +9,6 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -68,8 +67,6 @@ public class MainMenuScreen implements Screen {
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
 	private Image img = new Image(ChainReactionAIGame.texture);
-	// Initializing sounds 
-	private Sound sound;
 	
 	public MainMenuScreen(ChainReactionAIGame game) {
 		ChainReactionAIGame.currentScreen = 0;
@@ -172,7 +169,7 @@ public class MainMenuScreen implements Screen {
 		buttonPlay.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				myGame.setScreen(new ChooseGameTypeScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+				myGame.setScreen(new NumPlayersScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
 			}
 		});
 		buttonRules.addListener(new ClickListener() {
@@ -202,10 +199,6 @@ public class MainMenuScreen implements Screen {
 		});
 		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(stage);
-		sound = Gdx.audio.newSound(Gdx.files.internal("sounds/game.mp3"));
-		final long id = sound.loop();
-		
-		
 	}
 
 	@Override
