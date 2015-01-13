@@ -102,14 +102,11 @@ public class MainGameScreenChar implements Screen {
 	private boolean animationInit = false;
 	private Random rand;
 	private Image img;
-	//Sound Object
-	private Sound ballSound;
+	//Sounds
 	private Sound splitSound;
-
-
+	private boolean playThisTimeBallPlace, playThisTimeSplit;
 	// Stats to be stored
 	private Preferences stats;
-	
 	// All debug printing should go under this flag.
 	final private boolean DEBUG = false;
 	final private boolean DEBUG_CPU = false; 
@@ -175,7 +172,6 @@ public class MainGameScreenChar implements Screen {
 		distNow = new ArrayList<Integer>();
 		speed = new ArrayList<Integer>();
 		numBalls = 0;
-		this.ballSound = Gdx.audio.newSound(Gdx.files.internal("sounds/balls.mp3"));
 		this.splitSound = Gdx.audio.newSound(Gdx.files.internal("sounds/balls.mp3"));
 
 		create();
@@ -187,6 +183,7 @@ public class MainGameScreenChar implements Screen {
 		Color c = batch.getColor();
 		batch.setColor(c.r, c.g, c.b, 0.3f);
 		// Initializing stuff.
+		//playThisTime = false;
 		rectangularGrid = new Array<Rectangle>();
 		innerRectangularGrid = new Array<Rectangle>();
 		gameBoard = new GameBoardChar(GRID_SIZE_X, GRID_SIZE_Y, NUMBER_OF_PLAYERS);
@@ -382,7 +379,7 @@ public class MainGameScreenChar implements Screen {
 					// Check if current player is CPU and play its move
 					if (isCPU[currentPlayer] && !gameOver) {
 						try {
-							Thread.sleep(100);
+							Thread.sleep(261);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -396,9 +393,8 @@ public class MainGameScreenChar implements Screen {
 										System.out.println("Error Time.");
 								}
 								// Initialize the animation for changing the Board.
-								this.splitSound.play();
-
 								gameBoard.changeBoard2(winningMove.coordX, winningMove.coordY, currentPlayer);
+								playThisTimeBallPlace = false;
 								// Store these coordinates so they can be shown as highlighted.
 								highlightPos.coordX = winningMove.coordX;
 								highlightPos.coordY = winningMove.coordY;
@@ -426,7 +422,6 @@ public class MainGameScreenChar implements Screen {
 							if (DEBUG)
 								System.out.println("GameSolver initialized");
 						}
-						
 					}
 				} else {
 					// Giving the chance to the next player to play.
@@ -434,15 +429,20 @@ public class MainGameScreenChar implements Screen {
 				}
 			} else {
 				try {
-					Thread.sleep(100);
+					Thread.sleep(150);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 				//Play Sound
-				
-				this.splitSound.play();
 				// Animates board to show new board with next level of BFS
 				// calls done. Returns whether the BFS is complete or not.
+				if (playThisTimeBallPlace) {
+					this.splitSound.stop();
+					this.splitSound.play();
+					playThisTimeBallPlace = !playThisTimeBallPlace;
+				} else {
+					playThisTimeBallPlace = !playThisTimeBallPlace;
+				}
 				moveCompleted = gameBoard.nextBoard(currentPlayer);
 				// Empties the highlight position so every recursive split
 				// is not highlighted.
@@ -530,6 +530,7 @@ public class MainGameScreenChar implements Screen {
 				drawAnimation();
 				modelBatch.end();
 			}
+			img.setFillParent(true);
 			stage.addActor(img);
 			stage.addActor(table);
 			stage.act();
@@ -598,10 +599,7 @@ public class MainGameScreenChar implements Screen {
 				moveCompleted = false;
 				numberOfMovesPlayed += 1;
 				percentageMovesSearched += incrementValForPercentageMovesSearched;
-				
-				//Audio Play
-				this.ballSound.play();
-				
+				playThisTimeBallPlace = false;
 			}
 		}
 	}
