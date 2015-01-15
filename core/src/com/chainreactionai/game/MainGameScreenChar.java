@@ -104,7 +104,7 @@ public class MainGameScreenChar implements Screen {
 	private Image img;
 	//Sounds
 	private Sound splitSound;
-	private boolean playThisTimeBallPlace, playThisTimeSplit;
+	private boolean playThisTimeBallPlace;
 	// Stats to be stored
 	private Preferences stats;
 	// All debug printing should go under this flag.

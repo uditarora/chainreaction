@@ -50,7 +50,7 @@ public class GameRulesScreen implements Screen {
 	final private int HEIGHT_RULES_SCREEN_BUTTONS = 60;
 	final private int WIDTH_RULES_SCREEN_BUTTONS = 275;
 	final private int WIDTH_ANIMATION_BUTTONS = 113;
-	final private int HEIGHT_ANIMATION_BUTTONS = 137;
+	final private int HEIGHT_ANIMATION_BUTTONS = 114;
 	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;
 	final private int MAX_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MAX_Z_DIST_OF_NEW_BALLS;
 	final private int MIN_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MIN_Z_DIST_OF_NEW_BALLS;
@@ -58,12 +58,17 @@ public class GameRulesScreen implements Screen {
 	final private int MIN_SPEED_OF_BALLS = ChainReactionAIGame.MIN_SPEED_OF_BALLS;
 	final private int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = ChainReactionAIGame.MAX_NUMBER_OF_BALLS_AT_A_MOMENT;
 	final private int MAX_CORNER_SPLIT_WAIT_TIME = 50;
-	private int numBalls, cornerSplitWaitTime;
+	final private int MAX_MIDDLE_SPLIT_WAIT_TIME = 50;
+	final private int MAX_EDGE_SPLIT_WAIT_TIME = 50;
+	final private int MAX_WIN_ADJOINING_RECT_SPLIT_WAIT_TIME = 50;
+	final private int MAX_RECURSIVELY_BETWEEN_SPLIT_WAIT_TIME = 50;
+	final private int MAX_RECURSIVELY_SPLIT_WAIT_TIME = 100;
+	private int numBalls, cornerSplitWaitTime, middleSplitWaitTime, edgeSplitWaitTime, winAdjoiningRectAfterSplitWaitTime, recursivelySplitWaitTime;
 	final private int MAX_NUMBER_OF_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	private Stage stage = new Stage();
 	private Table table = new Table(), container = new Table();
 	private float heightUpscaleFactor, widthUpscaleFactor;
-	private Label rules, rulesHeading;
+	private Label rulesOne, rulesTwo, rulesThree, rulesFour, rulesFive, rulesHeading;
 	private int currentImage;
 	private ScrollPane scroll;
 	private Color[] colors;
@@ -76,10 +81,13 @@ public class GameRulesScreen implements Screen {
 	private Environment environment;
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
-	private Drawable cornerBeforeSplitButtonDraw, cornerAfterSplitButtonDraw;
+	private Drawable cornerBeforeSplitButtonDraw, cornerAfterSplitButtonDraw, middleBeforeSplitButtonDraw, middleAfterSplitButtonDraw,
+					 edgeBeforeSplitButtonDraw, edgeAfterSplitButtonDraw, recursivelyBeforeSplitButtonDraw, recursivelyAfterSplitButtonDraw,
+					 winAdjoiningRectBeforeSplitButtonDraw, winAdjoiningRectAfterSplitButtonDraw, recursivelyBetweenSplitButtonDraw;
 	// Trying ImageButton
-	private ImageButton backButtonImg = new ImageButton(ChainReactionAIGame.backButtonDraw, ChainReactionAIGame.backPressedButtonDraw);
-	private ImageButton cornerSplitButton;
+	private ImageButton backButtonImg = new ImageButton(ChainReactionAIGame.mainMenuButtonDraw, ChainReactionAIGame.mainMenuPressedButtonDraw),
+						tutorialButtonImg = new ImageButton(ChainReactionAIGame.tutorialButtonDraw, ChainReactionAIGame.tutorialPressedButtonDraw);
+	private ImageButton cornerSplitButton, middleSplitButton, edgeSplitButton, recursivelySplitButton, winAdjoiningRectSplitButton;
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private Image img = new Image(ChainReactionAIGame.texture);
@@ -166,41 +174,94 @@ public class GameRulesScreen implements Screen {
         rand = new Random();
         cornerBeforeSplitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("RulesAnimation/cornerBeforeSplit.png"))));
         cornerAfterSplitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("RulesAnimation/cornerAfterSplit.png"))));
+        middleBeforeSplitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("RulesAnimation/middleBeforeSplit.png"))));
+        middleAfterSplitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("RulesAnimation/middleAfterSplit.png"))));
+        edgeBeforeSplitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("RulesAnimation/edgeBeforeSplit.png"))));
+        edgeAfterSplitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("RulesAnimation/edgeAfterSplit.png"))));
+        recursivelyBeforeSplitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("RulesAnimation/recursivelySplitBeforeSplit.png"))));
+        recursivelyBetweenSplitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("RulesAnimation/recursivelySplitBetweenSplit.png"))));
+        recursivelyAfterSplitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("RulesAnimation/recursivelySplitAfterSplit.png"))));
+        winAdjoiningRectBeforeSplitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("RulesAnimation/winAdjoiningRectangleBeforeSplit.png"))));
+        winAdjoiningRectAfterSplitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("RulesAnimation/winAdjoiningRectangleAfterSplit.png"))));
         cornerSplitButton = new ImageButton(cornerBeforeSplitButtonDraw);
+        middleSplitButton = new ImageButton(middleBeforeSplitButtonDraw);
+        edgeSplitButton = new ImageButton(edgeBeforeSplitButtonDraw);
+        recursivelySplitButton = new ImageButton(recursivelyBeforeSplitButtonDraw);
+        winAdjoiningRectSplitButton = new ImageButton(winAdjoiningRectBeforeSplitButtonDraw);
         cornerSplitWaitTime = 0;
+        middleSplitWaitTime = 0;
+        edgeSplitWaitTime = 0;
+        recursivelySplitWaitTime = 0;
+        winAdjoiningRectAfterSplitWaitTime = 0;
         // Initializing and adding the rules to Table.
         rulesHeading = new Label("GAME RULES", ChainReactionAIGame.skin);
         rulesHeading.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
-		rules = new Label("There's only one rule - Eliminate your\n"
-				+ "opponent's atoms! Players take turns to place\n"
-				+ "their atoms on a square. If a square reaches\n"
-				+ "critical mass, one atom spreads out to each\n"
-				+ "of the adjacent squares. If a player loses all\n"
-				+ "their atoms, they are out of the game! A player\n"
-				+ "can only place their atoms on a blank square\n"
-				+ "or one occupied by atoms of their own colour.\n"
-				+ "Critical mass is 2 for the rectangles in the\n"
-				+ "corners, 3 for the rectangles along the edges\n"
-				+ "and 4 for the rest of the rectangles of the grid.\n"
-				+ "If your atom reaches a given rectangle, you\n"
-				+ "become the winning player for that rectangle\n"
-				+ "and your new ball gets added to the previously\n"
-				+ "existing balls present in that rectangle.", skin);
-		rules.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
-		table.add(rulesHeading).row();
-		table.add(rules).padLeft(10).padRight(10).padBottom(10).row();
-		table.add(cornerSplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).row();
-		table.add(backButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		table.setFillParent(true);
+		rulesOne = new Label("This is an interactive tutorial to learn the rules "
+				+ "of the game. Click on the boxes that the arrows point "
+				+ "to understand the way that the game works.\n"
+				+ "There's only one rule for the game - Eliminate your "
+				+ "opponent's atoms! Players take turns to place "
+				+ "their atoms on a square. If a square reaches "
+				+ "critical mass, one atom apiece spreads out to each "
+				+ "of the adjacent squares. If a player loses all "
+				+ "their atoms, they are out of the game! A player "
+				+ "can only place their atoms on a blank square "
+				+ "or one occupied by atoms of their own colour. "
+				+ "Critical mass is 2 for the rectangles in the "
+				+ "corners ie. the balls will split in two available "
+				+ "horizontal and vertical directions as shown in the image below.", skin);
+		rulesTwo = new Label("Critical mass is 3 for the rectangles along "
+				+ "the edges ie. the balls will split and one ball each "
+				+ "will be placed in the 3 available horizontal and vertical "
+				+ "directions as shown in the image below.", skin);
+		rulesThree = new Label("Similarly, critical mass is 4 for the rest of "
+				+ "the rectangles of the grid as shown in the image below. ", skin);
+		rulesFour = new Label("If your atom reaches a given rectangle on splitting, you "
+				+ "become the winning player for that rectangle "
+				+ "and your new ball gets added to the previously "
+				+ "existing balls present in that rectangle. Look "
+				+ "at the two images below to better understand this.", skin);
+		rulesFive = new Label("If you are playing the game for the first time, check out the game tutorial once.", skin);
+		rulesOne.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+		rulesOne.setWrap(true);
+		rulesTwo.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+		rulesTwo.setWrap(true);
+		rulesThree.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+		rulesThree.setWrap(true);
+		rulesFour.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+		rulesFour.setWrap(true);
+		rulesFive.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+		rulesFive.setWrap(true);
+		table.add(rulesHeading).padBottom(10).width(300).row();
+		table.add(rulesOne).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
+		table.add(cornerSplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
+		table.add(rulesTwo).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
+		table.add(edgeSplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
+		table.add(rulesThree).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
+		table.add(middleSplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
+		table.add(rulesFour).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
+		table.add(winAdjoiningRectSplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
+		table.add(recursivelySplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
+		table.add(rulesFive).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
+		table.add(tutorialButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(2).row();
+		table.add(backButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(2).row();
 		// Scroll pane consisting of the Table.
 		scroll = new ScrollPane(table);
 		// Container is the outside coverung which contains the
 		// ScrollPane.
 		container.setFillParent(true);
-		container.add(scroll).fill().expand().row();
+		container.add(scroll).fill().expand();
 		// Adding container to stage.
+		img.setFillParent(true);
+		stage.addActor(img);
 		stage.addActor(container);
 		// Attaching the ClickListener to the back button.
+		tutorialButtonImg.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				myGame.setScreen(new GameTutorialScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+			}
+		});
 		backButtonImg.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -213,8 +274,43 @@ public class GameRulesScreen implements Screen {
 				ImageButtonStyle temp = new ImageButtonStyle(cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw);
 				cornerSplitButton.setStyle(temp);
 				cornerSplitWaitTime += 1;
-				System.out.println("Clicked");
 				cornerSplitButton.removeListener(this);
+			}
+		});
+		middleSplitButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				ImageButtonStyle temp = new ImageButtonStyle(middleAfterSplitButtonDraw, middleAfterSplitButtonDraw, middleAfterSplitButtonDraw, middleAfterSplitButtonDraw, middleAfterSplitButtonDraw, middleAfterSplitButtonDraw);
+				middleSplitButton.setStyle(temp);
+				middleSplitWaitTime += 1;
+				middleSplitButton.removeListener(this);
+			}
+		});
+		edgeSplitButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				ImageButtonStyle temp = new ImageButtonStyle(edgeAfterSplitButtonDraw, edgeAfterSplitButtonDraw, edgeAfterSplitButtonDraw, edgeAfterSplitButtonDraw, edgeAfterSplitButtonDraw, edgeAfterSplitButtonDraw);
+				edgeSplitButton.setStyle(temp);
+				edgeSplitWaitTime += 1;
+				edgeSplitButton.removeListener(this);
+			}
+		});
+		recursivelySplitButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				ImageButtonStyle temp = new ImageButtonStyle(recursivelyBetweenSplitButtonDraw, recursivelyBetweenSplitButtonDraw, recursivelyBetweenSplitButtonDraw, recursivelyBetweenSplitButtonDraw, recursivelyBetweenSplitButtonDraw, recursivelyBetweenSplitButtonDraw);
+				recursivelySplitButton.setStyle(temp);
+				recursivelySplitWaitTime += 1;
+				recursivelySplitButton.removeListener(this);
+			}
+		});
+		winAdjoiningRectSplitButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				ImageButtonStyle temp = new ImageButtonStyle(winAdjoiningRectAfterSplitButtonDraw, winAdjoiningRectAfterSplitButtonDraw, winAdjoiningRectAfterSplitButtonDraw, winAdjoiningRectAfterSplitButtonDraw, winAdjoiningRectAfterSplitButtonDraw, winAdjoiningRectAfterSplitButtonDraw);
+				winAdjoiningRectSplitButton.setStyle(temp);
+				winAdjoiningRectAfterSplitWaitTime += 1;
+				winAdjoiningRectSplitButton.removeListener(this);
 			}
 		});
 		currentImage = 0;
@@ -227,10 +323,6 @@ public class GameRulesScreen implements Screen {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glClearColor(((float)(15)/255), ((float)(15)/255), ((float)(15)/255), 1);
-		batch.setProjectionMatrix(cam.combined);
-	    batch.begin();
-	    batch.draw(ChainReactionAIGame.texture, 0, 0, WIDTH_SCREEN, HEIGHT_SCREEN);
-	    batch.end();
 		if (animationInit) {
 			modelBatch.begin(cam);
 			createAnimation();
@@ -249,8 +341,78 @@ public class GameRulesScreen implements Screen {
 						ImageButtonStyle temp = new ImageButtonStyle(cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw, cornerAfterSplitButtonDraw);
 						cornerSplitButton.setStyle(temp);
 						cornerSplitWaitTime += 1;
-						System.out.println("Clicked");
 						cornerSplitButton.removeListener(this);
+					}
+				});
+			}
+		}
+		if (middleSplitWaitTime > 0) {
+			middleSplitWaitTime += 1;
+			if (middleSplitWaitTime > MAX_MIDDLE_SPLIT_WAIT_TIME) {
+				middleSplitWaitTime = 0;
+				ImageButtonStyle temp = new ImageButtonStyle(middleBeforeSplitButtonDraw, middleBeforeSplitButtonDraw, middleBeforeSplitButtonDraw, middleBeforeSplitButtonDraw, middleBeforeSplitButtonDraw, middleBeforeSplitButtonDraw);
+				middleSplitButton.setStyle(temp);
+				middleSplitButton.addListener(new ClickListener() {
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						ImageButtonStyle temp = new ImageButtonStyle(middleAfterSplitButtonDraw, middleAfterSplitButtonDraw, middleAfterSplitButtonDraw, middleAfterSplitButtonDraw, middleAfterSplitButtonDraw, middleAfterSplitButtonDraw);
+						middleSplitButton.setStyle(temp);
+						middleSplitWaitTime += 1;
+						middleSplitButton.removeListener(this);
+					}
+				});
+			}
+		}
+		if (edgeSplitWaitTime > 0) {
+			edgeSplitWaitTime += 1;
+			if (edgeSplitWaitTime > MAX_EDGE_SPLIT_WAIT_TIME) {
+				edgeSplitWaitTime = 0;
+				ImageButtonStyle temp = new ImageButtonStyle(edgeBeforeSplitButtonDraw, edgeBeforeSplitButtonDraw, edgeBeforeSplitButtonDraw, edgeBeforeSplitButtonDraw, edgeBeforeSplitButtonDraw, edgeBeforeSplitButtonDraw);
+				edgeSplitButton.setStyle(temp);
+				edgeSplitButton.addListener(new ClickListener() {
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						ImageButtonStyle temp = new ImageButtonStyle(edgeAfterSplitButtonDraw, edgeAfterSplitButtonDraw, edgeAfterSplitButtonDraw, edgeAfterSplitButtonDraw, edgeAfterSplitButtonDraw, edgeAfterSplitButtonDraw);
+						edgeSplitButton.setStyle(temp);
+						edgeSplitWaitTime += 1;
+						edgeSplitButton.removeListener(this);
+					}
+				});
+			}
+		}
+		if (recursivelySplitWaitTime > 0) {
+			recursivelySplitWaitTime += 1;
+			if ((recursivelySplitWaitTime > MAX_RECURSIVELY_BETWEEN_SPLIT_WAIT_TIME) && (recursivelySplitWaitTime < MAX_RECURSIVELY_SPLIT_WAIT_TIME)) {
+				ImageButtonStyle temp = new ImageButtonStyle(recursivelyAfterSplitButtonDraw, recursivelyAfterSplitButtonDraw, recursivelyAfterSplitButtonDraw, recursivelyAfterSplitButtonDraw, recursivelyAfterSplitButtonDraw, recursivelyAfterSplitButtonDraw);
+				recursivelySplitButton.setStyle(temp);
+			} else if (recursivelySplitWaitTime > MAX_RECURSIVELY_SPLIT_WAIT_TIME) {
+				recursivelySplitWaitTime = 0;
+				ImageButtonStyle temp = new ImageButtonStyle(recursivelyBeforeSplitButtonDraw, recursivelyBeforeSplitButtonDraw, recursivelyBeforeSplitButtonDraw, recursivelyBeforeSplitButtonDraw, recursivelyBeforeSplitButtonDraw, recursivelyBeforeSplitButtonDraw);
+				recursivelySplitButton.setStyle(temp);
+				recursivelySplitButton.addListener(new ClickListener() {
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						ImageButtonStyle temp = new ImageButtonStyle(recursivelyBetweenSplitButtonDraw, recursivelyBetweenSplitButtonDraw, recursivelyBetweenSplitButtonDraw, recursivelyBetweenSplitButtonDraw, recursivelyBetweenSplitButtonDraw, recursivelyBetweenSplitButtonDraw);
+						recursivelySplitButton.setStyle(temp);
+						recursivelySplitWaitTime += 1;
+						recursivelySplitButton.removeListener(this);
+					}
+				});
+			}
+		}
+		if (winAdjoiningRectAfterSplitWaitTime > 0) {
+			winAdjoiningRectAfterSplitWaitTime += 1;
+			if (winAdjoiningRectAfterSplitWaitTime > MAX_WIN_ADJOINING_RECT_SPLIT_WAIT_TIME) {
+				winAdjoiningRectAfterSplitWaitTime = 0;
+				ImageButtonStyle temp = new ImageButtonStyle(winAdjoiningRectBeforeSplitButtonDraw, winAdjoiningRectBeforeSplitButtonDraw, winAdjoiningRectBeforeSplitButtonDraw, winAdjoiningRectBeforeSplitButtonDraw, winAdjoiningRectBeforeSplitButtonDraw, winAdjoiningRectBeforeSplitButtonDraw);
+				winAdjoiningRectSplitButton.setStyle(temp);
+				winAdjoiningRectSplitButton.addListener(new ClickListener() {
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						ImageButtonStyle temp = new ImageButtonStyle(winAdjoiningRectAfterSplitButtonDraw, winAdjoiningRectAfterSplitButtonDraw, winAdjoiningRectAfterSplitButtonDraw, winAdjoiningRectAfterSplitButtonDraw, winAdjoiningRectAfterSplitButtonDraw, winAdjoiningRectAfterSplitButtonDraw);
+						winAdjoiningRectSplitButton.setStyle(temp);
+						winAdjoiningRectAfterSplitWaitTime += 1;
+						winAdjoiningRectSplitButton.removeListener(this);
 					}
 				});
 			}

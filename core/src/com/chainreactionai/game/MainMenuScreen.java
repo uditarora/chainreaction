@@ -28,8 +28,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.Timer.Task;
 
 /**
  * @author Kartik Parnami
@@ -55,7 +53,7 @@ public class MainMenuScreen implements Screen {
 	private float widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private ImageButton buttonPlay, buttonExit, buttonRules, buttonStats, buttonAchievements, logo;
+	private ImageButton buttonPlay, buttonExit, buttonRules, buttonTutorial, buttonStats, buttonAchievements, logo;
 	private Color[] colors;
 	private boolean animationInit = false;
 	// Trying 3D Graphics
@@ -154,6 +152,8 @@ public class MainMenuScreen implements Screen {
 		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		buttonRules = new ImageButton(ChainReactionAIGame.rulesButtonDraw, ChainReactionAIGame.rulesPressedButtonDraw);
 		table.add(buttonRules).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+		buttonTutorial = new ImageButton(ChainReactionAIGame.tutorialButtonDraw, ChainReactionAIGame.tutorialPressedButtonDraw);
+		table.add(buttonTutorial).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		buttonStats = new ImageButton(ChainReactionAIGame.statsButtonDraw, ChainReactionAIGame.statsPressedButtonDraw);
 		table.add(buttonStats).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		buttonAchievements = new ImageButton(ChainReactionAIGame.achievementsButtonDraw, ChainReactionAIGame.achievementsPressedButtonDraw);
@@ -176,6 +176,12 @@ public class MainMenuScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				myGame.setScreen(new GameRulesScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+			}
+		});
+		buttonTutorial.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				myGame.setScreen(new GameTutorialScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
 			}
 		});
 		buttonStats.addListener(new ClickListener() {
