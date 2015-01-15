@@ -68,8 +68,8 @@ public class ChainReactionAIGame extends Game {
 		pauseButtonDraw, pausePressedButtonDraw, playButtonDraw, playPressedButtonDraw,
 		playAgainButtonDraw, playAgainPressedButtonDraw, resumeButtonDraw, resumePressedButtonDraw,
 		rulesButtonDraw, rulesPressedButtonDraw, singlePlayerButtonDraw, singlePlayerPressedButtonDraw,
-		statsButtonDraw, statsPressedButtonDraw, submitButtonDraw, submitPressedButtonDraw,
-		pressedHumanCpuButtonDraw, unpressedHumanButtonDraw, unpressedCpuButtonDraw, logoDraw;
+		statsButtonDraw, statsPressedButtonDraw, submitButtonDraw, submitPressedButtonDraw, tutorialButtonDraw,
+		tutorialPressedButtonDraw, pressedHumanCpuButtonDraw, unpressedHumanButtonDraw, unpressedCpuButtonDraw, logoDraw;
 
 	@Override
 	public void create() {
@@ -112,6 +112,8 @@ public class ChainReactionAIGame extends Game {
 		statsPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/statisticsPressed.png"))));
 		submitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/submit.jpg"))));
 		submitPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/submitPressed.png"))));
+		tutorialButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/tutorial.jpg"))));
+		tutorialPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/tutorialPressed.png"))));
 		pressedHumanCpuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/pressedHumanCpu.png"))));
 		unpressedHumanButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/unpressedHuman.png"))));
 		unpressedCpuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/unpressedCPU.png"))));

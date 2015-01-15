@@ -7,13 +7,11 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -33,19 +31,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
- * @author Parnami
+ * @author karti_000
  *
  */
-public class GameStatsScreen implements Screen {
+public class GameTutorialScreen implements Screen {
+
 	SpriteBatch batch;
 	private ChainReactionAIGame myGame;
 	final private int WIDTH_SCREEN = 448;
 	final private int HEIGHT_SCREEN = 645;
 	final private int HEIGHT_RULES_SCREEN_BUTTONS = 60;
 	final private int WIDTH_RULES_SCREEN_BUTTONS = 275;
+	final private int WIDTH_ANIMATION_BUTTONS = 135;
+	final private int HEIGHT_ANIMATION_BUTTONS = 45;
 	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;
 	final private int MAX_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MAX_Z_DIST_OF_NEW_BALLS;
 	final private int MIN_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MIN_Z_DIST_OF_NEW_BALLS;
@@ -53,15 +55,12 @@ public class GameStatsScreen implements Screen {
 	final private int MIN_SPEED_OF_BALLS = ChainReactionAIGame.MIN_SPEED_OF_BALLS;
 	final private int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = ChainReactionAIGame.MAX_NUMBER_OF_BALLS_AT_A_MOMENT;
 	private int numBalls;
-	private int MAX_NUMBER_OF_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
+	final private int MAX_NUMBER_OF_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	private Stage stage = new Stage();
 	private Table table = new Table(), container = new Table();
 	private float heightUpscaleFactor, widthUpscaleFactor;
-	private Label stat, statHeadingGame, statHeadingStatistics;
-	Texture[] images = new Texture[15];
+	private Label tuteOne, tuteTwo, tuteThree, tuteFour, tuteHeadingOne, tuteHeadingTwo;
 	private ScrollPane scroll;
-	final private int NUMBER_OF_DIFFICULTY_LEVELS;
-	private Preferences stats;
 	private Color[] colors;
 	private boolean animationInit = false;
 	// Trying 3D Graphics
@@ -72,17 +71,18 @@ public class GameStatsScreen implements Screen {
 	private Environment environment;
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
-	private ImageButton backButton = new ImageButton(ChainReactionAIGame.backButtonDraw, ChainReactionAIGame.backPressedButtonDraw);
+	// Trying ImageButton
+	private ImageButton backButtonImg = new ImageButton(ChainReactionAIGame.mainMenuButtonDraw, ChainReactionAIGame.mainMenuPressedButtonDraw),
+						rulesButtonImg = new ImageButton(ChainReactionAIGame.rulesButtonDraw, ChainReactionAIGame.rulesPressedButtonDraw);
+	private ImageButton humanCpuToggleButton;
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private Image img = new Image(ChainReactionAIGame.texture);
 	
 	// Constructor
-	public GameStatsScreen(ChainReactionAIGame game) {
+	public GameTutorialScreen(ChainReactionAIGame game) {
 		ChainReactionAIGame.currentScreen = 2;
 		myGame = game;
-		NUMBER_OF_DIFFICULTY_LEVELS = 10;
-		stats = Gdx.app.getPreferences("chainReactionStatistics");
 		// Initialize ArrayLists
 		xVal = new ArrayList<Integer>();
 		yVal = new ArrayList<Integer>();
@@ -95,12 +95,11 @@ public class GameStatsScreen implements Screen {
 		create();
 	}
 	
-	public GameStatsScreen(ChainReactionAIGame game, ArrayList<Integer> xVal, ArrayList<Integer> yVal, ArrayList<Integer> color, ArrayList<Integer> startZPosition, ArrayList<Integer> distNow, ArrayList<Integer> speed, int numBalls) {
+	// Constructor
+	public GameTutorialScreen(ChainReactionAIGame game, ArrayList<Integer> xVal, ArrayList<Integer> yVal, ArrayList<Integer> color, ArrayList<Integer> startZPosition, ArrayList<Integer> distNow, ArrayList<Integer> speed, int numBalls) {
 		int i;
 		ChainReactionAIGame.currentScreen = 2;
 		myGame = game;
-		NUMBER_OF_DIFFICULTY_LEVELS = 10;
-		stats = Gdx.app.getPreferences("chainReactionStatistics");
 		// Initialize ArrayLists
 		this.xVal = new ArrayList<Integer>();
 		this.yVal = new ArrayList<Integer>();
@@ -160,38 +159,66 @@ public class GameStatsScreen implements Screen {
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
-		// Initializing and adding the stats to Table.
-		String keyWon, keyLost;
-		int numLost, numWon;
-		statHeadingGame = new Label("GAME", ChainReactionAIGame.skin);
-		statHeadingStatistics = new Label("STATISTICS", ChainReactionAIGame.skin);
-		statHeadingGame.setFontScale((float)heightUpscaleFactor);
-		statHeadingStatistics.setFontScale((float)heightUpscaleFactor);
-		table.add(statHeadingGame).row();
-		table.add(statHeadingStatistics).row();
-		for (int i = 1; i <= NUMBER_OF_DIFFICULTY_LEVELS; i += 1) {
-			keyWon = "wonLevel"+i;
-			keyLost = "lostLevel"+i;
-			numLost = stats.getInteger(keyLost, 0);
-			numWon = stats.getInteger(keyWon, 0);
-			stat = new Label("Level "+i+"- Won: "+numWon+", Lost: "+numLost, skin);
-			stat.setFontScale((float)heightUpscaleFactor);
-			table.add(stat).padLeft(10).padRight(10).padBottom(10).row();
-		}
-		// Adds the backButton to the Table.
-		table.add(backButton).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(10*heightUpscaleFactor).row();
+        humanCpuToggleButton = new ImageButton(ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw);
+        // Initializing and adding the rules to Table.
+        tuteHeadingOne = new Label("GAME", ChainReactionAIGame.skin);
+        tuteHeadingOne.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+		tuteHeadingTwo = new Label("TUTORIAL", ChainReactionAIGame.skin);
+		tuteHeadingTwo.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+		tuteOne = new Label("This is an interactive tutorial to learn about the interface "
+				+ "of the game. Click on the boxes that the arrows point "
+				+ "to understand the way that the game works.\n"
+				+ "On clicking Play, you see a screen having a slider "
+				+ "to decide the number of opponents you want. These can be either humans "
+				+ "or CPU. On clicking submit we reach the next screen where "
+				+ "you can choose the specifications for different players. "
+				+ "You can select whether the player is a human or CPU by clicking "
+				+ "on the red toggle button with the green light signifying whether the "
+				+ "player is a human or a CPU.", skin);
+		tuteTwo = new Label("There is also a slider attached to each player "
+				+ "to decide the difficulty level of the player if the player "
+				+ "is a CPU. If a player is a human then this slider does not "
+				+ "hold any significance.", skin);
+		tuteThree = new Label("On cicking submit we reach the main gameplay screen, "
+				+ "where the players can play and enjoy. They can pause the game at any time "
+				+ "during the gameplay by clicking the pause button and reach the pase menu.", skin);
+		tuteFour = new Label("If you are playing the game for the first time, check out the rules once.", skin);
+		tuteOne.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+		tuteOne.setWrap(true);
+		tuteTwo.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+		tuteTwo.setWrap(true);
+		tuteThree.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+		tuteThree.setWrap(true);
+		tuteFour.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+		tuteFour.setWrap(true);
+		table.add(tuteHeadingOne).padBottom(10).row();
+		table.add(tuteHeadingTwo).padBottom(10).row();
+		table.add(tuteOne).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
+		table.add(humanCpuToggleButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
+		humanCpuToggleButton.setChecked(true);
+		table.add(tuteTwo).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
+		table.add(tuteThree).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
+		table.add(tuteFour).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
+		table.add(rulesButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(2).row();
+		table.add(backButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(2).row();
 		// Scroll pane consisting of the Table.
 		scroll = new ScrollPane(table);
 		// Container is the outside coverung which contains the
 		// ScrollPane.
 		container.setFillParent(true);
-		container.add(scroll).fill().expand().row();
+		container.add(scroll).fill().expand();
 		// Adding container to stage.
 		img.setFillParent(true);
 		stage.addActor(img);
 		stage.addActor(container);
 		// Attaching the ClickListener to the back button.
-		backButton.addListener(new ClickListener() {
+		rulesButtonImg.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				myGame.setScreen(new GameRulesScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+			}
+		});
+		backButtonImg.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				myGame.setScreen(new MainMenuScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
@@ -206,17 +233,20 @@ public class GameStatsScreen implements Screen {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glClearColor(((float)(15)/255), ((float)(15)/255), ((float)(15)/255), 1);
-		batch.setProjectionMatrix(cam.combined);
-	    batch.begin();
-	    batch.draw(ChainReactionAIGame.texture, 0, 0, WIDTH_SCREEN, HEIGHT_SCREEN);
-	    batch.end();
 		if (animationInit) {
 			modelBatch.begin(cam);
 			createAnimation();
 			drawAnimation();
 			modelBatch.end();
 		}
-		stage.act();
+		if (humanCpuToggleButton.isChecked()) {
+			ImageButtonStyle temp = new ImageButtonStyle(ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw);
+			humanCpuToggleButton.setStyle(temp);
+		} else {
+			ImageButtonStyle temp = new ImageButtonStyle(ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedCpuButtonDraw);
+			humanCpuToggleButton.setStyle(temp);
+		}
+		stage.act(delta);
 		stage.draw();
 		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
 			myGame.setScreen(new MainMenuScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
@@ -318,5 +348,5 @@ public class GameStatsScreen implements Screen {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 }
