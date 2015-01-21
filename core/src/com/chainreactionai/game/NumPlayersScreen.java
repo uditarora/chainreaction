@@ -65,6 +65,8 @@ public class NumPlayersScreen implements Screen {
 	private Label numPlayerLabel;
 	private Color[] colors;
 	private boolean animationInit = false;
+	// Debug
+	private boolean GRAYED_OUT = true;
 	// Trying 3D Graphics
 	private Model[] models;
 	private ModelInstance[] instances;
@@ -184,13 +186,23 @@ public class NumPlayersScreen implements Screen {
 		stage.addActor(img);
 		stage.addActor(table);
 		// Attaching the ClickListener to the submit button.
-		submitButton.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				int chosenNumOfPlayers = (int)(numPlayerSlider.getValue())+1;
-				myGame.setScreen(new ChooseOpponentsAndLevelsScreen(myGame, chosenNumOfPlayers, NUMBER_OF_DIFFICULTY_LEVELS, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
-			}
-		});
+		if (!GRAYED_OUT) {
+			submitButton.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					int chosenNumOfPlayers = (int)(numPlayerSlider.getValue())+1;
+					myGame.setScreen(new ChooseOpponentsAndLevelsScreen(myGame, chosenNumOfPlayers, NUMBER_OF_DIFFICULTY_LEVELS, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+				}
+			});
+		} else {
+			submitButton.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					int chosenNumOfPlayers = (int)(numPlayerSlider.getValue())+1;
+					myGame.setScreen(new TutorialTextScreen(myGame, chosenNumOfPlayers, NUMBER_OF_DIFFICULTY_LEVELS, 3, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+				}
+			});
+		}
 		Gdx.input.setInputProcessor(stage);
 	}
 

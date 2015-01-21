@@ -27,6 +27,8 @@ public class SplashScreen implements Screen {
 	final boolean MONTE_CARLO = false;
 	private long prevTime, newTime;
 	private PrintWriter out;
+	// Debug
+	private boolean GRAYED_OUT = true;
 
 	public SplashScreen(ChainReactionAIGame game) {
 		prevTime = System.currentTimeMillis();
@@ -93,7 +95,10 @@ public class SplashScreen implements Screen {
 
 		// When user clicks on the screen, go to the main menu screen
 		if (newTime - prevTime > 1000) {
-			myGame.setScreen(new MainMenuScreen(myGame));
+			if (!GRAYED_OUT)
+				myGame.setScreen(new MainMenuScreen(myGame));
+			else
+				myGame.setScreen(new TutorialTextScreen(myGame, 1));
 		}
 	}
 
