@@ -76,6 +76,8 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	ArrayList<Integer> plyLevelList = new ArrayList<Integer>();
 	private Color[] colors;
 	private boolean animationInit = false;
+	// Debug
+	private boolean GRAYED_OUT = true;
 	// Trying 3D Graphics
 	private Model[] models;
 	private ModelInstance[] instances;
@@ -228,24 +230,45 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		stage.addActor(img);
 		stage.addActor(container);
 		// Adding ClickListener to the submit button
-		submitButton.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				// Same way we moved here from the Splash Screen
-				// We set it to new Splash because we got no other screens
-				// otherwise you put the screen there where you want to go
-				int j;
-				for (j = 0; j < NUMBER_OF_PLAYERS; j += 1) {
-					if (userSelectButtons.get(j).isChecked()) {
-						isCPU.add(false);
-					} else {
-						isCPU.add(true);
+		if (!GRAYED_OUT) {
+			submitButton.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					// Same way we moved here from the Splash Screen
+					// We set it to new Splash because we got no other screens
+					// otherwise you put the screen there where you want to go
+					int j;
+					for (j = 0; j < NUMBER_OF_PLAYERS; j += 1) {
+						if (userSelectButtons.get(j).isChecked()) {
+							isCPU.add(false);
+						} else {
+							isCPU.add(true);
+						}
+						plyLevelList.add((int) (plySliders.get(j).getValue()));
 					}
-					plyLevelList.add((int) (plySliders.get(j).getValue()));
+					myGame.setScreen(new MainGameScreenChar(myGame, isCPU, plyLevelList));
 				}
-				myGame.setScreen(new MainGameScreenChar(myGame, isCPU, plyLevelList));
-			}
-		});
+			});
+		} else {
+			submitButton.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					// Same way we moved here from the Splash Screen
+					// We set it to new Splash because we got no other screens
+					// otherwise you put the screen there where you want to go
+					int j;
+					for (j = 0; j < NUMBER_OF_PLAYERS; j += 1) {
+						if (userSelectButtons.get(j).isChecked()) {
+							isCPU.add(false);
+						} else {
+							isCPU.add(true);
+						}
+						plyLevelList.add((int) (plySliders.get(j).getValue()));
+					}
+					myGame.setScreen(new TutorialTextScreen(myGame, NUMBER_OF_PLAYERS, NUMBER_OF_DIFFICULTY_LEVELS, 4, isCPU, plyLevelList));
+				}
+			});
+		}
 		Gdx.input.setInputProcessor(stage);
 	}
 

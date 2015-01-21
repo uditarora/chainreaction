@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -26,6 +27,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -33,16 +36,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
  * @author Kartik Parnami
  * 
  */
-public class MainMenuScreen implements Screen {
+public class TutorialTextScreen implements Screen {
 	SpriteBatch batch;
 	private ChainReactionAIGame myGame;
 	final private int WIDTH_SCREEN = 448;
 	final private int HEIGHT_SCREEN = 645;
-	final private int HEIGHT_MAIN_MENU_BUTTONS = 60;
-	final private int WIDTH_MAIN_MENU_BUTTONS = 275;
-	final private int WIDTH_LOGO = 192;
-	final private int HEIGHT_LOGO = 150;
-	final private int MAX_NUM_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
+	final private int WIDTH_NEXT_BUTTON = 275;
+	final private int HEIGHT_NEXT_BUTTON = 60;
+	private float heightUpscaleFactor, widthUpscaleFactor;
 	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;
 	final private int MAX_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MAX_Z_DIST_OF_NEW_BALLS;
 	final private int MIN_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MIN_Z_DIST_OF_NEW_BALLS;
@@ -50,14 +51,14 @@ public class MainMenuScreen implements Screen {
 	final private int MIN_SPEED_OF_BALLS = ChainReactionAIGame.MIN_SPEED_OF_BALLS;
 	final private int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = ChainReactionAIGame.MAX_NUMBER_OF_BALLS_AT_A_MOMENT;
 	private int numBalls;
-	private float widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private ImageButton buttonPlay, buttonExit, buttonRules, buttonTutorial, buttonStats, buttonAchievements, logo;
+	private int MAX_NUMBER_OF_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
+	private ImageButton nextButton;
+	private Label title;
 	private Color[] colors;
 	private boolean animationInit = false;
-	// Debug
-	private boolean GRAYED_OUT = true;
+	private int textChoice, numPlayers, difficultyLevels;
 	// Trying 3D Graphics
 	private Model[] models;
 	private ModelInstance[] instances;
@@ -66,11 +67,24 @@ public class MainMenuScreen implements Screen {
 	private Environment environment;
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
-	private Image img;
+	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
+			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
+	private Image img = new Image(ChainReactionAIGame.texture);
+	private ArrayList<Boolean> isCPU = new ArrayList<Boolean>();
+	private ArrayList<Integer> difficultyLevelList = new ArrayList<Integer>();
 	
-	public MainMenuScreen(ChainReactionAIGame game) {
-		ChainReactionAIGame.currentScreen = 0;
+	public TutorialTextScreen(ChainReactionAIGame game, int numPlayers, int numDifficultyLevels, int textChoice, ArrayList<Boolean> isCPU, ArrayList<Integer> difficultyLevelList) {
+		ChainReactionAIGame.currentScreen = 1;
 		myGame = game;
+		this.textChoice = textChoice;
+		this.numPlayers = numPlayers;
+		this.difficultyLevels = numDifficultyLevels;
+		for (int i = 0; i < numPlayers; i += 1) {
+			this.isCPU.add(isCPU.get(i));
+		}
+		for (int i = 0; i < numPlayers; i += 1) {
+			this.difficultyLevelList.add(difficultyLevelList.get(i));
+		}
 		// Initialize ArrayLists
 		xVal = new ArrayList<Integer>();
 		yVal = new ArrayList<Integer>();
@@ -79,14 +93,35 @@ public class MainMenuScreen implements Screen {
 		distNow = new ArrayList<Integer>();
 		speed = new ArrayList<Integer>();
 		numBalls = 0;
-		create();
 		animationInit = true;
+		create();
 	}
 	
-	public MainMenuScreen(ChainReactionAIGame game, ArrayList<Integer> xVal, ArrayList<Integer> yVal, ArrayList<Integer> color, ArrayList<Integer> startZPosition, ArrayList<Integer> distNow, ArrayList<Integer> speed, int numBalls) {
-		int i;
-		ChainReactionAIGame.currentScreen = 0;
+	public TutorialTextScreen(ChainReactionAIGame game, int textChoice) {
+		ChainReactionAIGame.currentScreen = 1;
 		myGame = game;
+		this.textChoice = textChoice;
+		this.numPlayers = 0;
+		this.difficultyLevels = 0;
+		// Initialize ArrayLists
+		xVal = new ArrayList<Integer>();
+		yVal = new ArrayList<Integer>();
+		color = new ArrayList<Integer>();
+		startZPosition = new ArrayList<Integer>();
+		distNow = new ArrayList<Integer>();
+		speed = new ArrayList<Integer>();
+		numBalls = 0;
+		animationInit = true;
+		create();
+	}
+	
+	public TutorialTextScreen(ChainReactionAIGame game, int numPlayers, int numDifficultyLevels, int textChoice, ArrayList<Integer> xVal, ArrayList<Integer> yVal, ArrayList<Integer> color, ArrayList<Integer> startZPosition, ArrayList<Integer> distNow, ArrayList<Integer> speed, int numBalls) {
+		int i;
+		ChainReactionAIGame.currentScreen = 1;
+		myGame = game;
+		this.textChoice = textChoice;
+		this.numPlayers = numPlayers;
+		this.difficultyLevels = numDifficultyLevels;
 		// Initialize ArrayLists
 		this.xVal = new ArrayList<Integer>();
 		this.yVal = new ArrayList<Integer>();
@@ -108,16 +143,17 @@ public class MainMenuScreen implements Screen {
 		animationInit = true;
 	}
 	
-
+	// Initialization function
 	private void create() {
 		batch = new SpriteBatch();
 		// The elements are displayed in the order you add them.
 		// The first appear on top, the last at the bottom.
 		// Up-scale Factors are used to get proper sized buttons
 		// upscaled or downscaled according to the Screen Dimensions
+		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
 		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
 		// Initialize colors
-		colors = new Color[MAX_NUM_PLAYERS];
+		colors = new Color[MAX_NUMBER_OF_PLAYERS];
 		colors[0] = Color.WHITE;
 		colors[1] = Color.BLUE;
 		colors[2] = Color.MAROON;
@@ -134,9 +170,9 @@ public class MainMenuScreen implements Screen {
 	    cam.update();
 	    // Building models for spheres of different colors
 	    ModelBuilder modelBuilder = new ModelBuilder();
-		models = new Model[MAX_NUM_PLAYERS];
-		instances = new ModelInstance[MAX_NUM_PLAYERS];
-		for (int i = 0; i < MAX_NUM_PLAYERS; i += 1) {
+		models = new Model[MAX_NUMBER_OF_PLAYERS];
+		instances = new ModelInstance[MAX_NUMBER_OF_PLAYERS];
+		for (int i = 0; i < MAX_NUMBER_OF_PLAYERS; i += 1) {
 			models[i] = modelBuilder.createSphere(25f, 25f, 25f, 30, 30, new Material(ColorAttribute.createDiffuse(colors[i])), Usage.Position | Usage.Normal | Usage.TextureCoordinates);
 			instances[i] = new ModelInstance(models[i]);
 		}
@@ -145,105 +181,75 @@ public class MainMenuScreen implements Screen {
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
-        // Adds the title and buttons to the Table.
-        if (!GRAYED_OUT)
-        	img = new Image(ChainReactionAIGame.texture);
-        else
-        	img = new Image(ChainReactionAIGame.textureGray);
-        //title.setFontScale((1+(heightUpscaleFactor-1)/2));
-		//table.add(title).padBottom(40).row();
-        logo = new ImageButton(ChainReactionAIGame.logoDraw);
-        table.add(logo).size(WIDTH_LOGO*widthUpscaleFactor, HEIGHT_LOGO*widthUpscaleFactor).padBottom(20).row();
-		buttonPlay = new ImageButton(ChainReactionAIGame.playButtonDraw, ChainReactionAIGame.playPressedButtonDraw);
-		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		if (!GRAYED_OUT)
-			buttonRules = new ImageButton(ChainReactionAIGame.rulesButtonDraw, ChainReactionAIGame.rulesPressedButtonDraw);
-		else
-			buttonRules = new ImageButton(ChainReactionAIGame.rulesGrayButtonDraw);
-		table.add(buttonRules).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		if (!GRAYED_OUT)
-			buttonTutorial = new ImageButton(ChainReactionAIGame.tutorialButtonDraw, ChainReactionAIGame.tutorialPressedButtonDraw);
-		else
-			buttonTutorial = new ImageButton(ChainReactionAIGame.tutorialGrayButtonDraw);
-		table.add(buttonTutorial).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		if (!GRAYED_OUT)
-			buttonStats = new ImageButton(ChainReactionAIGame.statsButtonDraw, ChainReactionAIGame.statsPressedButtonDraw);
-		else
-			buttonStats = new ImageButton(ChainReactionAIGame.statsGrayButtonDraw);
-		table.add(buttonStats).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		if (!GRAYED_OUT)
-			buttonAchievements = new ImageButton(ChainReactionAIGame.achievementsButtonDraw, ChainReactionAIGame.achievementsPressedButtonDraw);
-		else
-			buttonAchievements = new ImageButton(ChainReactionAIGame.achievementsGrayButtonDraw);
-		table.add(buttonAchievements).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		if (!GRAYED_OUT)
-			buttonExit = new ImageButton(ChainReactionAIGame.exitButtonDraw, ChainReactionAIGame.exitPressedButtonDraw);
-		else
-			buttonExit = new ImageButton(ChainReactionAIGame.exitGrayButtonDraw);
-		table.add(buttonExit).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+		// Initializing and adding the title to Table.
+		if (textChoice == 1) {
+			title = new Label("Looks like you are here for the first time."
+					+ "You will now go through a guided tutorial to get familiar "
+					+ "with the interface and the options available in this game. "
+					+ "Just click the highlighted buttons to follow the tutorial. "
+					+ "This tutorial can be invoked again anytime by clicking the tutorial "
+					+ "button on the main menu.", skin);
+		} else if (textChoice == 2) {
+			title = new Label("This will lead you to the screen where you can choose "
+					+ "the number of opponents for the Player 1. The number of "
+					+ "opponens can be varied from 0 to 5 by using the slider on the "
+					+ "screen.", skin);
+		} else if (textChoice == 3) {
+			title = new Label("This will now lead you to a screen where you choose the "
+					+ "specifications of each player. There are two things which can be "
+					+ "varied for each player.\n1. CPU/Human Selection: By pressing the "
+					+ "red button alongside each player we can toggle whether the player "
+					+ "is a CPU bot or a human player. The green light indicates the "
+					+ "currently active selection.\n2. Difficulty Level: If a player is "
+					+ "chosen to be a CPU bot, you can adjust its difficulty level by "
+					+ "adjusting the accompanying slider. This slider is useless if a "
+					+ "player is Human.", skin);
+		} else if (textChoice == 4) {
+			title = new Label("Now that you have chosen the specifications for all players"
+					+ ", we are ready to play the game. You can enjoy this game against "
+					+ "your friends by choosing all human players, go solo against a "
+					+ "single/multiple CPU bot(s) or mix both and enjoy!!", skin);
+		}
+		title.setWrap(true);
+		title.setFontScale((1+(heightUpscaleFactor-1)/2));
+		table.add(title).width(420).padBottom(10).row();
+		nextButton = new ImageButton(ChainReactionAIGame.nextButtonDraw, ChainReactionAIGame.nextPressedButtonDraw);
+		table.add(nextButton).size(WIDTH_NEXT_BUTTON*widthUpscaleFactor, HEIGHT_NEXT_BUTTON*widthUpscaleFactor).padBottom(2).row();
 		table.setFillParent(true);
-		// Adding the table to stage.
+		// Adding the table to the stage.
 		img.setFillParent(true);
 		stage.addActor(img);
 		stage.addActor(table);
-		// Attaching ClickListeners to the Play and Exit buttons.
-		if (!GRAYED_OUT) {
-			buttonPlay.addListener(new ClickListener() {
+		// Attaching the ClickListener to the next button.
+		if (textChoice == 1) {
+			nextButton.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
-					myGame.setScreen(new NumPlayersScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+					myGame.setScreen(new MainMenuScreen(myGame));
 				}
 			});
-		} else {
-			buttonPlay.addListener(new ClickListener() {
+		} else if (textChoice == 2) {
+			nextButton.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
-					myGame.setScreen(new TutorialTextScreen(myGame, 0, 0, 2, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+					myGame.setScreen(new NumPlayersScreen(myGame));
 				}
 			});
-		}
-		if(!GRAYED_OUT) {
-			buttonRules.addListener(new ClickListener() {
+		} else if (textChoice == 3) {
+			nextButton.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
-					myGame.setScreen(new GameRulesScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+					myGame.setScreen(new ChooseOpponentsAndLevelsScreen(myGame, numPlayers, difficultyLevels));
 				}
 			});
-		}
-		if(!GRAYED_OUT) {
-			buttonTutorial.addListener(new ClickListener() {
+		} else if (textChoice == 4) {
+			nextButton.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
-					myGame.setScreen(new GameTutorialScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
-				}
-			});
-		}
-		if(!GRAYED_OUT) {
-			buttonStats.addListener(new ClickListener() {
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					myGame.setScreen(new GameStatsScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+					myGame.setScreen(new MainGameScreenChar(myGame, isCPU, difficultyLevelList));
 				}
 			});
 		}
-		if(!GRAYED_OUT) {
-			buttonAchievements.addListener(new ClickListener() {
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					if (ChainReactionAIGame.googleServices.isSignedIn())
-						ChainReactionAIGame.googleServices.showAchievement();
-				}
-			});
-		}
-		if(!GRAYED_OUT) {
-			buttonExit.addListener(new ClickListener() {
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					Gdx.app.exit();
-				}
-			});
-		}
-		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(stage);
 	}
 
@@ -252,6 +258,10 @@ public class MainMenuScreen implements Screen {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glClearColor(((float)(15)/255), ((float)(15)/255), ((float)(15)/255), 1);
+		batch.setProjectionMatrix(cam.combined);
+	    batch.begin();
+	    batch.draw(ChainReactionAIGame.texture, 0, 0, WIDTH_SCREEN, HEIGHT_SCREEN);
+	    batch.end();
 		if (animationInit) {
 			modelBatch.begin(cam);
 			createAnimation();
@@ -261,7 +271,7 @@ public class MainMenuScreen implements Screen {
 		stage.act(delta);
 		stage.draw();
 		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
-			Gdx.app.exit();
+			myGame.setScreen(new MainMenuScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
 		}
 	}
 	
@@ -284,7 +294,7 @@ public class MainMenuScreen implements Screen {
 			xVal.add(xCoord);
 			yCoord = rand.nextInt(HEIGHT_SCREEN);
 			yVal.add(yCoord);
-			color.add(rand.nextInt(MAX_NUM_PLAYERS));
+			color.add(rand.nextInt(MAX_NUMBER_OF_PLAYERS));
 			speedOfBall = rand.nextInt(MAX_SPEED_OF_BALLS) + 1;
 			if (speedOfBall < MIN_SPEED_OF_BALLS) {
 				speedOfBall += MIN_SPEED_OF_BALLS;
@@ -324,9 +334,10 @@ public class MainMenuScreen implements Screen {
 		distNow.clear();
 		speed.clear();
 	}
-	
+
 	@Override
 	public void resize(int width, int height) {
+		//viewport.update(width, height);
 	}
 
 	@Override
@@ -349,5 +360,6 @@ public class MainMenuScreen implements Screen {
 	@Override
 	public void dispose() {
 		stage.dispose();
+//		skin.dispose();
 	}
 }
