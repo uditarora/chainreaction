@@ -8,6 +8,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -72,6 +73,9 @@ public class TutorialTextScreen implements Screen {
 	private Image img = new Image(ChainReactionAIGame.texture);
 	private ArrayList<Boolean> isCPU = new ArrayList<Boolean>();
 	private ArrayList<Integer> difficultyLevelList = new ArrayList<Integer>();
+	
+	// For setting showTutorial flag
+	private Preferences stats;
 	
 	public TutorialTextScreen(ChainReactionAIGame game, int numPlayers, int numDifficultyLevels, int textChoice, ArrayList<Boolean> isCPU, ArrayList<Integer> difficultyLevelList) {
 		ChainReactionAIGame.currentScreen = 1;
@@ -209,6 +213,11 @@ public class TutorialTextScreen implements Screen {
 					+ ", we are ready to play the game. You can enjoy this game against "
 					+ "your friends by choosing all human players, go solo against a "
 					+ "single/multiple CPU bot(s) or mix both and enjoy!!", skin);
+			// Set showTutorial flag to false
+			ChainReactionAIGame.GRAYED_OUT = false;
+			stats = Gdx.app.getPreferences("chainReactionStatistics");
+			stats.putBoolean("showTutorial", false);
+			stats.flush();
 		}
 		title.setWrap(true);
 		title.setFontScale((1+(heightUpscaleFactor-1)/2));

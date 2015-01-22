@@ -76,8 +76,6 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	ArrayList<Integer> plyLevelList = new ArrayList<Integer>();
 	private Color[] colors;
 	private boolean animationInit = false;
-	// Debug
-	private boolean GRAYED_OUT = true;
 	// Trying 3D Graphics
 	private Model[] models;
 	private ModelInstance[] instances;
@@ -230,7 +228,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		stage.addActor(img);
 		stage.addActor(container);
 		// Adding ClickListener to the submit button
-		if (!GRAYED_OUT) {
+		if (!ChainReactionAIGame.GRAYED_OUT) {
 			submitButton.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {

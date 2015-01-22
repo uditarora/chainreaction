@@ -56,8 +56,6 @@ public class MainMenuScreen implements Screen {
 	private ImageButton buttonPlay, buttonExit, buttonRules, buttonTutorial, buttonStats, buttonAchievements, logo;
 	private Color[] colors;
 	private boolean animationInit = false;
-	// Debug
-	private boolean GRAYED_OUT = true;
 	// Trying 3D Graphics
 	private Model[] models;
 	private ModelInstance[] instances;
@@ -146,7 +144,7 @@ public class MainMenuScreen implements Screen {
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
         // Adds the title and buttons to the Table.
-        if (!GRAYED_OUT)
+        if (!ChainReactionAIGame.GRAYED_OUT)
         	img = new Image(ChainReactionAIGame.texture);
         else
         	img = new Image(ChainReactionAIGame.textureGray);
@@ -156,27 +154,27 @@ public class MainMenuScreen implements Screen {
         table.add(logo).size(WIDTH_LOGO*widthUpscaleFactor, HEIGHT_LOGO*widthUpscaleFactor).padBottom(20).row();
 		buttonPlay = new ImageButton(ChainReactionAIGame.playButtonDraw, ChainReactionAIGame.playPressedButtonDraw);
 		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		if (!GRAYED_OUT)
+		if (!ChainReactionAIGame.GRAYED_OUT)
 			buttonRules = new ImageButton(ChainReactionAIGame.rulesButtonDraw, ChainReactionAIGame.rulesPressedButtonDraw);
 		else
 			buttonRules = new ImageButton(ChainReactionAIGame.rulesGrayButtonDraw);
 		table.add(buttonRules).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		if (!GRAYED_OUT)
+		if (!ChainReactionAIGame.GRAYED_OUT)
 			buttonTutorial = new ImageButton(ChainReactionAIGame.tutorialButtonDraw, ChainReactionAIGame.tutorialPressedButtonDraw);
 		else
 			buttonTutorial = new ImageButton(ChainReactionAIGame.tutorialGrayButtonDraw);
 		table.add(buttonTutorial).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		if (!GRAYED_OUT)
+		if (!ChainReactionAIGame.GRAYED_OUT)
 			buttonStats = new ImageButton(ChainReactionAIGame.statsButtonDraw, ChainReactionAIGame.statsPressedButtonDraw);
 		else
 			buttonStats = new ImageButton(ChainReactionAIGame.statsGrayButtonDraw);
 		table.add(buttonStats).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		if (!GRAYED_OUT)
+		if (!ChainReactionAIGame.GRAYED_OUT)
 			buttonAchievements = new ImageButton(ChainReactionAIGame.achievementsButtonDraw, ChainReactionAIGame.achievementsPressedButtonDraw);
 		else
 			buttonAchievements = new ImageButton(ChainReactionAIGame.achievementsGrayButtonDraw);
 		table.add(buttonAchievements).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		if (!GRAYED_OUT)
+		if (!ChainReactionAIGame.GRAYED_OUT)
 			buttonExit = new ImageButton(ChainReactionAIGame.exitButtonDraw, ChainReactionAIGame.exitPressedButtonDraw);
 		else
 			buttonExit = new ImageButton(ChainReactionAIGame.exitGrayButtonDraw);
@@ -187,7 +185,7 @@ public class MainMenuScreen implements Screen {
 		stage.addActor(img);
 		stage.addActor(table);
 		// Attaching ClickListeners to the Play and Exit buttons.
-		if (!GRAYED_OUT) {
+		if (!ChainReactionAIGame.GRAYED_OUT) {
 			buttonPlay.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
@@ -202,7 +200,7 @@ public class MainMenuScreen implements Screen {
 				}
 			});
 		}
-		if(!GRAYED_OUT) {
+		if(!ChainReactionAIGame.GRAYED_OUT) {
 			buttonRules.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
@@ -210,7 +208,7 @@ public class MainMenuScreen implements Screen {
 				}
 			});
 		}
-		if(!GRAYED_OUT) {
+		if(!ChainReactionAIGame.GRAYED_OUT) {
 			buttonTutorial.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
@@ -218,7 +216,7 @@ public class MainMenuScreen implements Screen {
 				}
 			});
 		}
-		if(!GRAYED_OUT) {
+		if(!ChainReactionAIGame.GRAYED_OUT) {
 			buttonStats.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
@@ -226,7 +224,7 @@ public class MainMenuScreen implements Screen {
 				}
 			});
 		}
-		if(!GRAYED_OUT) {
+		if(!ChainReactionAIGame.GRAYED_OUT) {
 			buttonAchievements.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
@@ -235,7 +233,7 @@ public class MainMenuScreen implements Screen {
 				}
 			});
 		}
-		if(!GRAYED_OUT) {
+		if(!ChainReactionAIGame.GRAYED_OUT) {
 			buttonExit.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {

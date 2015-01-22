@@ -2,6 +2,7 @@ package com.chainreactionai.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -48,6 +49,10 @@ public class ChainReactionAIGame extends Game {
 	public static final String achievement_third_times_a_charm="CgkIu_W6xfwCEAIQEA";
 	public static final String achievement_welcome_to_the_jungle="CgkIu_W6xfwCEAIQDg";
 	public static final String achievement_you_are_the_champion="CgkIu_W6xfwCEAIQGA";
+	
+	// For getting showTutorial flag
+	private Preferences stats;
+	public static boolean GRAYED_OUT;
 	
 	final private boolean DEBUG = false;
 	
@@ -151,6 +156,10 @@ public class ChainReactionAIGame extends Game {
 		// Loading the skin
 		skin = new Skin(Gdx.files.internal("data/uiskin.json"),
 				new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
+		
+		// Determine whether to show tutorial or not
+        stats = Gdx.app.getPreferences("chainReactionStatistics");
+        GRAYED_OUT = stats.getBoolean("showTutorial", true);
 		
 		//Shift to the splash screen
 		setScreen(new SplashScreen(this));
