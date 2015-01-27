@@ -196,32 +196,31 @@ public class GameRulesScreen implements Screen {
         // Initializing and adding the rules to Table.
         rulesHeading = new Label("GAME RULES", ChainReactionAIGame.skin);
         rulesHeading.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
-		rulesOne = new Label("This is an interactive tutorial to learn the rules "
-				+ "of the game. Click on the boxes that the arrows point "
-				+ "to understand the way that the game works.\n"
-				+ "There's only one rule for the game - Eliminate your "
+		rulesOne = new Label("There's only one rule for the game - Eliminate your "
 				+ "opponent's atoms! Players take turns to place "
 				+ "their atoms on a square. If a square reaches "
 				+ "critical mass, one atom apiece spreads out to each "
 				+ "of the adjacent squares. If a player loses all "
 				+ "their atoms, they are out of the game! A player "
 				+ "can only place their atoms on a blank square "
-				+ "or one occupied by atoms of their own colour. "
-				+ "Critical mass is 2 for the rectangles in the "
-				+ "corners ie. the balls will split in two available "
+				+ "or one occupied by atoms of their own colour.\n\n"
+				+ "Let's walk you through an interactive tutorial to learn the rules "
+				+ "of the game. Click on the cells pointed at by the arrows "
+				+ "to understand the way that the game works.\n"
+				+ "Critical mass is 2 for the cells in the "
+				+ "corners ie. the atoms will split in two available "
 				+ "horizontal and vertical directions as shown in the image below.", skin);
-		rulesTwo = new Label("Critical mass is 3 for the rectangles along "
-				+ "the edges ie. the balls will split and one ball each "
+		rulesTwo = new Label("Critical mass is 3 for the cells along "
+				+ "the edges ie. the atoms will split and one atom each "
 				+ "will be placed in the 3 available horizontal and vertical "
 				+ "directions as shown in the image below.", skin);
 		rulesThree = new Label("Similarly, critical mass is 4 for the rest of "
-				+ "the rectangles of the grid as shown in the image below. ", skin);
-		rulesFour = new Label("If your atom reaches a given rectangle on splitting, you "
-				+ "become the winning player for that rectangle "
-				+ "and your new ball gets added to the previously "
-				+ "existing balls present in that rectangle. Look "
+				+ "the cells of the grid as shown in the image below. ", skin);
+		rulesFour = new Label("When your atom reaches a given cell on splitting, you "
+				+ "occupy that cell and your new atom gets added to the previously "
+				+ "existing atoms present in that cell. Look "
 				+ "at the two images below to better understand this.", skin);
-		rulesFive = new Label("If you are playing the game for the first time, check out the game tutorial once.", skin);
+		rulesFive = new Label("To understand how the interface works, you can check out the Tutorial.", skin);
 		rulesOne.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
 		rulesOne.setWrap(true);
 		rulesTwo.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
@@ -259,7 +258,9 @@ public class GameRulesScreen implements Screen {
 		tutorialButtonImg.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				myGame.setScreen(new GameTutorialScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+//				myGame.setScreen(new GameTutorialScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+				ChainReactionAIGame.GRAYED_OUT = true;
+				myGame.setScreen(new TutorialTextScreen(myGame, 1));
 			}
 		});
 		backButtonImg.addListener(new ClickListener() {
