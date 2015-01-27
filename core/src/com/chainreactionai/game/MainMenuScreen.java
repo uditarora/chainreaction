@@ -40,8 +40,8 @@ public class MainMenuScreen implements Screen {
 	final private int HEIGHT_SCREEN = 645;
 	final private int HEIGHT_MAIN_MENU_BUTTONS = 60;
 	final private int WIDTH_MAIN_MENU_BUTTONS = 275;
-	final private int WIDTH_LOGO = 192;
-	final private int HEIGHT_LOGO = 150;
+	final private int WIDTH_LOGO = 293;
+	final private int HEIGHT_LOGO = 138;
 	final private int MAX_NUM_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;
 	final private int MAX_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MAX_Z_DIST_OF_NEW_BALLS;
@@ -53,7 +53,7 @@ public class MainMenuScreen implements Screen {
 	private float widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private ImageButton buttonPlay, buttonExit, buttonRules, buttonTutorial, buttonStats, buttonAchievements, logo;
+	private ImageButton buttonPlay, buttonRules, buttonTutorial, buttonStats, buttonAchievements, logo;
 	private Color[] colors;
 	private boolean animationInit = false;
 	// Trying 3D Graphics
@@ -153,32 +153,27 @@ public class MainMenuScreen implements Screen {
         logo = new ImageButton(ChainReactionAIGame.logoDraw);
         table.add(logo).size(WIDTH_LOGO*widthUpscaleFactor, HEIGHT_LOGO*widthUpscaleFactor).padBottom(20).row();
 		buttonPlay = new ImageButton(ChainReactionAIGame.playButtonDraw, ChainReactionAIGame.playPressedButtonDraw);
-		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 		if (!ChainReactionAIGame.GRAYED_OUT)
 			buttonRules = new ImageButton(ChainReactionAIGame.rulesButtonDraw, ChainReactionAIGame.rulesPressedButtonDraw);
 		else
 			buttonRules = new ImageButton(ChainReactionAIGame.rulesGrayButtonDraw);
-		table.add(buttonRules).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+		table.add(buttonRules).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 		if (!ChainReactionAIGame.GRAYED_OUT)
 			buttonTutorial = new ImageButton(ChainReactionAIGame.tutorialButtonDraw, ChainReactionAIGame.tutorialPressedButtonDraw);
 		else
 			buttonTutorial = new ImageButton(ChainReactionAIGame.tutorialGrayButtonDraw);
-		table.add(buttonTutorial).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+		table.add(buttonTutorial).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 		if (!ChainReactionAIGame.GRAYED_OUT)
 			buttonStats = new ImageButton(ChainReactionAIGame.statsButtonDraw, ChainReactionAIGame.statsPressedButtonDraw);
 		else
 			buttonStats = new ImageButton(ChainReactionAIGame.statsGrayButtonDraw);
-		table.add(buttonStats).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+		table.add(buttonStats).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 		if (!ChainReactionAIGame.GRAYED_OUT)
 			buttonAchievements = new ImageButton(ChainReactionAIGame.achievementsButtonDraw, ChainReactionAIGame.achievementsPressedButtonDraw);
 		else
 			buttonAchievements = new ImageButton(ChainReactionAIGame.achievementsGrayButtonDraw);
-		table.add(buttonAchievements).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		if (!ChainReactionAIGame.GRAYED_OUT)
-			buttonExit = new ImageButton(ChainReactionAIGame.exitButtonDraw, ChainReactionAIGame.exitPressedButtonDraw);
-		else
-			buttonExit = new ImageButton(ChainReactionAIGame.exitGrayButtonDraw);
-		table.add(buttonExit).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+		table.add(buttonAchievements).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).row();
 		table.setFillParent(true);
 		// Adding the table to stage.
 		img.setFillParent(true);
@@ -232,14 +227,6 @@ public class MainMenuScreen implements Screen {
 				public void clicked(InputEvent event, float x, float y) {
 					if (ChainReactionAIGame.googleServices.isSignedIn())
 						ChainReactionAIGame.googleServices.showAchievement();
-				}
-			});
-		}
-		if(!ChainReactionAIGame.GRAYED_OUT) {
-			buttonExit.addListener(new ClickListener() {
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					Gdx.app.exit();
 				}
 			});
 		}
