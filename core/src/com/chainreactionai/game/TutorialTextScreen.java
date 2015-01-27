@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
@@ -44,6 +45,8 @@ public class TutorialTextScreen implements Screen {
 	final private int HEIGHT_SCREEN = 645;
 	final private int WIDTH_NEXT_BUTTON = 275;
 	final private int HEIGHT_NEXT_BUTTON = 60;
+	final private int WIDTH_ANIMATION_BUTTONS = 135;
+	final private int HEIGHT_ANIMATION_BUTTONS = 45;
 	private float heightUpscaleFactor, widthUpscaleFactor;
 	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;
 	final private int MAX_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MAX_Z_DIST_OF_NEW_BALLS;
@@ -56,7 +59,7 @@ public class TutorialTextScreen implements Screen {
 	private Table table = new Table();
 	private int MAX_NUMBER_OF_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	private ImageButton nextButton, skipButton;
-	private Label title;
+	private Label title, titleFollowup;
 	private Color[] colors;
 	private boolean animationInit = false;
 	private int textChoice, numPlayers, difficultyLevels;
@@ -73,6 +76,7 @@ public class TutorialTextScreen implements Screen {
 	private Image img = new Image(ChainReactionAIGame.texture);
 	private ArrayList<Boolean> isCPU = new ArrayList<Boolean>();
 	private ArrayList<Integer> difficultyLevelList = new ArrayList<Integer>();
+	private ImageButton humanCpuToggleButton;
 	
 	// For setting showTutorial flag
 	private Preferences stats;
@@ -186,33 +190,23 @@ public class TutorialTextScreen implements Screen {
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
 		// Initializing and adding the title to Table.
+        humanCpuToggleButton = new ImageButton(ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw);
 		if (textChoice == 1) {
-			title = new Label("Looks like you are here for the first time!\n"
-					+ "Let's walk you through a guided tutorial to get familiar "
-					+ "with the interface and the options available in this game. "
-					+ "Just click the highlighted options to continue.\n"
-					+ "You can skip this tutorial if you want.\n"
-					+ "This tutorial can be invoked again anytime by clicking the tutorial "
-					+ "button on the main menu.", skin);
+			title = new Label("Here for the first time? "
+					+ "Let's get you familiar with the interface of the game. "
+					+ "You can invoke this tutorial again anytime, from the main menu.", skin);
 		} else if (textChoice == 2) {
-			title = new Label("This will lead you to the screen where you can choose "
-					+ "the number of opponents. You can select "
-					+ "up to 5 opponents by using the slider on the "
-					+ "screen.", skin);
+			title = new Label("Now you will choose the number of opponents. You can select "
+					+ "up to 5 opponents using the slider.", skin);
 		} else if (textChoice == 3) {
-			title = new Label("Let's now choose the specifications of each player. "
-					+ "There are two things which can be "
-					+ "varied for each player -\n\n1. CPU/Human Selection: By pressing the "
-					+ "red button alongside each player, you can toggle whether the player "
-					+ "is a CPU bot or a human player. The green light indicates the "
-					+ "currently active selection.\n2. Difficulty Level: If a player is "
-					+ "chosen to be a CPU bot, you can adjust its difficulty level by "
-					+ "adjusting the accompanying slider.", skin);
+			title = new Label("Next, for each player you can toggle whether the player "
+					+ "is a CPU bot or a human player using the given red button.", skin);
+			titleFollowup = new Label("You can also vary the difficulty level of each CPU"
+					+ " bot using the sliders alongside.", skin);
+			titleFollowup.setWrap(true);
+			titleFollowup.setFontScale((1+(heightUpscaleFactor-1)/2));
 		} else if (textChoice == 4) {
-			title = new Label("Now that you have chosen the specifications for all the players"
-					+ ", you're ready to play the game.\nYou can go through an interactive "
-					+ "tutorial of the rules if you're not familiar with them. \n\n"
-					+ "You can enjoy this game against your friends by "
+			title = new Label("Now you're ready to rumble. You can enjoy this game against your friends by "
 					+ "choosing all human players, go solo against up to 5 "
 					+ "CPU bots, or have a mix of both!\n\nHave fun, and may the force be with you!", skin);
 			// Set showTutorial flag to false
@@ -224,6 +218,11 @@ public class TutorialTextScreen implements Screen {
 		title.setWrap(true);
 		title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		table.add(title).width(420).padBottom(10).row();
+		if (textChoice == 3) {
+			table.add(humanCpuToggleButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
+			humanCpuToggleButton.setChecked(true);
+			table.add(titleFollowup).width(420).padBottom(10).row();
+		}
 		nextButton = new ImageButton(ChainReactionAIGame.nextButtonDraw, ChainReactionAIGame.nextPressedButtonDraw);
 		table.add(nextButton).size(WIDTH_NEXT_BUTTON*widthUpscaleFactor, HEIGHT_NEXT_BUTTON*widthUpscaleFactor).padBottom(20).row();
 		if (textChoice == 1) {
@@ -293,6 +292,15 @@ public class TutorialTextScreen implements Screen {
 			createAnimation();
 			drawAnimation();
 			modelBatch.end();
+		}
+		if (textChoice == 3) {
+			if (humanCpuToggleButton.isChecked()) {
+				ImageButtonStyle temp = new ImageButtonStyle(ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw);
+				humanCpuToggleButton.setStyle(temp);
+			} else {
+				ImageButtonStyle temp = new ImageButtonStyle(ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedCpuButtonDraw);
+				humanCpuToggleButton.setStyle(temp);
+			}
 		}
 		stage.act(delta);
 		stage.draw();
