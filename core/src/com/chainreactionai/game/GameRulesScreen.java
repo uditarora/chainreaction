@@ -221,8 +221,8 @@ public class GameRulesScreen implements Screen {
 				+ "the cells of the grid as shown in the image below. ", skin);
 		rulesFive = new Label("When your atom reaches a given cell on splitting, you "
 				+ "occupy that cell and your new atom gets added to the previously "
-				+ "existing atoms present in that cell. Look "
-				+ "at the two images below to better understand this.", skin);
+				+ "existing atoms present in that cell. Click on "
+				+ "the two images below to see it in action.", skin);
 		rulesOne.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
 		rulesOne.setWrap(true);
 		rulesTwo.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
