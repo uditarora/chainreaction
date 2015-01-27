@@ -55,7 +55,7 @@ public class TutorialTextScreen implements Screen {
 	private Stage stage = new Stage();
 	private Table table = new Table();
 	private int MAX_NUMBER_OF_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
-	private ImageButton nextButton;
+	private ImageButton nextButton, skipButton;
 	private Label title;
 	private Color[] colors;
 	private boolean animationInit = false;
@@ -187,32 +187,34 @@ public class TutorialTextScreen implements Screen {
         rand = new Random();
 		// Initializing and adding the title to Table.
 		if (textChoice == 1) {
-			title = new Label("Looks like you are here for the first time."
-					+ "You will now go through a guided tutorial to get familiar "
+			title = new Label("Looks like you are here for the first time!\n"
+					+ "Let's walk you through a guided tutorial to get familiar "
 					+ "with the interface and the options available in this game. "
-					+ "Just click the highlighted buttons to follow the tutorial. "
+					+ "Just click the highlighted options to continue.\n"
+					+ "You can skip this tutorial if you want.\n"
 					+ "This tutorial can be invoked again anytime by clicking the tutorial "
 					+ "button on the main menu.", skin);
 		} else if (textChoice == 2) {
 			title = new Label("This will lead you to the screen where you can choose "
-					+ "the number of opponents for the Player 1. The number of "
-					+ "opponens can be varied from 0 to 5 by using the slider on the "
+					+ "the number of opponents. You can select "
+					+ "up to 5 opponents by using the slider on the "
 					+ "screen.", skin);
 		} else if (textChoice == 3) {
-			title = new Label("This will now lead you to a screen where you choose the "
-					+ "specifications of each player. There are two things which can be "
-					+ "varied for each player.\n1. CPU/Human Selection: By pressing the "
-					+ "red button alongside each player we can toggle whether the player "
+			title = new Label("Let's now choose the specifications of each player. "
+					+ "There are two things which can be "
+					+ "varied for each player -\n\n1. CPU/Human Selection: By pressing the "
+					+ "red button alongside each player, you can toggle whether the player "
 					+ "is a CPU bot or a human player. The green light indicates the "
 					+ "currently active selection.\n2. Difficulty Level: If a player is "
 					+ "chosen to be a CPU bot, you can adjust its difficulty level by "
-					+ "adjusting the accompanying slider. This slider is useless if a "
-					+ "player is Human.", skin);
+					+ "adjusting the accompanying slider.", skin);
 		} else if (textChoice == 4) {
-			title = new Label("Now that you have chosen the specifications for all players"
-					+ ", we are ready to play the game. You can enjoy this game against "
-					+ "your friends by choosing all human players, go solo against a "
-					+ "single/multiple CPU bot(s) or mix both and enjoy!!", skin);
+			title = new Label("Now that you have chosen the specifications for all the players"
+					+ ", you're ready to play the game.\nYou can go through an interactive "
+					+ "tutorial of the rules if you're not familiar with them. \n\n"
+					+ "You can enjoy this game against your friends by "
+					+ "choosing all human players, go solo against up to 5 "
+					+ "CPU bots, or have a mix of both!\n\nHave fun, and may the force be with you!", skin);
 			// Set showTutorial flag to false
 			ChainReactionAIGame.GRAYED_OUT = false;
 			stats = Gdx.app.getPreferences("chainReactionStatistics");
@@ -223,7 +225,11 @@ public class TutorialTextScreen implements Screen {
 		title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		table.add(title).width(420).padBottom(10).row();
 		nextButton = new ImageButton(ChainReactionAIGame.nextButtonDraw, ChainReactionAIGame.nextPressedButtonDraw);
-		table.add(nextButton).size(WIDTH_NEXT_BUTTON*widthUpscaleFactor, HEIGHT_NEXT_BUTTON*widthUpscaleFactor).padBottom(2).row();
+		table.add(nextButton).size(WIDTH_NEXT_BUTTON*widthUpscaleFactor, HEIGHT_NEXT_BUTTON*widthUpscaleFactor).padBottom(20).row();
+		if (textChoice == 1) {
+			skipButton = new ImageButton(ChainReactionAIGame.skipButtonDraw, ChainReactionAIGame.skipPressedButtonDraw);
+			table.add(skipButton).size(WIDTH_NEXT_BUTTON*widthUpscaleFactor, HEIGHT_NEXT_BUTTON*widthUpscaleFactor).padBottom(2).row();
+		}
 		table.setFillParent(true);
 		// Adding the table to the stage.
 		img.setFillParent(true);
@@ -234,6 +240,17 @@ public class TutorialTextScreen implements Screen {
 			nextButton.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
+					myGame.setScreen(new MainMenuScreen(myGame));
+				}
+			});
+			skipButton.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					// Set showTutorial flag to false
+					ChainReactionAIGame.GRAYED_OUT = false;
+					stats = Gdx.app.getPreferences("chainReactionStatistics");
+					stats.putBoolean("showTutorial", false);
+					stats.flush();
 					myGame.setScreen(new MainMenuScreen(myGame));
 				}
 			});

@@ -212,7 +212,9 @@ public class MainMenuScreen implements Screen {
 			buttonTutorial.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
-					myGame.setScreen(new GameTutorialScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+//					myGame.setScreen(new GameTutorialScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+					ChainReactionAIGame.GRAYED_OUT = true;
+					myGame.setScreen(new TutorialTextScreen(myGame, 1));
 				}
 			});
 		}
