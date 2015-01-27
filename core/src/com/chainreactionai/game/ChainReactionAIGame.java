@@ -79,7 +79,7 @@ public class ChainReactionAIGame extends Game {
 		statsPressedButtonDraw, submitButtonDraw, submitGrayButtonDraw, submitPressedButtonDraw,
 		tutorialButtonDraw, tutorialGrayButtonDraw, tutorialPressedButtonDraw, pressedHumanCpuButtonDraw,
 		unpressedHumanButtonDraw, unpressedCpuButtonDraw, logoDraw, nextButtonDraw, nextGrayButtonDraw,
-		nextPressedButtonDraw;
+		nextPressedButtonDraw, skipButtonDraw, skipPressedButtonDraw;
 
 	@Override
 	public void create() {
@@ -147,6 +147,9 @@ public class ChainReactionAIGame extends Game {
 		nextButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/next.jpg"))));
 		nextGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/nextGray.jpg"))));
 		nextPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/nextPressed.png"))));
+		skipButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/skip.jpg"))));
+		skipPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/skipPressed.png"))));
+		
 		
 		// Loading game background image
 		texture = new Texture(Gdx.files.internal("back.jpg"));
