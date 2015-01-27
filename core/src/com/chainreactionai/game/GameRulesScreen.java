@@ -65,6 +65,7 @@ public class GameRulesScreen implements Screen {
 	final private int MAX_RECURSIVELY_SPLIT_WAIT_TIME = 100;
 	private int numBalls, cornerSplitWaitTime, middleSplitWaitTime, edgeSplitWaitTime, winAdjoiningRectAfterSplitWaitTime, recursivelySplitWaitTime;
 	final private int MAX_NUMBER_OF_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
+	private int textChoice;
 	private Stage stage = new Stage();
 	private Table table = new Table(), container = new Table();
 	private float heightUpscaleFactor, widthUpscaleFactor;
@@ -86,14 +87,14 @@ public class GameRulesScreen implements Screen {
 					 winAdjoiningRectBeforeSplitButtonDraw, winAdjoiningRectAfterSplitButtonDraw, recursivelyBetweenSplitButtonDraw;
 	// Trying ImageButton
 	private ImageButton backButtonImg = new ImageButton(ChainReactionAIGame.mainMenuButtonDraw, ChainReactionAIGame.mainMenuPressedButtonDraw),
-						tutorialButtonImg = new ImageButton(ChainReactionAIGame.tutorialButtonDraw, ChainReactionAIGame.tutorialPressedButtonDraw);
+			nextButtonImg = new ImageButton(ChainReactionAIGame.nextButtonDraw, ChainReactionAIGame.nextPressedButtonDraw);
 	private ImageButton cornerSplitButton, middleSplitButton, edgeSplitButton, recursivelySplitButton, winAdjoiningRectSplitButton;
 	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
 			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private Image img = new Image(ChainReactionAIGame.texture);
 	
 	// Constructor
-	public GameRulesScreen(ChainReactionAIGame game) {
+	public GameRulesScreen(ChainReactionAIGame game, int textChoice) {
 		ChainReactionAIGame.currentScreen = 2;
 		myGame = game;
 		// Initialize ArrayLists
@@ -105,11 +106,12 @@ public class GameRulesScreen implements Screen {
 		speed = new ArrayList<Integer>();
 		numBalls = 0;
 		animationInit = true;
+		this.textChoice = textChoice;
 		create();
 	}
 	
 	// Constructor
-	public GameRulesScreen(ChainReactionAIGame game, ArrayList<Integer> xVal, ArrayList<Integer> yVal, ArrayList<Integer> color, ArrayList<Integer> startZPosition, ArrayList<Integer> distNow, ArrayList<Integer> speed, int numBalls) {
+	public GameRulesScreen(ChainReactionAIGame game, ArrayList<Integer> xVal, ArrayList<Integer> yVal, ArrayList<Integer> color, ArrayList<Integer> startZPosition, ArrayList<Integer> distNow, ArrayList<Integer> speed, int numBalls, int textChoice) {
 		int i;
 		ChainReactionAIGame.currentScreen = 2;
 		myGame = game;
@@ -130,6 +132,7 @@ public class GameRulesScreen implements Screen {
 			this.distNow.add(distNow.get(i));
 			this.speed.add(speed.get(i));
 		}
+		this.textChoice = textChoice;
 		create();
 		animationInit = true;
 	}
@@ -206,21 +209,20 @@ public class GameRulesScreen implements Screen {
 				+ "or one occupied by atoms of their own colour.\n\n"
 				+ "Let's walk you through an interactive tutorial to learn the rules "
 				+ "of the game. Click on the cells pointed at by the arrows "
-				+ "to understand the way that the game works.\n"
-				+ "Critical mass is 2 for the cells in the "
+				+ "to understand the way that the game works.\n", skin);
+		rulesTwo = new Label("Critical mass is 2 for the cells in the "
 				+ "corners ie. the atoms will split in two available "
 				+ "horizontal and vertical directions as shown in the image below.", skin);
-		rulesTwo = new Label("Critical mass is 3 for the cells along "
+		rulesThree = new Label("Critical mass is 3 for the cells along "
 				+ "the edges ie. the atoms will split and one atom each "
 				+ "will be placed in the 3 available horizontal and vertical "
 				+ "directions as shown in the image below.", skin);
-		rulesThree = new Label("Similarly, critical mass is 4 for the rest of "
+		rulesFour = new Label("Similarly, critical mass is 4 for the rest of "
 				+ "the cells of the grid as shown in the image below. ", skin);
-		rulesFour = new Label("When your atom reaches a given cell on splitting, you "
+		rulesFive = new Label("When your atom reaches a given cell on splitting, you "
 				+ "occupy that cell and your new atom gets added to the previously "
 				+ "existing atoms present in that cell. Look "
 				+ "at the two images below to better understand this.", skin);
-		rulesFive = new Label("To understand how the interface works, you can check out the Tutorial.", skin);
 		rulesOne.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
 		rulesOne.setWrap(true);
 		rulesTwo.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
@@ -231,19 +233,31 @@ public class GameRulesScreen implements Screen {
 		rulesFour.setWrap(true);
 		rulesFive.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
 		rulesFive.setWrap(true);
-		table.add(rulesHeading).padBottom(10).width(300).row();
-		table.add(rulesOne).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
-		table.add(cornerSplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
-		table.add(rulesTwo).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
-		table.add(edgeSplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
-		table.add(rulesThree).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
-		table.add(middleSplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
-		table.add(rulesFour).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
-		table.add(winAdjoiningRectSplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
-		table.add(recursivelySplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
-		table.add(rulesFive).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
-		table.add(tutorialButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(2).row();
-		table.add(backButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(2).row();
+		if (textChoice == 1) {
+			table.add(rulesHeading).padBottom(10).width(300).row();
+			table.add(rulesOne).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
+		}
+		else if (textChoice == 2) {
+			table.add(rulesTwo).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
+			table.add(cornerSplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+		}
+		else if (textChoice == 3) {
+			table.add(rulesThree).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
+			table.add(edgeSplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+		}
+		else if (textChoice == 4) {
+			table.add(rulesFour).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
+			table.add(middleSplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+		}
+		else if (textChoice == 5) {
+			table.add(rulesFive).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
+			table.add(winAdjoiningRectSplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
+			table.add(recursivelySplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+		}
+		if (textChoice < 5)
+			table.add(nextButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(15).row();
+		if (textChoice == 5)
+			table.add(backButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(2).row();
 		// Scroll pane consisting of the Table.
 		scroll = new ScrollPane(table);
 		// Container is the outside coverung which contains the
@@ -254,19 +268,17 @@ public class GameRulesScreen implements Screen {
 		img.setFillParent(true);
 		stage.addActor(img);
 		stage.addActor(container);
-		// Attaching the ClickListener to the back button.
-		tutorialButtonImg.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-//				myGame.setScreen(new GameTutorialScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
-				ChainReactionAIGame.GRAYED_OUT = true;
-				myGame.setScreen(new TutorialTextScreen(myGame, 1));
-			}
-		});
+		// Attaching the ClickListener to the buttons
 		backButtonImg.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				myGame.setScreen(new MainMenuScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+			}
+		});
+		nextButtonImg.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				myGame.setScreen(new GameRulesScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls, textChoice+1));
 			}
 		});
 		cornerSplitButton.addListener(new ClickListener() {
