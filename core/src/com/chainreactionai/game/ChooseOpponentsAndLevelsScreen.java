@@ -53,7 +53,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	final private int HEIGHT_SUBMIT_BUTTON = 60;
 	final private int WIDTH_SLIDER = 150;
 	final private int HEIGHT_SLIDER = 30;
-	final private int HEIGHT_KNOB = 20;
+	final private int HEIGHT_KNOB = 15;
 	private float heightUpscaleFactor, widthUpscaleFactor;
 	final private int MAX_NUM_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;

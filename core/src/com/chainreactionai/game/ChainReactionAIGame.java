@@ -79,7 +79,8 @@ public class ChainReactionAIGame extends Game {
 		statsPressedButtonDraw, submitButtonDraw, submitGrayButtonDraw, submitPressedButtonDraw,
 		tutorialButtonDraw, tutorialGrayButtonDraw, tutorialPressedButtonDraw, pressedHumanCpuButtonDraw,
 		unpressedHumanButtonDraw, unpressedCpuButtonDraw, logoDraw, nextButtonDraw, nextGrayButtonDraw,
-		nextPressedButtonDraw, skipButtonDraw, skipPressedButtonDraw;
+		nextPressedButtonDraw, skipButtonDraw, skipPressedButtonDraw, minusButtonDraw, minusPressedButtonDraw,
+		plusButtonDraw, plusPressedButtonDraw;
 
 	@Override
 	public void create() {
@@ -149,7 +150,10 @@ public class ChainReactionAIGame extends Game {
 		nextPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/nextPressed.png"))));
 		skipButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/skip.jpg"))));
 		skipPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/skipPressed.png"))));
-		
+//		plusButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/plusUnpressed.png"))));
+//		plusPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/plusPressed.png"))));
+//		minusButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/minusUnpressed.png"))));
+//		minusPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/minusPressed.png"))));
 		
 		// Loading game background image
 		texture = new Texture(Gdx.files.internal("back.jpg"));
@@ -157,8 +161,8 @@ public class ChainReactionAIGame extends Game {
 		mainGameScreenTexture = new Texture(Gdx.files.internal("mainGameScreenBack.jpg"));
 		
 		// Loading the skin
-		skin = new Skin(Gdx.files.internal("data/uiskin.json"),
-				new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
+		skin = new Skin(Gdx.files.internal("data/ui-color.json"),
+				new TextureAtlas(Gdx.files.internal("data/ui-yellow.atlas")));
 		
 		// Determine whether to show tutorial or not
         stats = Gdx.app.getPreferences("chainReactionStatistics");

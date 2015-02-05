@@ -44,8 +44,7 @@ public class NumPlayersScreen implements Screen {
 	final private int WIDTH_SCREEN = 448;
 	final private int HEIGHT_SCREEN = 645;
 	final private int WIDTH_SLIDER = 150;
-	final private int HEIGHT_SLIDER = 30;
-	final private int HEIGHT_KNOB = 25;
+	final private int HEIGHT_KNOB = 15;
 	final private int WIDTH_SUBMIT_BUTTON = 275;
 	final private int HEIGHT_SUBMIT_BUTTON = 60;
 	private float heightUpscaleFactor, widthUpscaleFactor;
@@ -163,7 +162,7 @@ public class NumPlayersScreen implements Screen {
 		numPlayerSlider = new Slider(1, MAX_NUMBER_OF_PLAYERS-1, 1, false, ChainReactionAIGame.skin);
 		numPlayerSlider.getStyle().knob.setMinHeight(HEIGHT_KNOB*heightUpscaleFactor);
 		// Adding the Slider to the Table.
-		table.add(numPlayerSlider).size(WIDTH_SLIDER*widthUpscaleFactor, HEIGHT_SLIDER*heightUpscaleFactor*2).padTop(5).padBottom(5);
+		table.add(numPlayerSlider).size(WIDTH_SLIDER*widthUpscaleFactor).padTop(5).padBottom(5);
 		// To allow the sliders to be dragged properly
 		InputListener stopTouchDown = new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
