@@ -217,11 +217,11 @@ public class TutorialTextScreen implements Screen {
 		}
 		title.setWrap(true);
 		title.setFontScale((1+(heightUpscaleFactor-1)/2));
-		table.add(title).width(420).padBottom(10).row();
+		table.add(title).width(420*widthUpscaleFactor).padBottom(10).row();
 		if (textChoice == 3) {
 			table.add(humanCpuToggleButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 			humanCpuToggleButton.setChecked(true);
-			table.add(titleFollowup).width(420).padBottom(10).row();
+			table.add(titleFollowup).width(420*widthUpscaleFactor).padBottom(10).row();
 		}
 		nextButton = new ImageButton(ChainReactionAIGame.nextButtonDraw, ChainReactionAIGame.nextPressedButtonDraw);
 		table.add(nextButton).size(WIDTH_NEXT_BUTTON*widthUpscaleFactor, HEIGHT_NEXT_BUTTON*widthUpscaleFactor).padBottom(20).row();
