@@ -156,7 +156,7 @@ public class NumPlayersScreen implements Screen {
         rand = new Random();
 		// Initializing and adding the title to Table.
 		title = new Label("Choose number of opponents", skin);
-		title.setFontScale((1+(heightUpscaleFactor-1)/2));
+		title.setFontScale(heightUpscaleFactor);
 		table.add(title).padBottom(10).row();
 		// Initializing the Slider
 		numPlayerSlider = new Slider(1, MAX_NUMBER_OF_PLAYERS-1, 1, false, ChainReactionAIGame.sliderSkin);
@@ -173,6 +173,7 @@ public class NumPlayersScreen implements Screen {
 		numPlayerSlider.addListener(stopTouchDown);
 		// Label Initialize
 		numPlayerLabel = new Label("1", skin);
+		numPlayerLabel.setFontScale(heightUpscaleFactor);
 		table.add(numPlayerLabel).padBottom(7).padTop(3).row();
 		// Initializing and adding the Submit Button to Table.
 		submitButton = new ImageButton(ChainReactionAIGame.submitButtonDraw, ChainReactionAIGame.submitPressedButtonDraw);

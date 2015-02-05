@@ -78,7 +78,7 @@ public class SplashScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		newTime = System.currentTimeMillis();
 		// Tell the camera to update its matrices.
@@ -92,7 +92,7 @@ public class SplashScreen implements Screen {
 		batch.end();
 
 		// When user clicks on the screen, go to the main menu screen
-		if (newTime - prevTime > 1000) {
+		if (newTime - prevTime > 500) {
 			if (!ChainReactionAIGame.GRAYED_OUT)
 				myGame.setScreen(new MainMenuScreen(myGame));
 			else
