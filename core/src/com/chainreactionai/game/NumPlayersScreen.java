@@ -159,7 +159,7 @@ public class NumPlayersScreen implements Screen {
 		title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		table.add(title).padBottom(10).row();
 		// Initializing the Slider
-		numPlayerSlider = new Slider(1, MAX_NUMBER_OF_PLAYERS-1, 1, false, ChainReactionAIGame.skin);
+		numPlayerSlider = new Slider(1, MAX_NUMBER_OF_PLAYERS-1, 1, false, ChainReactionAIGame.sliderSkin);
 		numPlayerSlider.getStyle().knob.setMinHeight(HEIGHT_KNOB*heightUpscaleFactor);
 		// Adding the Slider to the Table.
 		table.add(numPlayerSlider).size(WIDTH_SLIDER*widthUpscaleFactor).padTop(5).padBottom(5);

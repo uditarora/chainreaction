@@ -27,7 +27,7 @@ public class ChainReactionAIGame extends Game {
 	public static int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = 10;
 	public static int MAX_ARRAY_SIZE = 250;
 	public static Texture texture, mainGameScreenTexture, textureGray;
-	public static Skin skin;
+	public static Skin skin, sliderSkin;
 	
 	// For achievements
 	public static final String achievement_almost_there="CgkIu_W6xfwCEAIQDg";
@@ -79,8 +79,7 @@ public class ChainReactionAIGame extends Game {
 		statsPressedButtonDraw, submitButtonDraw, submitGrayButtonDraw, submitPressedButtonDraw,
 		tutorialButtonDraw, tutorialGrayButtonDraw, tutorialPressedButtonDraw, pressedHumanCpuButtonDraw,
 		unpressedHumanButtonDraw, unpressedCpuButtonDraw, logoDraw, nextButtonDraw, nextGrayButtonDraw,
-		nextPressedButtonDraw, skipButtonDraw, skipPressedButtonDraw, minusButtonDraw, minusPressedButtonDraw,
-		plusButtonDraw, plusPressedButtonDraw;
+		nextPressedButtonDraw, skipButtonDraw, skipPressedButtonDraw;
 
 	@Override
 	public void create() {
@@ -161,7 +160,9 @@ public class ChainReactionAIGame extends Game {
 		mainGameScreenTexture = new Texture(Gdx.files.internal("mainGameScreenBack.jpg"));
 		
 		// Loading the skin
-		skin = new Skin(Gdx.files.internal("data/ui-color.json"),
+		skin = new Skin(Gdx.files.internal("data/uiskin.json"),
+				new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
+		sliderSkin = new Skin(Gdx.files.internal("data/ui-color.json"),
 				new TextureAtlas(Gdx.files.internal("data/ui-yellow.atlas")));
 		
 		// Determine whether to show tutorial or not
