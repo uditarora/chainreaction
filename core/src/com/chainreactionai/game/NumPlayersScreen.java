@@ -44,7 +44,7 @@ public class NumPlayersScreen implements Screen {
 	final private int WIDTH_SCREEN = 448;
 	final private int HEIGHT_SCREEN = 645;
 	final private int WIDTH_SLIDER = 150;
-	final private int HEIGHT_KNOB = 15;
+	final private int HEIGHT_KNOB = 20;
 	final private int WIDTH_SUBMIT_BUTTON = 275;
 	final private int HEIGHT_SUBMIT_BUTTON = 60;
 	private float heightUpscaleFactor, widthUpscaleFactor;

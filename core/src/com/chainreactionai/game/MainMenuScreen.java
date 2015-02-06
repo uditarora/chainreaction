@@ -217,7 +217,8 @@ public class MainMenuScreen implements Screen {
 			buttonStats.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
-					myGame.setScreen(new GameStatsScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+//					myGame.setScreen(new GameStatsScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+					ChainReactionAIGame.googleServices.showScores();
 				}
 			});
 		}
