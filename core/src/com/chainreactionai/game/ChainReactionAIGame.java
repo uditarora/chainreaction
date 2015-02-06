@@ -4,11 +4,8 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 // Initial class which is executed by all the projects.
 public class ChainReactionAIGame extends Game {
@@ -26,7 +23,7 @@ public class ChainReactionAIGame extends Game {
 	public static int MIN_SPEED_OF_BALLS = 2;
 	public static int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = 10;
 	public static int MAX_ARRAY_SIZE = 250;
-	public static Texture texture, mainGameScreenTexture, textureGray;
+	public static Texture texture, mainGameScreenTexture, textureGray, splashTexture;
 	public static Skin skin, sliderSkin;
 	
 	// For achievements
@@ -90,80 +87,6 @@ public class ChainReactionAIGame extends Game {
 			Gdx.app.log("Screen Size", WIDTH + " " + HEIGHT);
 		}
 		MAX_NUMBER_PLAYERS = 6;
-		
-		// Load the drawables for image buttons
-		achievementsButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/achievements.jpg"))));
-		achievementsGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/achievementsGray.jpg"))));
-		achievementsPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/achievementsPressed.png"))));
-		backButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/backb.jpg"))));
-		backGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/backbGray.jpg"))));
-		backPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/backbPressed.png"))));
-		exitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/exit.jpg"))));
-		exitGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/exitGray.jpg"))));
-		exitPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/exitPressed.png"))));
-		leaderboardButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/leaderboard.jpg"))));
-		leaderboardGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/leaderboardGray.jpg"))));
-		leaderboardPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/leaderboardPressed.png"))));
-		mainMenuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/mainMenu.jpg"))));
-		mainMenuGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/mainMenuGray.jpg"))));
-		mainMenuPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/mainMenuPressed.png"))));
-		multiPlayerButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/multiPlayer.jpg"))));
-		multiPlayerGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/multiPlayerGray.jpg"))));
-		multiPlayerPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/multiPlayerPressed.png"))));
-		newGameButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/newGame.jpg"))));
-		newGameGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/newGameGray.jpg"))));
-		newGamePressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/newGamePressed.png"))));
-		pauseButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/pause.jpg"))));
-		pauseGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/pauseGray.jpg"))));
-		pausePressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/pausePressed.png"))));
-		playButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/play.jpg"))));
-		playGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/playGray.jpg"))));
-		playPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/playPressed.png"))));
-		playAgainButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/playAgain.jpg"))));
-		playAgainGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/playAgainGray.jpg"))));
-		playAgainPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/playAgainPressed.png"))));
-		resumeButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/resume.jpg"))));
-		resumeGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/resumeGray.jpg"))));
-		resumePressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/resumePressed.png"))));
-		rulesButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/rules.jpg"))));
-		rulesGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/rulesGray.jpg"))));
-		rulesPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/rulesPressed.png"))));
-		singlePlayerButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/singlePlayer.jpg"))));
-		singlePlayerGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/singlePlayerGray.jpg"))));
-		singlePlayerPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/singlePlayerPressed.png"))));
-		statsButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/statistics.jpg"))));
-		statsGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/statisticsGray.jpg"))));
-		statsPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/statisticsPressed.png"))));
-		submitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/submit.jpg"))));
-		submitGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/submitGray.jpg"))));
-		submitPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/submitPressed.png"))));
-		tutorialButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/tutorial.jpg"))));
-		tutorialGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/tutorialGray.jpg"))));
-		tutorialPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/tutorialPressed.png"))));
-		pressedHumanCpuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/pressedHumanCpu.png"))));
-		unpressedHumanButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/unpressedHuman.png"))));
-		unpressedCpuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/unpressedCPU.png"))));
-		logoDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("Logo.png"))));
-		nextButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/next.jpg"))));
-		nextGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/nextGray.jpg"))));
-		nextPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/nextPressed.png"))));
-		skipButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/skip.jpg"))));
-		skipPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/skipPressed.png"))));
-//		plusButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/plusUnpressed.png"))));
-//		plusPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/plusPressed.png"))));
-//		minusButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/minusUnpressed.png"))));
-//		minusPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/minusPressed.png"))));
-		
-		// Loading game background image
-		texture = new Texture(Gdx.files.internal("back.jpg"));
-		textureGray = new Texture(Gdx.files.internal("backGray.jpg"));
-		mainGameScreenTexture = new Texture(Gdx.files.internal("mainGameScreenBack.jpg"));
-		
-		// Loading the skin
-		skin = new Skin(Gdx.files.internal("data/uiskin.json"),
-				new TextureAtlas(Gdx.files.internal("data/uiskin.atlas")));
-		sliderSkin = new Skin(Gdx.files.internal("data/ui-color.json"),
-				new TextureAtlas(Gdx.files.internal("data/ui-yellow.atlas")));
 		
 		// Determine whether to show tutorial or not
         stats = Gdx.app.getPreferences("chainReactionStatistics");
