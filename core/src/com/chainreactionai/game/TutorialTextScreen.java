@@ -204,7 +204,7 @@ public class TutorialTextScreen implements Screen {
 			titleFollowup = new Label("You can also vary the difficulty level of each CPU"
 					+ " bot using the sliders alongside.", skin);
 			titleFollowup.setWrap(true);
-			titleFollowup.setFontScale((1+(heightUpscaleFactor-1)/2));
+			titleFollowup.setFontScale(heightUpscaleFactor);
 		} else if (textChoice == 4) {
 			title = new Label("Now you're ready to rumble. You can enjoy this game against your friends by "
 					+ "choosing all human players, go solo against up to 5 "
@@ -216,12 +216,12 @@ public class TutorialTextScreen implements Screen {
 			stats.flush();
 		}
 		title.setWrap(true);
-		title.setFontScale((1+(heightUpscaleFactor-1)/2));
-		table.add(title).width(420*widthUpscaleFactor).padBottom(10).row();
+		title.setFontScale(heightUpscaleFactor);
+		table.add(title).width(420*widthUpscaleFactor).padBottom(20*heightUpscaleFactor).row();
 		if (textChoice == 3) {
 			table.add(humanCpuToggleButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 			humanCpuToggleButton.setChecked(true);
-			table.add(titleFollowup).width(420*widthUpscaleFactor).padBottom(10).row();
+			table.add(titleFollowup).width(420*widthUpscaleFactor).padBottom(20*heightUpscaleFactor).row();
 		}
 		nextButton = new ImageButton(ChainReactionAIGame.nextButtonDraw, ChainReactionAIGame.nextPressedButtonDraw);
 		table.add(nextButton).size(WIDTH_NEXT_BUTTON*widthUpscaleFactor, HEIGHT_NEXT_BUTTON*widthUpscaleFactor).padBottom(20).row();
