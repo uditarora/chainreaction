@@ -53,7 +53,7 @@ public class MainMenuScreen implements Screen {
 	private float widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private ImageButton buttonPlay, buttonRules, buttonTutorial, buttonStats, buttonAchievements, logo;
+	private ImageButton buttonPlay, buttonRules, buttonTutorial, buttonLeaderboard, buttonAchievements, logo;
 	private Color[] colors;
 	private boolean animationInit = false;
 	// Trying 3D Graphics
@@ -165,10 +165,10 @@ public class MainMenuScreen implements Screen {
 			buttonTutorial = new ImageButton(ChainReactionAIGame.tutorialGrayButtonDraw);
 		table.add(buttonTutorial).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 		if (!ChainReactionAIGame.GRAYED_OUT)
-			buttonStats = new ImageButton(ChainReactionAIGame.statsButtonDraw, ChainReactionAIGame.statsPressedButtonDraw);
+			buttonLeaderboard = new ImageButton(ChainReactionAIGame.leaderboardButtonDraw, ChainReactionAIGame.leaderboardPressedButtonDraw);
 		else
-			buttonStats = new ImageButton(ChainReactionAIGame.statsGrayButtonDraw);
-		table.add(buttonStats).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(10).row();
+			buttonLeaderboard = new ImageButton(ChainReactionAIGame.leaderboardGrayButtonDraw);
+		table.add(buttonLeaderboard).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 		if (!ChainReactionAIGame.GRAYED_OUT)
 			buttonAchievements = new ImageButton(ChainReactionAIGame.achievementsButtonDraw, ChainReactionAIGame.achievementsPressedButtonDraw);
 		else
@@ -214,7 +214,7 @@ public class MainMenuScreen implements Screen {
 			});
 		}
 		if(!ChainReactionAIGame.GRAYED_OUT) {
-			buttonStats.addListener(new ClickListener() {
+			buttonLeaderboard.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 //					myGame.setScreen(new GameStatsScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
