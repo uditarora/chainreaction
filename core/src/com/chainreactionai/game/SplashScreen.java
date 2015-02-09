@@ -127,9 +127,6 @@ public class SplashScreen implements Screen {
 		ChainReactionAIGame.mainMenuButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/mainMenu.jpg"))));
 		ChainReactionAIGame.mainMenuGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/mainMenuGray.jpg"))));
 		ChainReactionAIGame.mainMenuPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/mainMenuPressed.png"))));
-		ChainReactionAIGame.multiPlayerButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/multiPlayer.jpg"))));
-		ChainReactionAIGame.multiPlayerGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/multiPlayerGray.jpg"))));
-		ChainReactionAIGame.multiPlayerPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/multiPlayerPressed.png"))));
 		ChainReactionAIGame.newGameButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/newGame.jpg"))));
 		ChainReactionAIGame.newGameGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/newGameGray.jpg"))));
 		ChainReactionAIGame.newGamePressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/newGamePressed.png"))));
@@ -148,12 +145,6 @@ public class SplashScreen implements Screen {
 		ChainReactionAIGame.rulesButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/rules.jpg"))));
 		ChainReactionAIGame.rulesGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/rulesGray.jpg"))));
 		ChainReactionAIGame.rulesPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/rulesPressed.png"))));
-		ChainReactionAIGame.singlePlayerButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/singlePlayer.jpg"))));
-		ChainReactionAIGame.singlePlayerGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/singlePlayerGray.jpg"))));
-		ChainReactionAIGame.singlePlayerPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/singlePlayerPressed.png"))));
-		ChainReactionAIGame.statsButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/statistics.jpg"))));
-		ChainReactionAIGame.statsGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/statisticsGray.jpg"))));
-		ChainReactionAIGame.statsPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/statisticsPressed.png"))));
 		ChainReactionAIGame.submitButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/submit.jpg"))));
 		ChainReactionAIGame.submitGrayButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/submitGray.jpg"))));
 		ChainReactionAIGame.submitPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/submitPressed.png"))));
