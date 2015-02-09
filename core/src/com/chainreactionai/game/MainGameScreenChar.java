@@ -164,6 +164,7 @@ public class MainGameScreenChar implements Screen {
 				System.out.println("Level "+i+"- Won: "+numWon+", Lost: "+numLost);
 			}
 		}
+		
 		// Initialize ArrayLists
 		xVal = new ArrayList<Integer>();
 		yVal = new ArrayList<Integer>();
@@ -893,21 +894,37 @@ public class MainGameScreenChar implements Screen {
 	
 	private void updateStatistics() {
 		String key;
+		int flag = 0, level;
 		if (isCPU[0]) {
 			if (currentPlayer == 0)
 				key = "lostLevel";
 			else
+			{
 				key = "wonLevel";
+				flag = 1;
+			}
 			key += difficultyLevels[0];
+			level = difficultyLevels[0];
 		}
 		else {
 			if (currentPlayer == 1)
 				key = "lostLevel";
 			else
+			{
 				key = "wonLevel";
+				flag = 1;
+			}
 			key += difficultyLevels[1];
+			level = difficultyLevels[1];
 		}
 		stats.putInteger(key, stats.getInteger(key, 0)+1);
+		
+		if(flag==1)
+		{
+			int overallScore = stats.getInteger("OverallScore", 0) + (10*level) + ((100 - numberOfMovesPlayed)*level/2);
+			stats.putInteger("OverallScore", overallScore);
+			ChainReactionAIGame.googleServices.submitScore(overallScore);
+		}
 		stats.flush();
 	}
 	

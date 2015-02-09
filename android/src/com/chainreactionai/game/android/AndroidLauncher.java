@@ -128,11 +128,12 @@ public class AndroidLauncher extends AndroidApplication implements
 	@Override
 	public void submitScore(long score) {
 		if (isSignedIn() == true) {
+			
 			Games.Leaderboards.submitScore(_gameHelper.getApiClient(),
-					getString(R.string.leaderboard_id), score);
+					getString(R.string.leaderboard_overall_score), score);
 			startActivityForResult(Games.Leaderboards.getLeaderboardIntent(
 					_gameHelper.getApiClient(),
-					getString(R.string.leaderboard_id)), REQUEST_CODE_UNUSED);
+					getString(R.string.leaderboard_overall_score)), REQUEST_CODE_UNUSED);
 		} else {
 			// Maybe sign in here then redirect to submitting score?
 		}
@@ -143,7 +144,7 @@ public class AndroidLauncher extends AndroidApplication implements
 		if (isSignedIn() == true)
 			startActivityForResult(Games.Leaderboards.getLeaderboardIntent(
 					_gameHelper.getApiClient(),
-					getString(R.string.leaderboard_id)), REQUEST_CODE_UNUSED);
+					getString(R.string.leaderboard_overall_score)), REQUEST_CODE_UNUSED);
 		else {
 			// Maybe sign in here then redirect to showing scores?
 		}
