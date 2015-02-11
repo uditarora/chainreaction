@@ -14,6 +14,7 @@ public class ChainReactionAIGame extends Game {
 	public static int HEIGHT;
 	public static int currentScreen;
 	public static int MAX_NUMBER_PLAYERS;
+	public static boolean muteStatus = false;
 	
 	// For background animation
 	public static int INVERSE_CHANCES_OF_NEW_BALLS = 40;
@@ -76,7 +77,7 @@ public class ChainReactionAIGame extends Game {
 		statsPressedButtonDraw, submitButtonDraw, submitGrayButtonDraw, submitPressedButtonDraw,
 		tutorialButtonDraw, tutorialGrayButtonDraw, tutorialPressedButtonDraw, pressedHumanCpuButtonDraw,
 		unpressedHumanButtonDraw, unpressedCpuButtonDraw, logoDraw, nextButtonDraw, nextGrayButtonDraw,
-		nextPressedButtonDraw, skipButtonDraw, skipPressedButtonDraw;
+		nextPressedButtonDraw, skipButtonDraw, skipPressedButtonDraw, muteActivateButton, muteInactivateButton;
 
 	@Override
 	public void create() {

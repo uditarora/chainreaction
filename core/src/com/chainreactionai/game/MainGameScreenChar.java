@@ -61,6 +61,8 @@ public class MainGameScreenChar implements Screen {
 	final private int HEIGHT_SCREEN = (int)((GRID_SIZE_Y * HEIGHT_RECTANGLE) + PAD_BOTTOM_PAUSE_BUTTON + HEIGHT_PAUSE_BUTTON + PAD_TOP_PAUSE_BUTTON) + 1;
 	final private int HEIGHT_PAUSE_MENU_BUTTONS = 60;
 	final private int WIDTH_PAUSE_MENU_BUTTONS = 275;
+	final private int HEIGHT_MUTE = 64;
+	final private int WIDTH_MUTE = 64;
 	final private int MAX_NUM_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;
 	final private int MAX_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MAX_Z_DIST_OF_NEW_BALLS;
@@ -72,6 +74,7 @@ public class MainGameScreenChar implements Screen {
 	private int INVERSE_SPEED_OF_BALL_VIBRATION = 28;
 	private int NUMBER_OF_PLAYERS, breakingAway, splittableBreakingAway;
 	private Texture pauseButtonImg = new Texture(Gdx.files.internal("buttons/pause.jpg"));
+	
 	private Array<Rectangle> rectangularGrid, innerRectangularGrid;
 	private GameBoardChar gameBoard;
 	private int clickCoordX, clickCoordY, currentPlayer, numberOfMovesPlayed, gameState, maxPlyLevel;
@@ -85,7 +88,7 @@ public class MainGameScreenChar implements Screen {
 	private ChainReactionAIGame myGame;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private ImageButton resumeButton, exitButton, newGameButton, mainMenuButton;
+	private ImageButton resumeButton, exitButton, newGameButton, mainMenuButton, muteActiveButton, muteInactiveButton, muteButton;
 	private Position highlightPos = new Position(-1, -1);
 	private GameSolverChar solver;
 	private long prevTime, newTime;
@@ -109,7 +112,8 @@ public class MainGameScreenChar implements Screen {
 	private Preferences stats;
 	// All debug printing should go under this flag.
 	final private boolean DEBUG = false;
-	final private boolean DEBUG_CPU = false; 
+	final private boolean DEBUG_CPU = false;
+	
 	
 	// Constructor to initialize which player is CPU and which is human.
 	// Also sets difficulty levels for CPU players.
@@ -227,16 +231,21 @@ public class MainGameScreenChar implements Screen {
 		newGameButton = new ImageButton(ChainReactionAIGame.newGameButtonDraw, ChainReactionAIGame.newGamePressedButtonDraw);
 		mainMenuButton = new ImageButton(ChainReactionAIGame.mainMenuButtonDraw, ChainReactionAIGame.mainMenuPressedButtonDraw);
 		exitButton = new ImageButton(ChainReactionAIGame.exitButtonDraw, ChainReactionAIGame.exitPressedButtonDraw);
-		
+		muteActiveButton = new ImageButton(ChainReactionAIGame.muteActivateButton, ChainReactionAIGame.muteActivateButton, ChainReactionAIGame.muteInactivateButton);
+		muteInactiveButton = new ImageButton(ChainReactionAIGame.muteInactivateButton, ChainReactionAIGame.muteInactivateButton, ChainReactionAIGame.muteActivateButton); 
+		muteButton = ChainReactionAIGame.muteStatus ? muteActiveButton :muteInactiveButton;
 		handle.writeString("--------------------------------------------------------------------------\r\n", true);
 		
 		// Populating the Pause menu with the buttons.
 		img = new Image(ChainReactionAIGame.texture);
 		img.setFillParent(true);
+		table.add(muteButton).size(WIDTH_MUTE*widthUpscaleFactor, HEIGHT_MUTE*widthUpscaleFactor).padLeft(ChainReactionAIGame.WIDTH - 40*widthUpscaleFactor).row();
+
 		table.add(resumeButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
 		table.add(newGameButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
 		table.add(mainMenuButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
 		table.add(exitButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
+
 		table.setFillParent(true);
 		
 		//Attaching click handlers to the pause menu buttons.
@@ -270,6 +279,15 @@ public class MainGameScreenChar implements Screen {
 				Gdx.app.exit();
 			}
 		});
+		muteButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				muteButton = ChainReactionAIGame.muteStatus ? muteInactiveButton : muteActiveButton;
+				ChainReactionAIGame.muteStatus = !ChainReactionAIGame.muteStatus;
+			}
+		});
+		
+		
 		
 		// Load default values into arrays
 		setDimsForRectangles();
@@ -438,8 +456,10 @@ public class MainGameScreenChar implements Screen {
 				// Animates board to show new board with next level of BFS
 				// calls done. Returns whether the BFS is complete or not.
 				if (playThisTimeBallPlace) {
-					this.splitSound.stop();
-					this.splitSound.play();
+					if(!ChainReactionAIGame.muteStatus){
+						this.splitSound.stop();
+						this.splitSound.play();
+					}
 					playThisTimeBallPlace = !playThisTimeBallPlace;
 				} else {
 					playThisTimeBallPlace = !playThisTimeBallPlace;
