@@ -146,6 +146,7 @@ public class AndroidLauncher extends AndroidApplication implements
 					_gameHelper.getApiClient(),
 					getString(R.string.leaderboard_overall_score)), REQUEST_CODE_UNUSED);
 		else {
+			signIn();
 			// Maybe sign in here then redirect to showing scores?
 		}
 	}
@@ -163,19 +164,17 @@ public class AndroidLauncher extends AndroidApplication implements
 						.getApiClient()), REQUEST_ACHIEVEMENTS);
 		else {
 			signIn();
-			// Maybe sign in here then redirect to showing scores?
+			// Maybe sign in here then redirect to showing achievements?
 		}
 	}
 
 	@Override
 	public void getAchievement(String achievementCode) {
-		// TODO Auto-generated method stub
 		Games.Achievements.unlock(_gameHelper.getApiClient(), achievementCode);
 	}
 
 	@Override
 	public void getIncAchievement(String achievementCode, int inc) {
-		// TODO Auto-generated method stub
 		Games.Achievements.increment(_gameHelper.getApiClient(),
 				achievementCode, inc);
 	}
