@@ -12,7 +12,6 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -92,7 +91,7 @@ public class MainGameScreenChar implements Screen {
 	private Position highlightPos = new Position(-1, -1);
 	private GameSolverChar solver;
 	private long prevTime, newTime;
-	private FileHandle handle = Gdx.files.external("data/myfile.txt");
+//	private FileHandle handle = Gdx.files.external("data/myfile.txt");
 	private ShapeRenderer shapeRenderer = new ShapeRenderer();
 	private Color[] colors;
 	// Trying 3D Graphics
@@ -234,7 +233,7 @@ public class MainGameScreenChar implements Screen {
 		muteActiveButton = new ImageButton(ChainReactionAIGame.muteActivateButton, ChainReactionAIGame.muteActivateButton, ChainReactionAIGame.muteInactivateButton);
 		muteInactiveButton = new ImageButton(ChainReactionAIGame.muteInactivateButton, ChainReactionAIGame.muteInactivateButton, ChainReactionAIGame.muteActivateButton); 
 		muteButton = ChainReactionAIGame.muteStatus ? muteInactiveButton :muteActiveButton;
-		handle.writeString("--------------------------------------------------------------------------\r\n", true);
+//		handle.writeString("--------------------------------------------------------------------------\r\n", true);
 		
 		// Populating the Pause menu with the buttons.
 		img = new Image(ChainReactionAIGame.texture);
@@ -435,7 +434,7 @@ public class MainGameScreenChar implements Screen {
 							newTime = System.currentTimeMillis();
 							if (DEBUG)
 								Gdx.app.log("mainPlayerAndPercentageMoves","MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed + " and Time taken : " + ((newTime - prevTime)/1000));
-							handle.writeString("MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed + " and Time taken : " + ((newTime - prevTime)/1000) +"\r\n", true);
+//							handle.writeString("MainPlayer: " + currentPlayer + " with percentageMovesSearched: " + percentageMovesSearched + " numMovesPlayed: " + numberOfMovesPlayed + " and Time taken : " + ((newTime - prevTime)/1000) +"\r\n", true);
 							solver = new GameSolverChar(gameBoard, currentPlayer,
 									NUMBER_OF_PLAYERS, lostPlayer, getCurrentPlyLevel(difficultyLevels[currentPlayer]), percentageMovesSearched, heuristicNumbers[currentPlayer]);
 							prevTime = System.currentTimeMillis();
