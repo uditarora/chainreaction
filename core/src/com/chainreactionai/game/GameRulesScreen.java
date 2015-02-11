@@ -191,6 +191,12 @@ public class GameRulesScreen implements Screen {
         edgeSplitButton = new ImageButton(edgeBeforeSplitButtonDraw);
         recursivelySplitButton = new ImageButton(recursivelyBeforeSplitButtonDraw);
         winAdjoiningRectSplitButton = new ImageButton(winAdjoiningRectBeforeSplitButtonDraw);
+        cornerSplitButton.getImageCell().expand().fill();
+        middleSplitButton.getImageCell().expand().fill();
+        edgeSplitButton.getImageCell().expand().fill();
+        recursivelySplitButton.getImageCell().expand().fill();
+        winAdjoiningRectSplitButton.getImageCell().expand().fill();
+        
         cornerSplitWaitTime = 0;
         middleSplitWaitTime = 0;
         edgeSplitWaitTime = 0;
@@ -254,6 +260,8 @@ public class GameRulesScreen implements Screen {
 			table.add(winAdjoiningRectSplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 			table.add(recursivelySplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(20).row();
 		}
+		nextButtonImg.getImageCell().expand().fill();
+		backButtonImg.getImageCell().expand().fill();
 		if (textChoice < 5)
 			table.add(nextButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(15).row();
 		if (textChoice == 5)

@@ -160,6 +160,7 @@ public class GameTutorialScreen implements Screen {
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
         humanCpuToggleButton = new ImageButton(ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw);
+        humanCpuToggleButton.getImageCell().expand().fill();
         // Initializing and adding the rules to Table.
         tuteHeadingOne = new Label("GAME", ChainReactionAIGame.skin);
         tuteHeadingOne.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
@@ -199,6 +200,9 @@ public class GameTutorialScreen implements Screen {
 		table.add(tuteTwo).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
 		table.add(tuteThree).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
 		table.add(tuteFour).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
+		
+		rulesButtonImg.getImageCell().expand().fill();
+		backButtonImg.getImageCell().expand().fill();
 		table.add(rulesButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(2).row();
 		table.add(backButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(2).row();
 		// Scroll pane consisting of the Table.

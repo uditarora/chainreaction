@@ -139,6 +139,11 @@ public class GameEndScreen implements Screen {
 		buttonExit = new ImageButton(ChainReactionAIGame.exitButtonDraw, ChainReactionAIGame.exitPressedButtonDraw);
 		buttonAchievements = new ImageButton(ChainReactionAIGame.achievementsButtonDraw, ChainReactionAIGame.achievementsPressedButtonDraw);
 		buttonLeaderboard = new ImageButton(ChainReactionAIGame.leaderboardButtonDraw, ChainReactionAIGame.leaderboardPressedButtonDraw);
+		buttonPlayAgain.getImageCell().expand().fill();
+		buttonNewGame.getImageCell().expand().fill();
+		buttonExit.getImageCell().expand().fill();
+		buttonAchievements.getImageCell().expand().fill();
+		buttonLeaderboard.getImageCell().expand().fill();
 		table.add(buttonPlayAgain).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 		table.add(buttonNewGame).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 		table.add(buttonAchievements).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(10).row();

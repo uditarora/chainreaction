@@ -191,6 +191,7 @@ public class TutorialTextScreen implements Screen {
         rand = new Random();
 		// Initializing and adding the title to Table.
         humanCpuToggleButton = new ImageButton(ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw);
+        humanCpuToggleButton.getImageCell().expand().fill();
 		if (textChoice == 1) {
 			title = new Label("Here for the first time? "
 					+ "Let's get you familiar with the interface of the game. "
@@ -224,9 +225,11 @@ public class TutorialTextScreen implements Screen {
 			table.add(titleFollowup).width(420*widthUpscaleFactor).padBottom(20*heightUpscaleFactor).row();
 		}
 		nextButton = new ImageButton(ChainReactionAIGame.nextButtonDraw, ChainReactionAIGame.nextPressedButtonDraw);
+		nextButton.getImageCell().expand().fill();
 		table.add(nextButton).size(WIDTH_NEXT_BUTTON*widthUpscaleFactor, HEIGHT_NEXT_BUTTON*widthUpscaleFactor).padBottom(20).row();
 		if (textChoice == 1) {
 			skipButton = new ImageButton(ChainReactionAIGame.skipButtonDraw, ChainReactionAIGame.skipPressedButtonDraw);
+			skipButton.getImageCell().expand().fill();
 			table.add(skipButton).size(WIDTH_NEXT_BUTTON*widthUpscaleFactor, HEIGHT_NEXT_BUTTON*widthUpscaleFactor).padBottom(2).row();
 		}
 		table.setFillParent(true);

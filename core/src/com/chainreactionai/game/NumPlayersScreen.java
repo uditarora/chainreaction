@@ -177,6 +177,7 @@ public class NumPlayersScreen implements Screen {
 		table.add(numPlayerLabel).padBottom(7).padTop(3).row();
 		// Initializing and adding the Submit Button to Table.
 		submitButton = new ImageButton(ChainReactionAIGame.submitButtonDraw, ChainReactionAIGame.submitPressedButtonDraw);
+		submitButton.getImageCell().expand().fill();
 		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*widthUpscaleFactor, HEIGHT_SUBMIT_BUTTON*widthUpscaleFactor).padBottom(2).row();
 		table.setFillParent(true);
 		// Adding the table to the stage.

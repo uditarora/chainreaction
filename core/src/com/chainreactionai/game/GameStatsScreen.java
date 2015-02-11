@@ -179,6 +179,7 @@ public class GameStatsScreen implements Screen {
 			table.add(stat).padLeft(10).padRight(10).padBottom(10).row();
 		}
 		// Adds the backButton to the Table.
+		backButton.getImageCell().expand().fill();
 		table.add(backButton).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(10*heightUpscaleFactor).row();
 		// Scroll pane consisting of the Table.
 		scroll = new ScrollPane(table);

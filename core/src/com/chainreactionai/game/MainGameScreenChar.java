@@ -233,14 +233,18 @@ public class MainGameScreenChar implements Screen {
 		exitButton = new ImageButton(ChainReactionAIGame.exitButtonDraw, ChainReactionAIGame.exitPressedButtonDraw);
 		muteActiveButton = new ImageButton(ChainReactionAIGame.muteActivateButton, ChainReactionAIGame.muteActivateButton, ChainReactionAIGame.muteInactivateButton);
 		muteInactiveButton = new ImageButton(ChainReactionAIGame.muteInactivateButton, ChainReactionAIGame.muteInactivateButton, ChainReactionAIGame.muteActivateButton); 
-		muteButton = ChainReactionAIGame.muteStatus ? muteActiveButton :muteInactiveButton;
+		muteButton = ChainReactionAIGame.muteStatus ? muteInactiveButton :muteActiveButton;
 		handle.writeString("--------------------------------------------------------------------------\r\n", true);
 		
 		// Populating the Pause menu with the buttons.
 		img = new Image(ChainReactionAIGame.texture);
 		img.setFillParent(true);
-		table.add(muteButton).size(WIDTH_MUTE*widthUpscaleFactor, HEIGHT_MUTE*widthUpscaleFactor).padLeft(ChainReactionAIGame.WIDTH - 40*widthUpscaleFactor).row();
-
+		muteButton.getImageCell().expand().fill();
+		resumeButton.getImageCell().expand().fill();
+		newGameButton.getImageCell().expand().fill();
+		mainMenuButton.getImageCell().expand().fill();
+		exitButton.getImageCell().expand().fill();
+		table.add(muteButton).size(WIDTH_MUTE*widthUpscaleFactor, HEIGHT_MUTE*widthUpscaleFactor).padLeft(ChainReactionAIGame.WIDTH - 100*widthUpscaleFactor).row();
 		table.add(resumeButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
 		table.add(newGameButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
 		table.add(mainMenuButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
