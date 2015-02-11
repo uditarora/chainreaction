@@ -53,7 +53,7 @@ public class MainMenuScreen implements Screen {
 	private float widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private ImageButton buttonPlay, buttonRules, buttonTutorial, buttonLeaderboard, buttonAchievements, logo;
+	private ImageButton buttonPlay, buttonRules, buttonTutorial, buttonLeaderboard, buttonAchievements, logo, buttonMute;
 	private Color[] colors;
 	private boolean animationInit = false;
 	// Trying 3D Graphics
@@ -173,6 +173,9 @@ public class MainMenuScreen implements Screen {
 			buttonAchievements = new ImageButton(ChainReactionAIGame.achievementsButtonDraw, ChainReactionAIGame.achievementsPressedButtonDraw);
 		else
 			buttonAchievements = new ImageButton(ChainReactionAIGame.achievementsGrayButtonDraw);
+		
+		
+		
 		table.add(buttonAchievements).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).row();
 		table.setFillParent(true);
 		// Adding the table to stage.
