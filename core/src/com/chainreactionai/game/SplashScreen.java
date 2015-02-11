@@ -160,8 +160,8 @@ public class SplashScreen implements Screen {
 		ChainReactionAIGame.nextPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/nextPressed.png"))));
 		ChainReactionAIGame.skipButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/skip.jpg"))));
 		ChainReactionAIGame.skipPressedButtonDraw = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/skipPressed.png"))));
-		ChainReactionAIGame.muteActivateButton = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/audio49-3.png"))));
-		ChainReactionAIGame.muteInactivateButton = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/volume47-3.png"))));
+		ChainReactionAIGame.muteActivateButton = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/volume51.png"))));
+		ChainReactionAIGame.muteInactivateButton = (Drawable)(new TextureRegionDrawable(new TextureRegion(new Texture("buttons/volume47-4.png"))));
 
 		
 		// Loading game background image
