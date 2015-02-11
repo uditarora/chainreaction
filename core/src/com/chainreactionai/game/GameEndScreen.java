@@ -56,7 +56,7 @@ public class GameEndScreen implements Screen {
 	private ArrayList<Integer> difficultyLevelList = new ArrayList<Integer>();
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private ImageButton buttonPlayAgain, buttonNewGame, buttonExit, buttonAchievements;
+	private ImageButton buttonPlayAgain, buttonNewGame, buttonExit, buttonAchievements, buttonLeaderboard;
 	private int winningPlayer, numMovesPlayed;
 	private Label title;
 	private Color[] colors;
@@ -131,16 +131,19 @@ public class GameEndScreen implements Screen {
 		// The first appear on top, the last at the bottom.
 		// Initialize and add the winning quote to the Table
 		title = new Label("Player " + String.valueOf(winningPlayer + 1) + " has won the game after " + numMovesPlayed + " moves!", skin);
-		table.add(title).padBottom(40).row();
+		title.setFontScale((float)ChainReactionAIGame.HEIGHT/HEIGHT_SCREEN);
+		table.add(title).padBottom(30*(float)ChainReactionAIGame.HEIGHT/HEIGHT_SCREEN).row();
 		// Add the PlayAgain and Exit buttons to the Table.
 		buttonPlayAgain = new ImageButton(ChainReactionAIGame.playAgainButtonDraw, ChainReactionAIGame.playAgainPressedButtonDraw);
 		buttonNewGame = new ImageButton(ChainReactionAIGame.newGameButtonDraw, ChainReactionAIGame.newGamePressedButtonDraw);
 		buttonExit = new ImageButton(ChainReactionAIGame.exitButtonDraw, ChainReactionAIGame.exitPressedButtonDraw);
 		buttonAchievements = new ImageButton(ChainReactionAIGame.achievementsButtonDraw, ChainReactionAIGame.achievementsPressedButtonDraw);
-		table.add(buttonPlayAgain).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		table.add(buttonNewGame).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		table.add(buttonAchievements).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(20).row();
-		table.add(buttonExit).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+		buttonLeaderboard = new ImageButton(ChainReactionAIGame.leaderboardButtonDraw, ChainReactionAIGame.leaderboardPressedButtonDraw);
+		table.add(buttonPlayAgain).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(10).row();
+		table.add(buttonNewGame).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(10).row();
+		table.add(buttonAchievements).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(10).row();
+		table.add(buttonLeaderboard).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(10).row();
+		table.add(buttonExit).size(WIDTH_BUTTONS*widthUpscaleFactor, HEIGHT_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 		table.setFillParent(true);
 		// Add table to the stage.
 		img.setFillParent(true);

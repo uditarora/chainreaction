@@ -198,7 +198,7 @@ public class GameRulesScreen implements Screen {
         winAdjoiningRectAfterSplitWaitTime = 0;
         // Initializing and adding the rules to Table.
         rulesHeading = new Label("GAME RULES", ChainReactionAIGame.skin);
-        rulesHeading.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+        rulesHeading.setFontScale((float)(heightUpscaleFactor));
 		rulesOne = new Label("There's only one rule for the game - Eliminate your "
 				+ "opponent's atoms! Players take turns to place "
 				+ "their atoms on a square. If a square reaches "
@@ -223,18 +223,18 @@ public class GameRulesScreen implements Screen {
 				+ "occupy that cell and your new atom gets added to the previously "
 				+ "existing atoms present in that cell. Click on "
 				+ "the two images below to see it in action.", skin);
-		rulesOne.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+		rulesOne.setFontScale((float)(heightUpscaleFactor));
 		rulesOne.setWrap(true);
-		rulesTwo.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+		rulesTwo.setFontScale((float)(heightUpscaleFactor));
 		rulesTwo.setWrap(true);
-		rulesThree.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+		rulesThree.setFontScale((float)(heightUpscaleFactor));
 		rulesThree.setWrap(true);
-		rulesFour.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+		rulesFour.setFontScale((float)(heightUpscaleFactor));
 		rulesFour.setWrap(true);
-		rulesFive.setFontScale((float)((1+(heightUpscaleFactor-1)/2)));
+		rulesFive.setFontScale((float)(heightUpscaleFactor));
 		rulesFive.setWrap(true);
 		if (textChoice == 1) {
-			table.add(rulesHeading).padBottom(10).width(300).row();
+			table.add(rulesHeading).padBottom(10).row();
 			table.add(rulesOne).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
 		}
 		else if (textChoice == 2) {
