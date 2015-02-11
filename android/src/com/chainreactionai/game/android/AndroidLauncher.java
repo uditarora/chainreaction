@@ -162,6 +162,7 @@ public class AndroidLauncher extends AndroidApplication implements
 				Games.Achievements.getAchievementsIntent(_gameHelper
 						.getApiClient()), REQUEST_ACHIEVEMENTS);
 		else {
+			signIn();
 			// Maybe sign in here then redirect to showing scores?
 		}
 	}
