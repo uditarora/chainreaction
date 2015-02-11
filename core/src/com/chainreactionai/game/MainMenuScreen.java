@@ -151,31 +151,35 @@ public class MainMenuScreen implements Screen {
         //title.setFontScale((1+(heightUpscaleFactor-1)/2));
 		//table.add(title).padBottom(40).row();
         logo = new ImageButton(ChainReactionAIGame.logoDraw);
+        logo.getImageCell().expand().fill();
         table.add(logo).size(WIDTH_LOGO*widthUpscaleFactor, HEIGHT_LOGO*widthUpscaleFactor).padBottom(20).row();
 		buttonPlay = new ImageButton(ChainReactionAIGame.playButtonDraw, ChainReactionAIGame.playPressedButtonDraw);
+		buttonPlay.getImageCell().expand().fill();
 		table.add(buttonPlay).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 		if (!ChainReactionAIGame.GRAYED_OUT)
 			buttonRules = new ImageButton(ChainReactionAIGame.rulesButtonDraw, ChainReactionAIGame.rulesPressedButtonDraw);
 		else
 			buttonRules = new ImageButton(ChainReactionAIGame.rulesGrayButtonDraw);
+		buttonRules.getImageCell().expand().fill();
 		table.add(buttonRules).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 		if (!ChainReactionAIGame.GRAYED_OUT)
 			buttonTutorial = new ImageButton(ChainReactionAIGame.tutorialButtonDraw, ChainReactionAIGame.tutorialPressedButtonDraw);
 		else
 			buttonTutorial = new ImageButton(ChainReactionAIGame.tutorialGrayButtonDraw);
+		buttonTutorial.getImageCell().expand().fill();
 		table.add(buttonTutorial).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 		if (!ChainReactionAIGame.GRAYED_OUT)
 			buttonLeaderboard = new ImageButton(ChainReactionAIGame.leaderboardButtonDraw, ChainReactionAIGame.leaderboardPressedButtonDraw);
 		else
 			buttonLeaderboard = new ImageButton(ChainReactionAIGame.leaderboardGrayButtonDraw);
+		buttonLeaderboard.getImageCell().expand().fill();
 		table.add(buttonLeaderboard).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 		if (!ChainReactionAIGame.GRAYED_OUT)
 			buttonAchievements = new ImageButton(ChainReactionAIGame.achievementsButtonDraw, ChainReactionAIGame.achievementsPressedButtonDraw);
 		else
 			buttonAchievements = new ImageButton(ChainReactionAIGame.achievementsGrayButtonDraw);
 		
-		
-		
+		buttonAchievements.getImageCell().expand().fill();
 		table.add(buttonAchievements).size(WIDTH_MAIN_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_MAIN_MENU_BUTTONS*widthUpscaleFactor).row();
 		table.setFillParent(true);
 		// Adding the table to stage.

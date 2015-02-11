@@ -180,6 +180,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 			if (i != 0) {
 				tempButton = new ImageButton(ChainReactionAIGame.unpressedCpuButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw);
 				tempButton.setChecked(false);
+				tempButton.getImageCell().expand().fill();
 			}
 			userSelectButtons.add(tempButton);
 			userSelectIsHuman.add(tempButton.isChecked());
@@ -216,6 +217,7 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 		}
 		// Creating and adding the submit button to the Table.
 		submitButton = new ImageButton(ChainReactionAIGame.submitButtonDraw, ChainReactionAIGame.submitPressedButtonDraw);
+		submitButton.getImageCell().expand().fill();
 		table.add(submitButton).size(WIDTH_SUBMIT_BUTTON*widthUpscaleFactor, HEIGHT_SUBMIT_BUTTON*widthUpscaleFactor).row();
 		// Scroll pane consisting of the Table.
 		scroll = new ScrollPane(table);
