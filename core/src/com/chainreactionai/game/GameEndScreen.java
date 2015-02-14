@@ -176,8 +176,13 @@ public class GameEndScreen implements Screen {
 		buttonAchievements.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				if (ChainReactionAIGame.googleServices.isSignedIn())
-					ChainReactionAIGame.googleServices.showAchievement();
+				ChainReactionAIGame.googleServices.showAchievement();
+			}
+		});
+		buttonLeaderboard.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				ChainReactionAIGame.googleServices.showScores();
 			}
 		});
 		buttonExit.addListener(new ClickListener() {

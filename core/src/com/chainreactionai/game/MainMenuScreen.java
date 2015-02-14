@@ -53,7 +53,7 @@ public class MainMenuScreen implements Screen {
 	private float widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private ImageButton buttonPlay, buttonRules, buttonTutorial, buttonLeaderboard, buttonAchievements, logo, buttonMute;
+	private ImageButton buttonPlay, buttonRules, buttonTutorial, buttonLeaderboard, buttonAchievements, logo;
 	private Color[] colors;
 	private boolean animationInit = false;
 	// Trying 3D Graphics
@@ -233,8 +233,7 @@ public class MainMenuScreen implements Screen {
 			buttonAchievements.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
-					if (ChainReactionAIGame.googleServices.isSignedIn())
-						ChainReactionAIGame.googleServices.showAchievement();
+					ChainReactionAIGame.googleServices.showAchievement();
 				}
 			});
 		}
