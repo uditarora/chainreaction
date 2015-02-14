@@ -30,10 +30,14 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 
@@ -60,8 +64,10 @@ public class MainGameScreenChar implements Screen {
 	final private int HEIGHT_SCREEN = (int)((GRID_SIZE_Y * HEIGHT_RECTANGLE) + PAD_BOTTOM_PAUSE_BUTTON + HEIGHT_PAUSE_BUTTON + PAD_TOP_PAUSE_BUTTON) + 1;
 	final private int HEIGHT_PAUSE_MENU_BUTTONS = 60;
 	final private int WIDTH_PAUSE_MENU_BUTTONS = 275;
-	final private int HEIGHT_MUTE = 64;
-	final private int WIDTH_MUTE = 64;
+	final private int WIDTH_SLIDER = 180;
+	final private int HEIGHT_KNOB = 20;
+	final private int HEIGHT_MUTE = 50;
+	final private int WIDTH_MUTE = 50;
 	final private int MAX_NUM_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;
 	final private int MAX_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MAX_Z_DIST_OF_NEW_BALLS;
@@ -88,6 +94,7 @@ public class MainGameScreenChar implements Screen {
 	private Stage stage = new Stage();
 	private Table table = new Table();
 	private ImageButton resumeButton, exitButton, newGameButton, mainMenuButton, muteActiveButton, muteInactiveButton, muteButton;
+	private Slider animationSpeedSlider;
 	private Position highlightPos = new Position(-1, -1);
 	private GameSolverChar solver;
 	private long prevTime, newTime;
@@ -201,8 +208,8 @@ public class MainGameScreenChar implements Screen {
 		colors = new Color[MAX_NUM_PLAYERS];
 		colors[0] = Color.WHITE;
 		colors[1] = Color.BLUE;
-		colors[2] = Color.MAROON;
-		colors[3] = Color.ORANGE;
+		colors[2] = Color.YELLOW;
+		colors[3] = Color.RED;
 		colors[4] = Color.PURPLE;
 		colors[5] = Color.GREEN;
 		rand = new Random();
@@ -243,11 +250,29 @@ public class MainGameScreenChar implements Screen {
 		newGameButton.getImageCell().expand().fill();
 		mainMenuButton.getImageCell().expand().fill();
 		exitButton.getImageCell().expand().fill();
-		table.add(muteButton).size(WIDTH_MUTE*widthUpscaleFactor, HEIGHT_MUTE*widthUpscaleFactor).padLeft(ChainReactionAIGame.WIDTH - 100*widthUpscaleFactor).row();
-		table.add(resumeButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
-		table.add(newGameButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
-		table.add(mainMenuButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
-		table.add(exitButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).row();
+		
+		// Slider to change animation speed
+		animationSpeedSlider = new Slider(0, 200, 20, false, ChainReactionAIGame.sliderSkin);
+		animationSpeedSlider.getStyle().knob.setMinHeight(HEIGHT_KNOB*heightUpscaleFactor);
+		animationSpeedSlider.setValue(stats.getInteger("animationSpeed", 0));
+		Label label = new Label("Animation Speed", ChainReactionAIGame.skin);
+		label.setFontScale(heightUpscaleFactor/2);
+		table.add(label).align(Align.center).width(WIDTH_SLIDER*widthUpscaleFactor);
+		table.add(muteButton).size(WIDTH_MUTE*widthUpscaleFactor, HEIGHT_MUTE*widthUpscaleFactor).row();
+		table.add(animationSpeedSlider).width(WIDTH_SLIDER*widthUpscaleFactor).padBottom(20*widthUpscaleFactor).align(Align.center).row();
+		// To allow the sliders to be dragged properly
+		InputListener stopTouchDown = new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				event.stop();
+			    return false;
+			}
+		};
+		animationSpeedSlider.addListener(stopTouchDown);
+
+		table.add(resumeButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).padLeft(45*widthUpscaleFactor).row();
+		table.add(newGameButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).padLeft(45*widthUpscaleFactor).row();
+		table.add(mainMenuButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).padLeft(45*widthUpscaleFactor).row();
+		table.add(exitButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).padLeft(45*widthUpscaleFactor).row();
 
 		table.setFillParent(true);
 		
@@ -401,7 +426,7 @@ public class MainGameScreenChar implements Screen {
 					// Check if current player is CPU and play its move
 					if (isCPU[currentPlayer] && !gameOver) {
 						try {
-							Thread.sleep(261);
+							Thread.sleep((long) (261 - (animationSpeedSlider.getValue())));
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -451,7 +476,7 @@ public class MainGameScreenChar implements Screen {
 				}
 			} else {
 				try {
-					Thread.sleep(150);
+					Thread.sleep((long) (200 - (animationSpeedSlider.getValue()*0.6)));
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -1030,6 +1055,8 @@ public class MainGameScreenChar implements Screen {
 	// Sets game state to 0 thereby resuming the game.
 	@Override
 	public void resume() {
+		stats.putInteger("animationSpeed", (int)animationSpeedSlider.getValue());
+		stats.flush();
 		setGameState(0);
 		Gdx.input.setInputProcessor(inputProcessor);
 	}
