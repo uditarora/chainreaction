@@ -187,7 +187,7 @@ public class GameEndScreen implements Screen {
 			}
 		});
 		Gdx.input.setInputProcessor(stage);
-		ChainReactionAIGame.googleServices.showScores();
+//		ChainReactionAIGame.googleServices.showScores();
 	}
 
 	@Override

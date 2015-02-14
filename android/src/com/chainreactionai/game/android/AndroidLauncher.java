@@ -170,12 +170,14 @@ public class AndroidLauncher extends AndroidApplication implements
 
 	@Override
 	public void getAchievement(String achievementCode) {
-		Games.Achievements.unlock(_gameHelper.getApiClient(), achievementCode);
+		if (isSignedIn() == true)
+			Games.Achievements.unlock(_gameHelper.getApiClient(), achievementCode);
 	}
 
 	@Override
 	public void getIncAchievement(String achievementCode, int inc) {
-		Games.Achievements.increment(_gameHelper.getApiClient(),
+		if (isSignedIn() == true)
+			Games.Achievements.increment(_gameHelper.getApiClient(),
 				achievementCode, inc);
 	}
 
