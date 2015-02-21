@@ -46,28 +46,14 @@ public class TutorialTextScreen implements Screen {
 	final private int WIDTH_ANIMATION_BUTTONS = 135;
 	final private int HEIGHT_ANIMATION_BUTTONS = 45;
 	private float heightUpscaleFactor, widthUpscaleFactor;
-	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;
-	final private int MAX_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MAX_Z_DIST_OF_NEW_BALLS;
-	final private int MIN_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MIN_Z_DIST_OF_NEW_BALLS;
-	final private int MAX_SPEED_OF_BALLS = ChainReactionAIGame.MAX_SPEED_OF_BALLS;
-	final private int MIN_SPEED_OF_BALLS = ChainReactionAIGame.MIN_SPEED_OF_BALLS;
-	final private int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = ChainReactionAIGame.MAX_NUMBER_OF_BALLS_AT_A_MOMENT;
-	private int numBalls;
 	private Stage stage = new Stage();
 	private Table table = new Table();
 	private int MAX_NUMBER_OF_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	private ImageButton nextButton, skipButton;
 	private Label title, titleFollowup;
-	private Color[] colors;
-	private boolean animationInit = false;
 	private int textChoice, numPlayers, difficultyLevels;
 	// Trying 3D Graphics
-	private Model[] models;
-	private ModelInstance[] instances;
-	private ModelBatch modelBatch;
 	private PerspectiveCamera cam;
-	private Environment environment;
-	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
 	private Image img = new Image(ChainReactionAIGame.texture);
 	private ArrayList<Boolean> isCPU = new ArrayList<Boolean>();
@@ -89,15 +75,6 @@ public class TutorialTextScreen implements Screen {
 		for (int i = 0; i < numPlayers; i += 1) {
 			this.difficultyLevelList.add(difficultyLevelList.get(i));
 		}
-		// Initialize ArrayLists
-		xVal = new ArrayList<Integer>();
-		yVal = new ArrayList<Integer>();
-		color = new ArrayList<Integer>();
-		startZPosition = new ArrayList<Integer>();
-		distNow = new ArrayList<Integer>();
-		speed = new ArrayList<Integer>();
-		numBalls = 0;
-		animationInit = true;
 		create();
 	}
 	
@@ -108,43 +85,16 @@ public class TutorialTextScreen implements Screen {
 		this.numPlayers = 0;
 		this.difficultyLevels = 0;
 		// Initialize ArrayLists
-		xVal = new ArrayList<Integer>();
-		yVal = new ArrayList<Integer>();
-		color = new ArrayList<Integer>();
-		startZPosition = new ArrayList<Integer>();
-		distNow = new ArrayList<Integer>();
-		speed = new ArrayList<Integer>();
-		numBalls = 0;
-		animationInit = true;
 		create();
 	}
 	
-	public TutorialTextScreen(ChainReactionAIGame game, int numPlayers, int numDifficultyLevels, int textChoice, ArrayList<Integer> xVal, ArrayList<Integer> yVal, ArrayList<Integer> color, ArrayList<Integer> startZPosition, ArrayList<Integer> distNow, ArrayList<Integer> speed, int numBalls) {
-		int i;
+	public TutorialTextScreen(ChainReactionAIGame game, int numPlayers, int numDifficultyLevels, int textChoice) {
 		ChainReactionAIGame.currentScreen = 1;
 		myGame = game;
 		this.textChoice = textChoice;
 		this.numPlayers = numPlayers;
 		this.difficultyLevels = numDifficultyLevels;
-		// Initialize ArrayLists
-		this.xVal = new ArrayList<Integer>();
-		this.yVal = new ArrayList<Integer>();
-		this.color = new ArrayList<Integer>();
-		this.startZPosition = new ArrayList<Integer>();
-		this.distNow = new ArrayList<Integer>();
-		this.speed = new ArrayList<Integer>();
-		this.numBalls = numBalls;
-		// Copy ArrayLists
-		for (i = 0; i < xVal.size(); i += 1) {
-			this.xVal.add(xVal.get(i));
-			this.yVal.add(yVal.get(i));
-			this.color.add(color.get(i));
-			this.startZPosition.add(startZPosition.get(i));
-			this.distNow.add(distNow.get(i));
-			this.speed.add(speed.get(i));
-		}
 		create();
-		animationInit = true;
 	}
 	
 	// Initialization function
@@ -156,14 +106,6 @@ public class TutorialTextScreen implements Screen {
 		// upscaled or downscaled according to the Screen Dimensions
 		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
 		widthUpscaleFactor = ((float)(ChainReactionAIGame.WIDTH))/WIDTH_SCREEN;
-		// Initialize colors
-		colors = new Color[MAX_NUMBER_OF_PLAYERS];
-		colors[0] = Color.WHITE;
-		colors[1] = Color.BLUE;
-		colors[2] = Color.MAROON;
-		colors[3] = Color.ORANGE;
-		colors[4] = Color.PURPLE;
-		colors[5] = Color.GREEN;
 		// Trying 3D graphics
 		cam = new PerspectiveCamera(30, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		float camZ = ((float)1440*720/1240)*((float)Gdx.graphics.getHeight()/Gdx.graphics.getWidth());
@@ -172,19 +114,7 @@ public class TutorialTextScreen implements Screen {
 	    cam.near = 1f;
 	    cam.far = 4000f;
 	    cam.update();
-	    // Building models for spheres of different colors
-	    ModelBuilder modelBuilder = new ModelBuilder();
-		models = new Model[MAX_NUMBER_OF_PLAYERS];
-		instances = new ModelInstance[MAX_NUMBER_OF_PLAYERS];
-		for (int i = 0; i < MAX_NUMBER_OF_PLAYERS; i += 1) {
-			models[i] = modelBuilder.createSphere(25f, 25f, 25f, 30, 30, new Material(ColorAttribute.createDiffuse(colors[i])), Usage.Position | Usage.Normal | Usage.TextureCoordinates);
-			instances[i] = new ModelInstance(models[i]);
-		}
-		modelBatch = new ModelBatch();
-        environment = new Environment();
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
-        rand = new Random();
+	    rand = new Random();
 		// Initializing and adding the title to Table.
         humanCpuToggleButton = new ImageButton(ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw);
         humanCpuToggleButton.getImageCell().expand().fill();
@@ -286,12 +216,6 @@ public class TutorialTextScreen implements Screen {
 	    batch.begin();
 	    batch.draw(ChainReactionAIGame.texture, 0, 0, WIDTH_SCREEN, HEIGHT_SCREEN);
 	    batch.end();
-		if (animationInit) {
-			modelBatch.begin(cam);
-			createAnimation();
-			drawAnimation();
-			modelBatch.end();
-		}
 		if (textChoice == 3) {
 			if (humanCpuToggleButton.isChecked()) {
 				ImageButtonStyle temp = new ImageButtonStyle(ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw, ChainReactionAIGame.unpressedHumanButtonDraw);
@@ -304,70 +228,10 @@ public class TutorialTextScreen implements Screen {
 		stage.act(delta);
 		stage.draw();
 		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
-			myGame.setScreen(new MainMenuScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+			myGame.setScreen(new MainMenuScreen(myGame));
 		}
 	}
 	
-	private void createAnimation() {
-		int newOrNot, xCoord, yCoord, zCoord, speedOfBall;
-		newOrNot = rand.nextInt(INVERSE_CHANCES_OF_NEW_BALLS);
-		if (numBalls == 0) {
-			clearBallsList();
-		}
-		if (xVal.size() > ChainReactionAIGame.MAX_ARRAY_SIZE)
-			return;
-		if ((newOrNot == 0 || (numBalls == 0)) && numBalls < MAX_NUMBER_OF_BALLS_AT_A_MOMENT) {
-			zCoord = rand.nextInt(MAX_Z_DIST_OF_NEW_BALLS);
-			if (zCoord < MIN_Z_DIST_OF_NEW_BALLS) {
-				zCoord += MIN_Z_DIST_OF_NEW_BALLS;
-			}
-			startZPosition.add(zCoord);
-			distNow.add(0);
-			xCoord = rand.nextInt(WIDTH_SCREEN);
-			xVal.add(xCoord);
-			yCoord = rand.nextInt(HEIGHT_SCREEN);
-			yVal.add(yCoord);
-			color.add(rand.nextInt(MAX_NUMBER_OF_PLAYERS));
-			speedOfBall = rand.nextInt(MAX_SPEED_OF_BALLS) + 1;
-			if (speedOfBall < MIN_SPEED_OF_BALLS) {
-				speedOfBall += MIN_SPEED_OF_BALLS;
-			}
-			speed.add(speedOfBall);
-			numBalls += 1;
-		}
-	}
-	
-	private void drawAnimation() {
-		int xCoord, yCoord, zCoord;
-		for (int i = 0; i < startZPosition.size(); i += 1) {
-			xCoord = xVal.get(i);
-			if (xCoord != -1) {
-				yCoord = yVal.get(i);
-				zCoord = -startZPosition.get(i) + distNow.get(i);
-				instances[color.get(i)].transform.setTranslation(xCoord, yCoord, zCoord);
-				modelBatch.render(instances[color.get(i)], environment);
-				distNow.set(i, distNow.get(i) + speed.get(i));
-				if (distNow.get(i) - startZPosition.get(i) > 0) {
-					deleteBallFromList(i);
-				}
-			}
-		}
-	}
-	
-	private void deleteBallFromList(int index) {
-		xVal.set(index, -1);
-		numBalls -= 1;
-	}
-	
-	private void clearBallsList () {
-		xVal.clear();
-		yVal.clear();
-		color.clear();
-		startZPosition.clear();
-		distNow.clear();
-		speed.clear();
-	}
-
 	@Override
 	public void resize(int width, int height) {
 		//viewport.update(width, height);
