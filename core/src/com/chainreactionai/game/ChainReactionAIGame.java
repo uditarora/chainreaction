@@ -14,16 +14,7 @@ public class ChainReactionAIGame extends Game {
 	public static int HEIGHT;
 	public static int currentScreen;
 	public static int MAX_NUMBER_PLAYERS;
-	public static boolean muteStatus = false;
-	
-	// For background animation
-	public static int INVERSE_CHANCES_OF_NEW_BALLS = 40;
-	public static int MAX_Z_DIST_OF_NEW_BALLS = 900;
-	public static int MIN_Z_DIST_OF_NEW_BALLS = 300;
-	public static int MAX_SPEED_OF_BALLS = 8;
-	public static int MIN_SPEED_OF_BALLS = 2;
-	public static int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = 10;
-	public static int MAX_ARRAY_SIZE = 250;
+	public static boolean muteStatus = false;	
 	public static Texture texture, mainGameScreenTexture, textureGray, splashTexture;
 	public static Skin skin, sliderSkin;
 	
