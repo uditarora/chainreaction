@@ -710,6 +710,9 @@ public class MainGameScreenChar implements Screen {
 		for (int counter = 1; counter <= (WIDTH_INNER_RECTANGLE - 1); counter += 1) {
 			shapeRenderer.line(x + counter, y, x + counter, y + HEIGHT_INNER_RECTANGLE);
 		}
+		for (int counter = 1; counter <= (HEIGHT_INNER_RECTANGLE - 1); counter += 1) {
+			shapeRenderer.line(x, y + counter, x + WIDTH_INNER_RECTANGLE, y + counter);
+		}
 	}
 	
 	private void drawBalls (float x, float y, int numAtomsToDraw, int rectangleWinnerToDraw, int coordX, int coordY) {
