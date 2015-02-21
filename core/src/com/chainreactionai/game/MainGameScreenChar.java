@@ -969,7 +969,7 @@ public class MainGameScreenChar implements Screen {
 		
 		if(flag==1)
 		{
-			int overallScore = stats.getInteger("OverallScore", 0) + (10*level) + ((100 - numberOfMovesPlayed)*level/2);
+			int overallScore = stats.getInteger("OverallScore", 0) + (level*level) + ((100 - numberOfMovesPlayed)*level*level/20);
 			stats.putInteger("OverallScore", overallScore);
 			ChainReactionAIGame.googleServices.submitScore(overallScore);
 		}
