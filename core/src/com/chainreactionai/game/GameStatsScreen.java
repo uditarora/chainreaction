@@ -16,7 +16,6 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -31,7 +30,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -73,8 +71,6 @@ public class GameStatsScreen implements Screen {
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
 	private ImageButton backButton = new ImageButton(ChainReactionAIGame.backButtonDraw, ChainReactionAIGame.backPressedButtonDraw);
-	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
-			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private Image img = new Image(ChainReactionAIGame.texture);
 	
 	// Constructor
@@ -174,8 +170,8 @@ public class GameStatsScreen implements Screen {
 			keyLost = "lostLevel"+i;
 			numLost = stats.getInteger(keyLost, 0);
 			numWon = stats.getInteger(keyWon, 0);
-			stat = new Label("Level "+i+"- Won: "+numWon+", Lost: "+numLost, skin);
-			stat.setFontScale((float)heightUpscaleFactor);
+			stat = new Label("Level "+i+"- Won: "+numWon+", Lost: "+numLost, ChainReactionAIGame.skin);
+			stat.setFontScale((float)heightUpscaleFactor/2);
 			table.add(stat).padLeft(10).padRight(10).padBottom(10).row();
 		}
 		// Adds the backButton to the Table.

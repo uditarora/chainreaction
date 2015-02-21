@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -29,7 +28,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -72,8 +70,6 @@ public class NumPlayersScreen implements Screen {
 	private Environment environment;
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
-	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
-			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private Image img = new Image(ChainReactionAIGame.texture);
 	
 	public NumPlayersScreen(ChainReactionAIGame game) {
@@ -155,8 +151,8 @@ public class NumPlayersScreen implements Screen {
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         rand = new Random();
 		// Initializing and adding the title to Table.
-		title = new Label("Choose number of opponents", skin);
-		title.setFontScale(heightUpscaleFactor);
+		title = new Label("Choose number of opponents", ChainReactionAIGame.skin);
+		title.setFontScale(heightUpscaleFactor/2);
 		table.add(title).padBottom(10).row();
 		// Initializing the Slider
 		numPlayerSlider = new Slider(1, MAX_NUMBER_OF_PLAYERS-1, 1, false, ChainReactionAIGame.sliderSkin);
@@ -172,8 +168,8 @@ public class NumPlayersScreen implements Screen {
 		};
 		numPlayerSlider.addListener(stopTouchDown);
 		// Label Initialize
-		numPlayerLabel = new Label("1", skin);
-		numPlayerLabel.setFontScale(heightUpscaleFactor);
+		numPlayerLabel = new Label("1", ChainReactionAIGame.skin);
+		numPlayerLabel.setFontScale(heightUpscaleFactor/2);
 		table.add(numPlayerLabel).padBottom(7).padTop(3).row();
 		// Initializing and adding the Submit Button to Table.
 		submitButton = new ImageButton(ChainReactionAIGame.submitButtonDraw, ChainReactionAIGame.submitPressedButtonDraw);
