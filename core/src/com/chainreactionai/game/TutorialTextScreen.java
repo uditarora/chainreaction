@@ -86,6 +86,7 @@ public class TutorialTextScreen implements Screen {
 	
 	// Initialization function
 	private void create() {
+		stats = Gdx.app.getPreferences("chainReactionStatistics");
 		batch = new SpriteBatch();
 		// The elements are displayed in the order you add them.
 		// The first appear on top, the last at the bottom.
@@ -126,7 +127,6 @@ public class TutorialTextScreen implements Screen {
 					+ "CPU bots, or have a mix of both!\nIf you are new to the Chain Reaction concept you can check out the rules by clicking the button underneath.\n\nHave fun, and may the force be with you!", ChainReactionAIGame.skin);
 			// Set showTutorial flag to false
 			ChainReactionAIGame.GRAYED_OUT = false;
-			stats = Gdx.app.getPreferences("chainReactionStatistics");
 			stats.putBoolean("showTutorial", false);
 			stats.flush();
 		}
@@ -227,6 +227,8 @@ public class TutorialTextScreen implements Screen {
 		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
 			if (textChoice == 1) {
 				ChainReactionAIGame.GRAYED_OUT = false;
+				stats.putBoolean("showTutorial", false);
+				stats.flush();
 				myGame.setScreen(new MainMenuScreen(myGame));
 			} else if (textChoice == 2) {
 				myGame.setScreen(new MainMenuScreen(myGame));
