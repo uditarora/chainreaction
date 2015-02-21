@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -28,10 +27,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
@@ -71,8 +69,6 @@ public class TutorialTextScreen implements Screen {
 	private Environment environment;
 	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
 	private Random rand;
-	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
-			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private Image img = new Image(ChainReactionAIGame.texture);
 	private ArrayList<Boolean> isCPU = new ArrayList<Boolean>();
 	private ArrayList<Integer> difficultyLevelList = new ArrayList<Integer>();
@@ -195,21 +191,21 @@ public class TutorialTextScreen implements Screen {
 		if (textChoice == 1) {
 			title = new Label("Here for the first time? "
 					+ "Let's get you familiar with the interface of the game. "
-					+ "You can invoke this tutorial again anytime, from the main menu.", skin);
+					+ "You can invoke this tutorial again anytime, from the main menu.", ChainReactionAIGame.skin);
 		} else if (textChoice == 2) {
 			title = new Label("Now you will choose the number of opponents. You can select "
-					+ "up to 5 opponents using the slider.", skin);
+					+ "up to 5 opponents using the slider.", ChainReactionAIGame.skin);
 		} else if (textChoice == 3) {
 			title = new Label("Next, for each player you can toggle whether the player "
-					+ "is a CPU bot or a human player using the given red button.", skin);
+					+ "is a CPU bot or a human player using the given red button.", ChainReactionAIGame.skin);
 			titleFollowup = new Label("You can also vary the difficulty level of each CPU"
-					+ " bot using the sliders alongside.", skin);
+					+ " bot using the sliders alongside.", ChainReactionAIGame.skin);
 			titleFollowup.setWrap(true);
-			titleFollowup.setFontScale(heightUpscaleFactor);
+			titleFollowup.setFontScale(heightUpscaleFactor/2);
 		} else if (textChoice == 4) {
 			title = new Label("Now you're ready to rumble. You can enjoy this game against your friends by "
 					+ "choosing all human players, go solo against up to 5 "
-					+ "CPU bots, or have a mix of both!\n\nHave fun, and may the force be with you!", skin);
+					+ "CPU bots, or have a mix of both!\n\nHave fun, and may the force be with you!", ChainReactionAIGame.skin);
 			// Set showTutorial flag to false
 			ChainReactionAIGame.GRAYED_OUT = false;
 			stats = Gdx.app.getPreferences("chainReactionStatistics");
@@ -217,7 +213,7 @@ public class TutorialTextScreen implements Screen {
 			stats.flush();
 		}
 		title.setWrap(true);
-		title.setFontScale(heightUpscaleFactor);
+		title.setFontScale(heightUpscaleFactor/2);
 		table.add(title).width(420*widthUpscaleFactor).padBottom(20*heightUpscaleFactor).row();
 		if (textChoice == 3) {
 			table.add(humanCpuToggleButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();

@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
@@ -27,12 +26,11 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -89,8 +87,6 @@ public class GameRulesScreen implements Screen {
 	private ImageButton backButtonImg = new ImageButton(ChainReactionAIGame.mainMenuButtonDraw, ChainReactionAIGame.mainMenuPressedButtonDraw),
 			nextButtonImg = new ImageButton(ChainReactionAIGame.nextButtonDraw, ChainReactionAIGame.nextPressedButtonDraw);
 	private ImageButton cornerSplitButton, middleSplitButton, edgeSplitButton, recursivelySplitButton, winAdjoiningRectSplitButton;
-	private Skin skin = new Skin(Gdx.files.internal("data/Holo-dark-mdpi.json"),
-			new TextureAtlas(Gdx.files.internal("data/Holo-dark-mdpi.atlas")));
 	private Image img = new Image(ChainReactionAIGame.texture);
 	
 	// Constructor
@@ -215,29 +211,29 @@ public class GameRulesScreen implements Screen {
 				+ "or one occupied by atoms of their own colour.\n\n"
 				+ "Let's walk you through an interactive tutorial to learn the rules "
 				+ "of the game. Click on the cells pointed at by the arrows "
-				+ "to understand the way that the game works.\n", skin);
+				+ "to understand the way that the game works.\n", ChainReactionAIGame.skin);
 		rulesTwo = new Label("Critical mass is 2 for the cells in the "
 				+ "corners ie. the atoms will split in two available "
-				+ "horizontal and vertical directions as shown in the image below.", skin);
+				+ "horizontal and vertical directions as shown in the image below.", ChainReactionAIGame.skin);
 		rulesThree = new Label("Critical mass is 3 for the cells along "
 				+ "the edges ie. the atoms will split and one atom each "
 				+ "will be placed in the 3 available horizontal and vertical "
-				+ "directions as shown in the image below.", skin);
+				+ "directions as shown in the image below.", ChainReactionAIGame.skin);
 		rulesFour = new Label("Similarly, critical mass is 4 for the rest of "
-				+ "the cells of the grid as shown in the image below. ", skin);
+				+ "the cells of the grid as shown in the image below. ", ChainReactionAIGame.skin);
 		rulesFive = new Label("When your atom reaches a given cell on splitting, you "
 				+ "occupy that cell and your new atom gets added to the previously "
 				+ "existing atoms present in that cell. Click on "
-				+ "the two images below to see it in action.", skin);
-		rulesOne.setFontScale((float)(heightUpscaleFactor));
+				+ "the two images below to see it in action.", ChainReactionAIGame.skin);
+		rulesOne.setFontScale((float)heightUpscaleFactor/2);
 		rulesOne.setWrap(true);
-		rulesTwo.setFontScale((float)(heightUpscaleFactor));
+		rulesTwo.setFontScale((float)heightUpscaleFactor/2);
 		rulesTwo.setWrap(true);
-		rulesThree.setFontScale((float)(heightUpscaleFactor));
+		rulesThree.setFontScale((float)heightUpscaleFactor/2);
 		rulesThree.setWrap(true);
-		rulesFour.setFontScale((float)(heightUpscaleFactor));
+		rulesFour.setFontScale((float)heightUpscaleFactor/2);
 		rulesFour.setWrap(true);
-		rulesFive.setFontScale((float)(heightUpscaleFactor));
+		rulesFive.setFontScale((float)heightUpscaleFactor/2);
 		rulesFive.setWrap(true);
 		if (textChoice == 1) {
 			table.add(rulesHeading).padBottom(10).row();
