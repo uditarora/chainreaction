@@ -88,6 +88,7 @@ public class TutorialTextScreen implements Screen {
 	private void create() {
 		stats = Gdx.app.getPreferences("chainReactionStatistics");
 		batch = new SpriteBatch();
+		Gdx.input.setCatchBackKey(true);
 		// The elements are displayed in the order you add them.
 		// The first appear on top, the last at the bottom.
 		// Up-scale Factors are used to get proper sized buttons

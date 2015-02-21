@@ -161,7 +161,10 @@ public class MainMenuScreen implements Screen {
 		stage.act(delta);
 		stage.draw();
 		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
-			Gdx.app.exit();
+			if (ChainReactionAIGame.GRAYED_OUT == false)
+				Gdx.app.exit();
+			else
+				myGame.setScreen(new TutorialTextScreen(myGame, 1));
 		}
 	}
 	
