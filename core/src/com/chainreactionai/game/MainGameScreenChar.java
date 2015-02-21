@@ -5,7 +5,6 @@ package com.chainreactionai.game;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -69,13 +68,6 @@ public class MainGameScreenChar implements Screen {
 	final private int HEIGHT_MUTE = 50;
 	final private int WIDTH_MUTE = 50;
 	final private int MAX_NUM_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
-	final private int INVERSE_CHANCES_OF_NEW_BALLS = ChainReactionAIGame.INVERSE_CHANCES_OF_NEW_BALLS;
-	final private int MAX_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MAX_Z_DIST_OF_NEW_BALLS;
-	final private int MIN_Z_DIST_OF_NEW_BALLS = ChainReactionAIGame.MIN_Z_DIST_OF_NEW_BALLS;
-	final private int MAX_SPEED_OF_BALLS = ChainReactionAIGame.MAX_SPEED_OF_BALLS;
-	final private int MIN_SPEED_OF_BALLS = ChainReactionAIGame.MIN_SPEED_OF_BALLS;
-	final private int MAX_NUMBER_OF_BALLS_AT_A_MOMENT = ChainReactionAIGame.MAX_NUMBER_OF_BALLS_AT_A_MOMENT;
-	private int numBalls;
 	private int INVERSE_SPEED_OF_BALL_VIBRATION = 28;
 	private int NUMBER_OF_PLAYERS, breakingAway, splittableBreakingAway;
 	private Texture pauseButtonImg = new Texture(Gdx.files.internal("buttons/pause.jpg"));
@@ -107,9 +99,6 @@ public class MainGameScreenChar implements Screen {
 	private ModelBatch modelBatch;
 	private PerspectiveCamera cam;
 	private Environment environment;
-	private ArrayList<Integer> startZPosition, distNow, xVal, yVal, color, speed;
-	private boolean animationInit = false;
-	private Random rand;
 	private Image img;
 	//Sounds
 	private Sound splitSound;
@@ -175,18 +164,9 @@ public class MainGameScreenChar implements Screen {
 			}
 		}
 		
-		// Initialize ArrayLists
-		xVal = new ArrayList<Integer>();
-		yVal = new ArrayList<Integer>();
-		color = new ArrayList<Integer>();
-		startZPosition = new ArrayList<Integer>();
-		distNow = new ArrayList<Integer>();
-		speed = new ArrayList<Integer>();
-		numBalls = 0;
 		this.splitSound = Gdx.audio.newSound(Gdx.files.internal("sounds/balls.mp3"));
 
 		create();
-		animationInit = true;
 	}
 
 	private void create() {
@@ -212,7 +192,6 @@ public class MainGameScreenChar implements Screen {
 		colors[3] = Color.RED;
 		colors[4] = Color.PURPLE;
 		colors[5] = Color.GREEN;
-		rand = new Random();
 		// Up-scale Factors are used to get proper sized buttons
 		// upscaled or downscaled according to the Screen Dimensions
 		heightUpscaleFactor = ((float)(ChainReactionAIGame.HEIGHT))/HEIGHT_SCREEN;
@@ -288,7 +267,7 @@ public class MainGameScreenChar implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				if (numberOfMovesPlayed < 1)
 					ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_like_seriously);
-				myGame.setScreen(new NumPlayersScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+				myGame.setScreen(new NumPlayersScreen(myGame));
 			}
 		});
 		mainMenuButton.addListener(new ClickListener() {
@@ -296,7 +275,7 @@ public class MainGameScreenChar implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				if (numberOfMovesPlayed < 1)
 					ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_like_seriously);
-				myGame.setScreen(new MainMenuScreen(myGame, xVal, yVal, color, startZPosition, distNow, speed, numBalls));
+				myGame.setScreen(new MainMenuScreen(myGame));
 			}
 		});
 		exitButton.addListener(new ClickListener() {
@@ -573,12 +552,6 @@ public class MainGameScreenChar implements Screen {
 	        shapeRenderer.end();		
 		} else {
 			// If the game is paused, add the pause menu to the stage.
-			if (animationInit) {
-				modelBatch.begin(cam);
-				createAnimation();
-				drawAnimation();
-				modelBatch.end();
-			}
 			img.setFillParent(true);
 			stage.addActor(img);
 			stage.addActor(table);
@@ -878,66 +851,6 @@ public class MainGameScreenChar implements Screen {
 		default:
 			return difficultyLevel;				
 		}
-	}
-	
-	private void createAnimation() {
-		int newOrNot, xCoord, yCoord, zCoord, speedOfBall;
-		newOrNot = rand.nextInt(INVERSE_CHANCES_OF_NEW_BALLS);
-		if (numBalls == 0) {
-			clearBallsList();
-		}
-		if (xVal.size() > ChainReactionAIGame.MAX_ARRAY_SIZE)
-			return;
-		if ((newOrNot == 0 || (numBalls == 0)) && numBalls < MAX_NUMBER_OF_BALLS_AT_A_MOMENT) {
-			zCoord = rand.nextInt(MAX_Z_DIST_OF_NEW_BALLS);
-			if (zCoord < MIN_Z_DIST_OF_NEW_BALLS) {
-				zCoord += MIN_Z_DIST_OF_NEW_BALLS;
-			}
-			startZPosition.add(zCoord);
-			distNow.add(0);
-			xCoord = rand.nextInt(WIDTH_SCREEN);
-			xVal.add(xCoord);
-			yCoord = rand.nextInt(HEIGHT_SCREEN);
-			yVal.add(yCoord);
-			color.add(rand.nextInt(MAX_NUM_PLAYERS));
-			speedOfBall = rand.nextInt(MAX_SPEED_OF_BALLS) + 1;
-			if (speedOfBall < MIN_SPEED_OF_BALLS) {
-				speedOfBall += MIN_SPEED_OF_BALLS;
-			}
-			speed.add(speedOfBall);
-			numBalls += 1;
-		}
-	}
-	
-	private void drawAnimation() {
-		int xCoord, yCoord, zCoord;
-		for (int i = 0; i < startZPosition.size(); i += 1) {
-			xCoord = xVal.get(i);
-			if (xCoord != -1) {
-				yCoord = yVal.get(i);
-				zCoord = -startZPosition.get(i) + distNow.get(i);
-				instances[color.get(i)].transform.setTranslation(xCoord, yCoord, zCoord);
-				modelBatch.render(instances[color.get(i)], environment);
-				distNow.set(i, distNow.get(i) + speed.get(i));
-				if (distNow.get(i) - startZPosition.get(i) > 0) {
-					deleteBallFromList(i);
-				}
-			}
-		}
-	}
-	
-	private void deleteBallFromList(int index) {
-		xVal.set(index, -1);
-		numBalls -= 1;
-	}
-	
-	private void clearBallsList () {
-		xVal.clear();
-		yVal.clear();
-		color.clear();
-		startZPosition.clear();
-		distNow.clear();
-		speed.clear();
 	}
 	
 	private void updateStatistics() {
