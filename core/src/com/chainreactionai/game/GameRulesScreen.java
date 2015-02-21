@@ -47,7 +47,7 @@ public class GameRulesScreen implements Screen {
 	private Stage stage = new Stage();
 	private Table table = new Table(), container = new Table();
 	private float heightUpscaleFactor, widthUpscaleFactor;
-	private Label rulesOne, rulesTwo, rulesThree, rulesFour, rulesFive, rulesHeading;
+	private Label rulesOne, rulesTwo, rulesThree, rulesFour, rulesFive, rulesFiveFollowUp, rulesHeading;
 	private int currentImage;
 	private ScrollPane scroll;
 	// Trying 3D Graphics
@@ -56,8 +56,9 @@ public class GameRulesScreen implements Screen {
 					 edgeBeforeSplitButtonDraw, edgeAfterSplitButtonDraw, recursivelyBeforeSplitButtonDraw, recursivelyAfterSplitButtonDraw,
 					 winAdjoiningRectBeforeSplitButtonDraw, winAdjoiningRectAfterSplitButtonDraw, recursivelyBetweenSplitButtonDraw;
 	// Trying ImageButton
-	private ImageButton backButtonImg = new ImageButton(ChainReactionAIGame.mainMenuButtonDraw, ChainReactionAIGame.mainMenuPressedButtonDraw),
-			nextButtonImg = new ImageButton(ChainReactionAIGame.nextButtonDraw, ChainReactionAIGame.nextPressedButtonDraw);
+	private ImageButton mainMenuButtonImg = new ImageButton(ChainReactionAIGame.mainMenuButtonDraw, ChainReactionAIGame.mainMenuPressedButtonDraw),
+			nextButtonImg = new ImageButton(ChainReactionAIGame.nextButtonDraw, ChainReactionAIGame.nextPressedButtonDraw),
+			tutorialButtonImg = new ImageButton(ChainReactionAIGame.tutorialButtonDraw, ChainReactionAIGame.tutorialPressedButtonDraw);
 	private ImageButton cornerSplitButton, middleSplitButton, edgeSplitButton, recursivelySplitButton, winAdjoiningRectSplitButton;
 	private Image img = new Image(ChainReactionAIGame.texture);
 	
@@ -139,6 +140,8 @@ public class GameRulesScreen implements Screen {
 				+ "occupy that cell and your new atom gets added to the previously "
 				+ "existing atoms present in that cell. Click on "
 				+ "the two images below to see it in action.", ChainReactionAIGame.skin);
+		rulesFiveFollowUp = new Label("If you are not familiar with our interface as of "
+				+ "yet, check out the tutorial by clicking the button underneath.", ChainReactionAIGame.skin);
 		rulesOne.setFontScale((float)heightUpscaleFactor/2);
 		rulesOne.setWrap(true);
 		rulesTwo.setFontScale((float)heightUpscaleFactor/2);
@@ -149,6 +152,8 @@ public class GameRulesScreen implements Screen {
 		rulesFour.setWrap(true);
 		rulesFive.setFontScale((float)heightUpscaleFactor/2);
 		rulesFive.setWrap(true);
+		rulesFiveFollowUp.setFontScale((float)heightUpscaleFactor/2);
+		rulesFiveFollowUp.setWrap(true);
 		if (textChoice == 1) {
 			table.add(rulesHeading).padBottom(10).row();
 			table.add(rulesOne).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
@@ -169,13 +174,15 @@ public class GameRulesScreen implements Screen {
 			table.add(rulesFive).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
 			table.add(winAdjoiningRectSplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 			table.add(recursivelySplitButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(20).row();
+			table.add(rulesFiveFollowUp).padLeft(10).padRight(10).padBottom(10).width(420*widthUpscaleFactor).row();
 		}
 		nextButtonImg.getImageCell().expand().fill();
-		backButtonImg.getImageCell().expand().fill();
+		mainMenuButtonImg.getImageCell().expand().fill();
 		if (textChoice < 5)
 			table.add(nextButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(15).row();
 		if (textChoice == 5)
-			table.add(backButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(2).row();
+			table.add(tutorialButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(2).row();
+			table.add(mainMenuButtonImg).size(WIDTH_RULES_SCREEN_BUTTONS*widthUpscaleFactor, HEIGHT_RULES_SCREEN_BUTTONS*widthUpscaleFactor).padBottom(2).row();
 		// Scroll pane consisting of the Table.
 		scroll = new ScrollPane(table);
 		// Container is the outside coverung which contains the
@@ -187,7 +194,7 @@ public class GameRulesScreen implements Screen {
 		stage.addActor(img);
 		stage.addActor(container);
 		// Attaching the ClickListener to the buttons
-		backButtonImg.addListener(new ClickListener() {
+		mainMenuButtonImg.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				myGame.setScreen(new MainMenuScreen(myGame));
@@ -349,7 +356,17 @@ public class GameRulesScreen implements Screen {
 			currentImage = 0;
 		}
 		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
-			myGame.setScreen(new MainMenuScreen(myGame));
+			if (textChoice == 1) {
+				myGame.setScreen(new MainMenuScreen(myGame));
+			} else if (textChoice == 2) {
+				myGame.setScreen(new GameRulesScreen(myGame, 1));
+			} else if (textChoice == 3) {
+				myGame.setScreen(new GameRulesScreen(myGame, 2));
+			} else if (textChoice == 4) {
+				myGame.setScreen(new GameRulesScreen(myGame, 3));
+			} else if (textChoice == 5) {
+				myGame.setScreen(new GameRulesScreen(myGame, 4));
+			}
 		}
 	}
 	

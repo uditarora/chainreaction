@@ -45,7 +45,7 @@ public class TutorialTextScreen implements Screen {
 	private Image img = new Image(ChainReactionAIGame.texture);
 	private ArrayList<Boolean> isCPU = new ArrayList<Boolean>();
 	private ArrayList<Integer> difficultyLevelList = new ArrayList<Integer>();
-	private ImageButton humanCpuToggleButton;
+	private ImageButton humanCpuToggleButton, rulesButton;
 	
 	// For setting showTutorial flag
 	private Preferences stats;
@@ -104,6 +104,8 @@ public class TutorialTextScreen implements Screen {
 	    // Initializing and adding the title to Table.
         humanCpuToggleButton = new ImageButton(ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw);
         humanCpuToggleButton.getImageCell().expand().fill();
+		rulesButton = new ImageButton(ChainReactionAIGame.rulesButtonDraw, ChainReactionAIGame.rulesPressedButtonDraw);
+		rulesButton.getImageCell().expand().fill();
 		if (textChoice == 1) {
 			title = new Label("Here for the first time? "
 					+ "Let's get you familiar with the interface of the game. "
@@ -121,7 +123,7 @@ public class TutorialTextScreen implements Screen {
 		} else if (textChoice == 4) {
 			title = new Label("Now you're ready to rumble. You can enjoy this game against your friends by "
 					+ "choosing all human players, go solo against up to 5 "
-					+ "CPU bots, or have a mix of both!\n\nHave fun, and may the force be with you!", ChainReactionAIGame.skin);
+					+ "CPU bots, or have a mix of both!\nIf you are new to the Chain Reaction concept you can check out the rules by clicking the button underneath.\n\nHave fun, and may the force be with you!", ChainReactionAIGame.skin);
 			// Set showTutorial flag to false
 			ChainReactionAIGame.GRAYED_OUT = false;
 			stats = Gdx.app.getPreferences("chainReactionStatistics");
@@ -135,6 +137,9 @@ public class TutorialTextScreen implements Screen {
 			table.add(humanCpuToggleButton).size(WIDTH_ANIMATION_BUTTONS*widthUpscaleFactor, HEIGHT_ANIMATION_BUTTONS*widthUpscaleFactor).padBottom(10).row();
 			humanCpuToggleButton.setChecked(true);
 			table.add(titleFollowup).width(420*widthUpscaleFactor).padBottom(20*heightUpscaleFactor).row();
+		}
+		if (textChoice == 4) {
+			table.add(rulesButton).size(WIDTH_NEXT_BUTTON*widthUpscaleFactor, HEIGHT_NEXT_BUTTON*widthUpscaleFactor).padBottom(20).row();
 		}
 		nextButton = new ImageButton(ChainReactionAIGame.nextButtonDraw, ChainReactionAIGame.nextPressedButtonDraw);
 		nextButton.getImageCell().expand().fill();
@@ -189,6 +194,12 @@ public class TutorialTextScreen implements Screen {
 					myGame.setScreen(new MainGameScreenChar(myGame, isCPU, difficultyLevelList));
 				}
 			});
+			rulesButton.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					myGame.setScreen(new GameRulesScreen(myGame, 1));
+				}
+			});
 		}
 		Gdx.input.setInputProcessor(stage);
 	}
@@ -214,7 +225,16 @@ public class TutorialTextScreen implements Screen {
 		stage.act(delta);
 		stage.draw();
 		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
-			myGame.setScreen(new MainMenuScreen(myGame));
+			if (textChoice == 1) {
+				ChainReactionAIGame.GRAYED_OUT = false;
+				myGame.setScreen(new MainMenuScreen(myGame));
+			} else if (textChoice == 2) {
+				myGame.setScreen(new MainMenuScreen(myGame));
+			} else if (textChoice == 3) {
+				myGame.setScreen(new NumPlayersScreen(myGame));
+			} else if (textChoice == 4) {
+				myGame.setScreen(new ChooseOpponentsAndLevelsScreen(myGame, numPlayers, difficultyLevels));
+			}
 		}
 	}
 	
