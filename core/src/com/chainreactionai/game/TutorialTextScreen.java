@@ -4,25 +4,14 @@
 package com.chainreactionai.game;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Material;
-import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -48,13 +37,11 @@ public class TutorialTextScreen implements Screen {
 	private float heightUpscaleFactor, widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private int MAX_NUMBER_OF_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	private ImageButton nextButton, skipButton;
 	private Label title, titleFollowup;
 	private int textChoice, numPlayers, difficultyLevels;
 	// Trying 3D Graphics
 	private PerspectiveCamera cam;
-	private Random rand;
 	private Image img = new Image(ChainReactionAIGame.texture);
 	private ArrayList<Boolean> isCPU = new ArrayList<Boolean>();
 	private ArrayList<Integer> difficultyLevelList = new ArrayList<Integer>();
@@ -114,8 +101,7 @@ public class TutorialTextScreen implements Screen {
 	    cam.near = 1f;
 	    cam.far = 4000f;
 	    cam.update();
-	    rand = new Random();
-		// Initializing and adding the title to Table.
+	    // Initializing and adding the title to Table.
         humanCpuToggleButton = new ImageButton(ChainReactionAIGame.unpressedHumanButtonDraw, ChainReactionAIGame.pressedHumanCpuButtonDraw);
         humanCpuToggleButton.getImageCell().expand().fill();
 		if (textChoice == 1) {
