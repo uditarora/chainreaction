@@ -205,6 +205,8 @@ public class AndroidLauncher extends AndroidApplication implements
 		                if (score > 0) {
 		                	// System.out.println("Got score: "+score);
 		                	if (stats.getInteger("OverallScore", 0) > 0) {
+		                		stats.putBoolean("scoreUpdatedFlag", true);
+		        				stats.flush();
 		                		submitScore(score+stats.getInteger("OverallScore", 0));
 		                		stats.putInteger("OverallScore", (int)score+stats.getInteger("OverallScore", 0));
 		                		stats.flush();
