@@ -204,8 +204,15 @@ public class AndroidLauncher extends AndroidApplication implements
 		                // or if the user is re-installing the app
 		                if (score > 0) {
 		                	// System.out.println("Got score: "+score);
-		                	stats.putInteger("OverallScore", (int)score + stats.getInteger("OverallScore", 0));
-		                	stats.flush();
+		                	if (stats.getInteger("OverallScore", 0) > 0) {
+		                		submitScore(score+stats.getInteger("OverallScore", 0));
+		                		stats.putInteger("OverallScore", (int)score+stats.getInteger("OverallScore", 0));
+		                		stats.flush();
+		                	}
+		                	else {
+		                		stats.putInteger("OverallScore", (int)score);
+		                		stats.flush();
+		                	}
 		                }
 		            }
 		        }
