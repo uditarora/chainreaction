@@ -36,12 +36,12 @@ public class ChainReactionAIGame extends Game {
 	public static final String achievement_high_five="CgkIu_W6xfwCEAIQEw";
 	public static final String achievement_i_eight_a_lot="CgkIu_W6xfwCEAIQFg";
 	public static final String achievement_king_of_the_world="CgkIu_W6xfwCEAIQHg";
-	public static final String achievement_like_seriously="CgkIu_W6xfwCEAIQEw";
+	public static final String achievement_like_seriously="CgkIu_W6xfwCEAIQGw";
 	public static final String achievement_lucky_number_seven="CgkIu_W6xfwCEAIQFQ";
 	public static final String achievement_no_longer_an_amateur="CgkIu_W6xfwCEAIQDw";
 	public static final String achievement_quick_mover="CgkIu_W6xfwCEAIQHA";
 	public static final String achievement_secret_of_the_universe="CgkIu_W6xfwCEAIQHw";
-	public static final String achievement_silver_jubilee="CgkIu_W6xfwCEAIQGG";
+	public static final String achievement_silver_jubilee="CgkIu_W6xfwCEAIQGg";
 	public static final String achievement_sore_loser="CgkIu_W6xfwCEAIQHQ";
 	public static final String achievement_thats_a_six="CgkIu_W6xfwCEAIQFA";
 	public static final String achievement_third_times_a_charm="CgkIu_W6xfwCEAIQEA";
