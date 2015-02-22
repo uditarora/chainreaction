@@ -52,9 +52,7 @@ public class AndroidLauncher extends AndroidApplication implements
 		GameHelperListener gameHelperListener = new GameHelper.GameHelperListener() {
 			@Override
 			public void onSignInSucceeded() {
-				if (stats.getBoolean("scoreUpdatedFlag", false) == false) {
-					loadScoreOfLeaderBoard();
-            	}
+				loadScoreOfLeaderBoard();
 			}
 
 			@Override
@@ -198,24 +196,15 @@ public class AndroidLauncher extends AndroidApplication implements
 		    Games.Leaderboards.loadCurrentPlayerLeaderboardScore(_gameHelper.getApiClient(), getString(R.string.leaderboard_overall_score), LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
 		        @Override
 		        public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
-		            if (isScoreResultValid(scoreResult)) {
+		        	if (scoreResult == null) {
+		        		stats.putInteger("OverallScore", 0);
+                		stats.flush();
+		        	}
+		        	else if (isScoreResultValid(scoreResult)) {
 		                long score = scoreResult.getScore().getRawScore();
-		                // Update local score if the user already has a score on some other device,
-		                // or if the user is re-installing the app
-		                if (score > 0) {
-		                	// System.out.println("Got score: "+score);
-		                	if (stats.getInteger("OverallScore", 0) > 0) {
-		                		stats.putBoolean("scoreUpdatedFlag", true);
-		        				stats.flush();
-		                		submitScore(score+stats.getInteger("OverallScore", 0));
-		                		stats.putInteger("OverallScore", (int)score+stats.getInteger("OverallScore", 0));
-		                		stats.flush();
-		                	}
-		                	else {
-		                		stats.putInteger("OverallScore", (int)score);
-		                		stats.flush();
-		                	}
-		                }
+		                // Update local score from global score
+                		stats.putInteger("OverallScore", (int)score);
+                		stats.flush();
 		            }
 		        }
 		    });
