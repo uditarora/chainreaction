@@ -143,9 +143,9 @@ public class AndroidLauncher extends AndroidApplication implements
 				stats.putBoolean("scoreUpdatedFlag", true);
 				stats.flush();
 			}
-			startActivityForResult(Games.Leaderboards.getLeaderboardIntent(
-					_gameHelper.getApiClient(),
-					getString(R.string.leaderboard_overall_score)), REQUEST_CODE_UNUSED);
+//			startActivityForResult(Games.Leaderboards.getLeaderboardIntent(
+//					_gameHelper.getApiClient(),
+//					getString(R.string.leaderboard_overall_score)), REQUEST_CODE_UNUSED);
 		} else {
 			// Maybe sign in here then redirect to submitting score?
 		}

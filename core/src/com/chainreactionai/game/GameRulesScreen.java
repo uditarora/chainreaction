@@ -253,6 +253,7 @@ public class GameRulesScreen implements Screen {
 		});
 		currentImage = 0;
 		// loadImages();
+		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(stage);
 	}
 	
