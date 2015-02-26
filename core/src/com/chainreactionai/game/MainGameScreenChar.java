@@ -70,7 +70,8 @@ public class MainGameScreenChar implements Screen {
 	final private int MAX_NUM_PLAYERS = ChainReactionAIGame.MAX_NUMBER_PLAYERS;
 	private int INVERSE_SPEED_OF_BALL_VIBRATION = 28;
 	private int NUMBER_OF_PLAYERS, breakingAway, splittableBreakingAway;
-	private Texture pauseButtonImg = new Texture(Gdx.files.internal("buttons/pause.jpg"));
+	private Texture pauseButtonImg = new Texture(Gdx.files.internal("buttons/pause.jpg")),
+					undoButtonImg = new Texture(Gdx.files.internal("buttons/undo.jpg"));
 	
 	private Array<Rectangle> rectangularGrid, innerRectangularGrid;
 	private GameBoardChar gameBoard;
@@ -85,7 +86,7 @@ public class MainGameScreenChar implements Screen {
 	private ChainReactionAIGame myGame;
 	private Stage stage = new Stage();
 	private Table table = new Table();
-	private ImageButton resumeButton, exitButton, newGameButton, mainMenuButton, muteActiveButton, muteInactiveButton, muteButton;
+	private ImageButton resumeButton, exitButton, playAgainButton, newGameButton, mainMenuButton, muteActiveButton, muteInactiveButton, muteButton;
 	private Slider animationSpeedSlider;
 	private Position highlightPos = new Position(-1, -1);
 	private GameSolverChar solver;
@@ -105,6 +106,10 @@ public class MainGameScreenChar implements Screen {
 	private boolean playThisTimeBallPlace;
 	// Stats to be stored
 	private Preferences stats;
+	// Stuff for undo option
+	private char[][] prevRectangleWinner;
+	private char[][] prevNumAtomsInRectangle;
+	private int prevNumMovesPlayed, prevCurrentPlayer;
 	// All debug printing should go under this flag.
 	final private boolean DEBUG = false;
 	final private boolean DEBUG_CPU = false;
@@ -213,6 +218,7 @@ public class MainGameScreenChar implements Screen {
 			percentageMovesSearched = 1/(double)(maxPlyLevel);
 		incrementValForPercentageMovesSearched = 1/(double)(3*maxPlyLevel*maxPlyLevel);
 		resumeButton = new ImageButton(ChainReactionAIGame.resumeButtonDraw, ChainReactionAIGame.resumePressedButtonDraw);
+		playAgainButton = new ImageButton(ChainReactionAIGame.playAgainButtonDraw, ChainReactionAIGame.playAgainPressedButtonDraw);
 		newGameButton = new ImageButton(ChainReactionAIGame.newGameButtonDraw, ChainReactionAIGame.newGamePressedButtonDraw);
 		mainMenuButton = new ImageButton(ChainReactionAIGame.mainMenuButtonDraw, ChainReactionAIGame.mainMenuPressedButtonDraw);
 		exitButton = new ImageButton(ChainReactionAIGame.exitButtonDraw, ChainReactionAIGame.exitPressedButtonDraw);
@@ -226,6 +232,7 @@ public class MainGameScreenChar implements Screen {
 		img.setFillParent(true);
 		muteButton.getImageCell().expand().fill();
 		resumeButton.getImageCell().expand().fill();
+		playAgainButton.getImageCell().expand().fill();
 		newGameButton.getImageCell().expand().fill();
 		mainMenuButton.getImageCell().expand().fill();
 		exitButton.getImageCell().expand().fill();
@@ -249,6 +256,7 @@ public class MainGameScreenChar implements Screen {
 		animationSpeedSlider.addListener(stopTouchDown);
 
 		table.add(resumeButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).padLeft(45*widthUpscaleFactor).row();
+		table.add(playAgainButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).padLeft(45*widthUpscaleFactor).row();
 		table.add(newGameButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).padLeft(45*widthUpscaleFactor).row();
 		table.add(mainMenuButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).padLeft(45*widthUpscaleFactor).row();
 		table.add(exitButton).size(WIDTH_PAUSE_MENU_BUTTONS*widthUpscaleFactor, HEIGHT_PAUSE_MENU_BUTTONS*widthUpscaleFactor).padBottom(2).padLeft(45*widthUpscaleFactor).row();
@@ -260,6 +268,21 @@ public class MainGameScreenChar implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				resume();
+			}
+		});
+		playAgainButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				// Same way we moved here from the Splash Screen
+				// We set it to new Splash because we got no other screens
+				// otherwise you put the screen there where you want to go
+				ArrayList<Integer> difficultyLevelList = new ArrayList<Integer>();
+				ArrayList<Boolean> isCPUList = new ArrayList<Boolean>();
+				for (int i = 0; i < isCPU.length; i += 1) {
+					isCPUList.add(isCPU[i]);
+					difficultyLevelList.add(difficultyLevels[i]);
+				}
+				myGame.setScreen(new MainGameScreenChar(myGame, isCPUList, difficultyLevelList));
 			}
 		});
 		newGameButton.addListener(new ClickListener() {
@@ -327,6 +350,11 @@ public class MainGameScreenChar implements Screen {
         environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+        
+        // Undo option
+        prevRectangleWinner = new char[GRID_SIZE_X][GRID_SIZE_Y];
+		prevNumAtomsInRectangle = new char[GRID_SIZE_X][GRID_SIZE_Y];
+		copyCurrentBoardToPrevBoard();
 	}
 
 	// This function loads the dimensions for all the
@@ -528,6 +556,9 @@ public class MainGameScreenChar implements Screen {
 					}
 					// Used to process pause button click
 					processPauseAction();
+					// Used to process undo button click
+					if (!isCPU[currentPlayer])
+						processUndoAction();
 				}
 			}
 			// Rendering here to have board updated
@@ -541,6 +572,7 @@ public class MainGameScreenChar implements Screen {
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
 			batch.draw(pauseButtonImg, PAD_LEFT_PAUSE_BUTTON, ((GRID_SIZE_Y * HEIGHT_RECTANGLE) + PAD_BOTTOM_PAUSE_BUTTON), WIDTH_PAUSE_BUTTON, HEIGHT_PAUSE_BUTTON);
+			batch.draw(undoButtonImg, WIDTH_SCREEN - PAD_LEFT_PAUSE_BUTTON - WIDTH_PAUSE_BUTTON, ((GRID_SIZE_Y * HEIGHT_RECTANGLE) + PAD_BOTTOM_PAUSE_BUTTON), WIDTH_PAUSE_BUTTON, HEIGHT_PAUSE_BUTTON);
 			batch.end();
 			shapeRenderer.setProjectionMatrix(cam.combined);
 			shapeRenderer.begin(ShapeType.Line);
@@ -612,6 +644,8 @@ public class MainGameScreenChar implements Screen {
 			
 			if (!isCPU[currentPlayer] && gameBoard.isValidMove(clickCoordX, clickCoordY,
 					currentPlayer)) {
+				if(numberOfMovesPlayed >= 1)
+					copyCurrentBoardToPrevBoard();
 				gameBoard.changeBoard2(clickCoordX, clickCoordY,
 						currentPlayer);
 				highlightPos.coordX = clickCoordX;
@@ -642,6 +676,51 @@ public class MainGameScreenChar implements Screen {
 		if (DEBUG)
 			Gdx.app.log("Pause Button Debug", "coordX: " + coordX + " coordY: " + coordY + " coordX is smaller than: " + WIDTH_PAUSE_BUTTON * widthUpscaleFactor);
 		pause();
+	}
+	
+	private void processUndoAction() {
+		if(isCPU[currentPlayer])
+			return;
+		float coordX = inputProcessor.getXCoord(), coordY = inputProcessor.getYCoord(), distOfUndoButtonFromTop, distOfGridFromTop;
+		if (DEBUG)
+			Gdx.app.log("Undo Button Debug", "coordX: " + coordX + " coordY: " + coordY + " coordX is smaller than: " + WIDTH_PAUSE_BUTTON * widthUpscaleFactor + " Also, numberOfMoves " + numberOfMovesPlayed + ", prevNumMoves: " + prevNumMovesPlayed);
+		distOfUndoButtonFromTop = (ChainReactionAIGame.HEIGHT - (((float)(ChainReactionAIGame.WIDTH * 8))/6 + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor) + (PAD_BOTTOM_PAUSE_BUTTON * heightUpscaleFactor)))/2;
+		distOfGridFromTop = distOfUndoButtonFromTop + (HEIGHT_PAUSE_BUTTON * heightUpscaleFactor) + (PAD_BOTTOM_PAUSE_BUTTON * heightUpscaleFactor);
+		if (coordY > distOfGridFromTop || coordY < distOfUndoButtonFromTop) {
+			return;
+		}
+		if (coordX > ((WIDTH_SCREEN - PAD_LEFT_PAUSE_BUTTON) * widthUpscaleFactor) || coordX < ((WIDTH_SCREEN - WIDTH_PAUSE_BUTTON - PAD_LEFT_PAUSE_BUTTON)*widthUpscaleFactor)) {
+			return;
+		}
+		if (DEBUG)
+			Gdx.app.log("Undo Button Debug", "coordX: " + coordX + " coordY: " + coordY + " coordX is smaller than: " + WIDTH_PAUSE_BUTTON * widthUpscaleFactor);
+		copyPrevBoardToCurrentBoard();
+	}
+	
+	// Copies current board to previous board just before a human makes a move.
+	private void copyCurrentBoardToPrevBoard() {
+		int i, j;
+		prevNumMovesPlayed = numberOfMovesPlayed;
+		prevCurrentPlayer = currentPlayer;
+		for (i = 0; i < GRID_SIZE_X; i += 1) {
+			for (j = 0; j < GRID_SIZE_Y; j += 1) {
+				prevNumAtomsInRectangle[i][j] = gameBoard.numAtomsInRectangle[i][j];
+				prevRectangleWinner[i][j] = gameBoard.rectangleWinner[i][j];
+			}
+		}
+	}
+	
+	// Copies previous board to current board if undo button is pressed.
+	private void copyPrevBoardToCurrentBoard() {
+		int i, j;
+		numberOfMovesPlayed = prevNumMovesPlayed;
+		currentPlayer = prevCurrentPlayer;
+		for (i = 0; i < GRID_SIZE_X; i += 1) {
+			for (j = 0; j < GRID_SIZE_Y; j += 1) {
+				gameBoard.numAtomsInRectangle[i][j] = prevNumAtomsInRectangle[i][j];
+				gameBoard.rectangleWinner[i][j] = prevRectangleWinner[i][j];
+			}
+		}
 	}
 	
 	// Function to draw the game board using the three
