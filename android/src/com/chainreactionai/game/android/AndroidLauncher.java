@@ -196,16 +196,16 @@ public class AndroidLauncher extends AndroidApplication implements
 		    Games.Leaderboards.loadCurrentPlayerLeaderboardScore(_gameHelper.getApiClient(), getString(R.string.leaderboard_overall_score), LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
 		        @Override
 		        public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
-		        	if (scoreResult == null) {
-		        		stats.putInteger("OverallScore", 0);
-                		stats.flush();
-		        	}
-		        	else if (isScoreResultValid(scoreResult)) {
+		        	if (isScoreResultValid(scoreResult)) {
 		                long score = scoreResult.getScore().getRawScore();
 		                // Update local score from global score
                 		stats.putInteger("OverallScore", (int)score);
                 		stats.flush();
 		            }
+		        	else {
+		        		stats.putInteger("OverallScore", 0);
+                		stats.flush();
+		        	}
 		        }
 		    });
 		}

@@ -123,7 +123,10 @@ public class GameRulesScreen implements Screen {
 				+ "of the adjacent squares. If a player loses all "
 				+ "their atoms, they are out of the game! A player "
 				+ "can only place their atoms on a blank square "
-				+ "or one occupied by atoms of their own colour.\n\n"
+				+ "or one occupied by atoms of their own colour.\n"
+				+ "You can undo your last move during the game.\n"
+				+ "But you won't unlock any achievements and your\n"
+				+ "score won't be updated in the leaderboards.\n\n"
 				+ "Let's walk you through an interactive tutorial to learn the rules "
 				+ "of the game. Click on the cells pointed at by the arrows "
 				+ "to understand the way that the game works.\n", ChainReactionAIGame.skin);
@@ -198,6 +201,13 @@ public class GameRulesScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				myGame.setScreen(new MainMenuScreen(myGame));
+			}
+		});
+		tutorialButtonImg.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				ChainReactionAIGame.GRAYED_OUT = true;
+				myGame.setScreen(new TutorialTextScreen(myGame, 1));
 			}
 		});
 		nextButtonImg.addListener(new ClickListener() {
