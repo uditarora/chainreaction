@@ -110,6 +110,7 @@ public class MainGameScreenChar implements Screen {
 	private char[][] prevRectangleWinner;
 	private char[][] prevNumAtomsInRectangle;
 	private int prevNumMovesPlayed, prevCurrentPlayer;
+	private boolean undoUsedFlag = false;
 	// All debug printing should go under this flag.
 	final private boolean DEBUG = false;
 	final private boolean DEBUG_CPU = false;
@@ -170,7 +171,9 @@ public class MainGameScreenChar implements Screen {
 		}
 		
 		this.splitSound = Gdx.audio.newSound(Gdx.files.internal("sounds/balls.mp3"));
-
+		// Flag to keep track if undo was used, and prevent achievements and 
+		// leaderboards from getting updated if it was.
+		undoUsedFlag = false;
 		create();
 	}
 
@@ -695,6 +698,7 @@ public class MainGameScreenChar implements Screen {
 		if (DEBUG)
 			Gdx.app.log("Undo Button Debug", "coordX: " + coordX + " coordY: " + coordY + " coordX is smaller than: " + WIDTH_PAUSE_BUTTON * widthUpscaleFactor);
 		copyPrevBoardToCurrentBoard();
+		undoUsedFlag = true;
 	}
 	
 	// Copies current board to previous board just before a human makes a move.
@@ -962,7 +966,7 @@ public class MainGameScreenChar implements Screen {
 		}
 		stats.putInteger(key, stats.getInteger(key, 0)+1);
 		
-		if(flag==1)
+		if (flag==1 && undoUsedFlag == false)
 		{
 			int overallScore = stats.getInteger("OverallScore", 0) + (level*level) + ((100 - numberOfMovesPlayed)*level*level/20);
 			stats.putInteger("OverallScore", overallScore);
@@ -973,6 +977,8 @@ public class MainGameScreenChar implements Screen {
 	
 	private void updateAchievements(int humanPlayer, boolean won) {
 		if (!ChainReactionAIGame.googleServices.isSignedIn())
+			return;
+		else if (undoUsedFlag == true)
 			return;
 		else {
 			// Achievements updated regardless of win or loss
@@ -991,7 +997,7 @@ public class MainGameScreenChar implements Screen {
 				
 				if (NUMBER_OF_PLAYERS == 2) {
 					switch (difficultyLevels[(humanPlayer+1)%2]) {
-					case 2:		// combination of 1ply and 3ply
+					case 2:
 						ChainReactionAIGame.googleServices.getAchievement(ChainReactionAIGame.achievement_no_longer_an_amateur);
 						break;
 					case 3:

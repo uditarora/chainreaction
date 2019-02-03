@@ -19,7 +19,7 @@ public class ChainReactionAIGame extends Game {
 	public static Skin skin, sliderSkin;
 	
 	// For achievements
-	public static final String achievement_almost_there="CgkIu_W6xfwCEAIQDg";
+	public static final String achievement_almost_there="CgkIu_W6xfwCEAIQFw";
 	public static final String achievement_beginners_luck= "CgkIu_W6xfwCEAIQAw";
 	public static final String achievement_conqueror_quattro="CgkIu_W6xfwCEAIQEg";
 	public static final String achievement_decimus="CgkIu_W6xfwCEAIQEQ";

@@ -38,9 +38,10 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 	final private int HEIGHT_HUMAN_CPU_MENUS = 30;
 	final private int WIDTH_SUBMIT_BUTTON = 275;
 	final private int HEIGHT_SUBMIT_BUTTON = 60;
-	final private int WIDTH_SLIDER = 150;
+	final private int WIDTH_SLIDER = 170;
 	final private int HEIGHT_SLIDER = 30;
-	final private int HEIGHT_KNOB = 20;
+	final private int HEIGHT_KNOB = 25;
+	final private int WIDTH_KNOB = 18;
 	private float heightUpscaleFactor, widthUpscaleFactor;
 	private Stage stage = new Stage();
 	private Table table = new Table(), container = new Table();
@@ -122,7 +123,12 @@ public class ChooseOpponentsAndLevelsScreen implements Screen {
 			// To allow the sliders to be dragged properly
 			plySliders.get(i).addListener(stopTouchDown);
 			plySliders.get(i).getStyle().knob.setMinHeight(HEIGHT_KNOB*heightUpscaleFactor);
-			table.add(plySliders.get(i)).height(HEIGHT_SLIDER*heightUpscaleFactor).width(WIDTH_SLIDER*widthUpscaleFactor).padBottom(10);
+			plySliders.get(i).getStyle().knob.setMinWidth(WIDTH_KNOB*heightUpscaleFactor);
+			plySliders.get(i).getStyle().background.setMinHeight((float)HEIGHT_KNOB*heightUpscaleFactor/5);
+			if (i < NUMBER_OF_PLAYERS-1)
+				table.add(plySliders.get(i)).height(HEIGHT_SLIDER*heightUpscaleFactor).width(WIDTH_SLIDER*widthUpscaleFactor).padBottom(10*heightUpscaleFactor);
+			else
+				table.add(plySliders.get(i)).height(HEIGHT_SLIDER*heightUpscaleFactor).width(WIDTH_SLIDER*widthUpscaleFactor).padBottom(20*heightUpscaleFactor);
 			// Add the labels containing the currently selected plyLevel
 			Label tempLabel2 = plyLabels.get(i);
 			tempLabel2.setFontScale(heightUpscaleFactor/2);
